@@ -21,8 +21,16 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    @Autowired
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
 }

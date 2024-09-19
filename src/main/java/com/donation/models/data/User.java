@@ -84,4 +84,12 @@ public class User {
     public void setProfileImage(byte[] profileImage) {
         this.profileImage = profileImage;
     }
+
+    public User() {
+    }
+
+    public User(String firstName, String lastName, String email) {
+        this.username = firstName + " " + lastName;
+        this.email = email;
+    }
 }

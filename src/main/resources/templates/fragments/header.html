@@ -1,0 +1,35 @@
+<!-- src/main/resources/templates/fragments/header.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My Application</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100">
+    <header th:fragment="header" class="bg-white shadow-md p-4">
+      <h1 class="text-2xl font-bold text-gray-800">Donation Application</h1>
+      <nav class="mt-4">
+        <ul class="flex space-x-4">
+          <li>
+            <a href="/" class="text-blue-500 hover:text-blue-700">Home</a>
+          </li>
+          <li>
+            <a href="/users" class="text-blue-500 hover:text-blue-700">Users</a>
+          </li>
+          <li>
+            <a href="/about" class="text-blue-500 hover:text-blue-700">About</a>
+          </li>
+          <li>
+            <a href="/contact" class="text-blue-500 hover:text-blue-700"
+              >Contact</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+  </body>
+</html>
