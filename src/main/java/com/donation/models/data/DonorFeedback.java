@@ -1,28 +1,29 @@
-// package com.donation.models.data;
+package com.donation.models.data;
 
-// import lombok.Getter;
-// import lombok.Setter;
+import lombok.Getter;
+import lombok.Setter;
 
-// import jakarta.persistence.*;
-// import java.time.LocalDate;
+import jakarta.persistence.*;
+import java.time.LocalDate;
 
-// @Getter
-// @Setter
-// @Entity
-// @Table(name = "donorfeedback")
-// public class DonorFeedback {
+@Getter
+@Setter
+@Entity
+@Table(name = "donorfeedback")
+public class DonorFeedback {
 
-// @Id
-// @GeneratedValue(strategy = GenerationType.IDENTITY)
-// private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-// @ManyToOne
-// @JoinColumn(name = "donor_id", nullable = false)
-// private Donor donor;
+    @ManyToOne
+    @JoinColumn(name = "donor_id", nullable = false)
+    private Donor donor;
 
-// @Lob
-// private String message;
+    @Lob
+    private String message;
 
-// @Column(nullable = false)
-// private LocalDate submittedDate;
-// }
+    @Column(nullable = false, name = "submitted_date")
+    private LocalDate submittedDate;
+
+}

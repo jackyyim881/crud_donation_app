@@ -1,5 +1,10 @@
 package com.donation.models.data;
 
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -19,7 +24,7 @@ public class User {
     @Column(nullable = false, length = 100)
     private String email;
 
-    @Column(length = 20)
+    @Column(length = 20, name = "phone_number")
     private String phoneNumber;
 
     @Column(length = 255)
@@ -92,4 +97,30 @@ public class User {
         this.username = firstName + " " + lastName;
         this.email = email;
     }
+
+    // @Override
+    // public Collection<? extends GrantedAuthority> getAuthorities() {
+    // return roles; // Since Role implements GrantedAuthority
+    // }
+
+    // @Override
+    // public boolean isAccountNonExpired() {
+    // return true; // Modify as needed
+    // }
+
+    // @Override
+    // public boolean isAccountNonLocked() {
+    // return true; // Modify as needed
+    // }
+
+    // @Override
+    // public boolean isCredentialsNonExpired() {
+    // return true; // Modify as needed
+    // }
+
+    // @Override
+    // public boolean isEnabled() {
+    // return true; // Modify as needed
+    // }
+
 }

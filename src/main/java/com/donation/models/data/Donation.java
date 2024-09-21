@@ -1,97 +1,97 @@
-// package com.donation.models.data;
 
-// import jakarta.persistence.*;
+package com.donation.models.data;
 
-// import java.sql.Date;
+import lombok.Data;
 
-// @Entity
-// @Table(name = "donation")
-// public class Donation {
+import jakarta.persistence.*;
 
-// @Id
-// @GeneratedValue(strategy = GenerationType.IDENTITY)
-// private int id;
+import java.sql.Date;
+import java.time.LocalDate;
 
-// @Column(name = "amount", nullable = false)
-// private double amount;
+@Entity
+@Table(name = "donation")
+public class Donation {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-// @Column(name = "date", nullable = false)
-// private Date date;
+    @ManyToOne
+    @JoinColumn(name = "donor_id")
+    private Donor donor;
 
-// // Many-to-One relationship with Campaign
-// @ManyToOne
-// @JoinColumn(name = "campaign_id", nullable = false)
-// private Campaign campaign;
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private Student student; // Assuming a student entity
 
-// // Many-to-One relationship with Student (nullable, as it could be optional)
-// @ManyToOne
-// @JoinColumn(name = "student_id", nullable = true)
-// private Student student;
+    @Column(nullable = false)
+    private Double amount;
 
-// // Other columns such as donor_id and payment_method_id would go here as
-// well.
-// @Column(name = "donor_id", nullable = false)
-// private Donor donor;
+    @Column(name = "date")
+    @Temporal(TemporalType.DATE)
+    private Date donationDate;
 
-// @Column(name = "paym_ent_method_id", nullable = false)
-// private int paymentMethodId;
+    @ManyToOne
+    @JoinColumn(name = "campaign_id")
+    private Campaign ncampaign; // Assuming a campaign entity
 
-// public int getId() {
-// return id;
-// }
+    @ManyToOne
+    @JoinColumn(name = "payment_method_id")
+    private PaymentMethod paymentMethod; // Assuming a payment method entity
 
-// public void setId(int id) {
-// this.id = id;
-// }
+    public Long getId() {
+        return id;
+    }
 
-// public double getAmount() {
-// return amount;
-// }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-// public void setAmount(double amount) {
-// this.amount = amount;
-// }
+    public Donor getDonor() {
+        return donor;
+    }
 
-// public Date getDate() {
-// return date;
-// }
+    public void setDonor(Donor donor) {
+        this.donor = donor;
+    }
 
-// public void setDate(Date date) {
-// this.date = date;
-// }
+    public Student getStudent() {
+        return student;
+    }
 
-// public Campaign getCampaign() {
-// return campaign;
-// }
+    public void setStudent(Student student) {
+        this.student = student;
+    }
 
-// public void setCampaign(Campaign campaign) {
-// this.campaign = campaign;
-// }
+    public Campaign getNcampaign() {
+        return ncampaign;
+    }
 
-// public Student getStudent() {
-// return student;
-// }
+    public void setNcampaign(Campaign ncampaign) {
+        this.ncampaign = ncampaign;
+    }
 
-// public void setStudent(Student student) {
-// this.student = student;
-// }
+    public Double getAmount() {
+        return amount;
+    }
 
-// public Donor getDonor() {
-// return donor;
-// }
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
 
-// public void setDonor(Donor donor) {
-// this.donor = donor;
-// }
+    public Date getDonationDate() {
+        return donationDate;
+    }
 
-// public int getPaymentMethodId() {
-// return paymentMethodId;
-// }
+    public void setDonationDate(Date donationDate) {
+        this.donationDate = donationDate;
+    }
 
-// public void setPaymentMethodId(int paymentMethodId) {
-// this.paymentMethodId = paymentMethodId;
-// }
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
 
-// // Getters and Setters
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
 
-// }
+}

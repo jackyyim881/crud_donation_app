@@ -1,24 +1,17 @@
-// package com.donation.service;
+package com.donation.service;
 
-// import java.util.List;
-// import org.springframework.stereotype.Service;
-// import com.donation.models.data.Donation;
-// import com.donation.repository.DonationRepository;
+import com.donation.models.data.Donation;
 
-// import jakarta.persistence.EntityManager;
-// import jakarta.persistence.PersistenceContext;
+import java.util.List;
 
-// @Service
-// public class DonationService {
-// @PersistenceContext
-// private EntityManager entityManager;
-// private final DonationRepository donationRepository;
+public interface DonationService {
+    Donation createDonation(Donation donation);
 
-// public DonationService(DonationRepository donationRepository) {
-// this.donationRepository = donationRepository;
-// }
+    List<Donation> getAllDonations();
 
-// public List<Donation> getAllDonations() {
-// return donationRepository.findAll();
-// }
-// }
+    Donation getDonationById(Long id);
+
+    Donation updateDonation(Long id, Donation donationDetails);
+
+    void deleteDonation(Long id);
+}

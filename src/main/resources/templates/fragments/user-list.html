@@ -1,25 +1,5 @@
-<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <title>User List</title>
-    <!-- Include Tailwind CSS CDN -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
-  </head>
-  <body class="bg-gray-100 p-4">
-    <div th:replace="fragments/header :: header"></div>
-    <div class="mb-4">
-      <div class="mb-4 mt-5">
-        <a
-          href="/api/v1/user/addForm"
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Add New User
-        </a>
-      </div>
-    </div>
+  <div id="user-list">
     <div class="overflow-x-auto">
       <table class="min-w-full bg-white border border-gray-200">
         <thead>
@@ -61,5 +41,5 @@
         </tbody>
       </table>
     </div>
-  </body>
+  </div>
 </html>

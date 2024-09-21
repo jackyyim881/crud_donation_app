@@ -1,49 +1,32 @@
-// package com.donation.models.data;
+package com.donation.models.data;
 
-// import lombok.Getter;
-// import lombok.Setter;
+import jakarta.persistence.*;
 
-// import jakarta.persistence.*;
-// import java.util.List;
+@Entity
+@Table(name = "paymentmethod")
+public class PaymentMethod {
 
-// @Getter
-// @Setter
-// @Entity
-// @Table(name = "paymentmethod")
-// public class PaymentMethod {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-// @Id
-// @GeneratedValue(strategy = GenerationType.IDENTITY)
-// private Integer id;
+    @Column(name = "method_name", nullable = false, length = 50)
+    private String methodName;
 
-// private String name;
+    public Long getId() {
+        return id;
+    }
 
-// @OneToMany(mappedBy = "paymentmethod")
-// private List<Donation> donations;
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-// // Getters and Setters
-// public Integer getId() {
-// return id;
-// }
+    public String getMethodName() {
+        return methodName;
+    }
 
-// public void setId(Integer id) {
-// this.id = id;
-// }
+    public void setMethodName(String methodName) {
+        this.methodName = methodName;
+    }
 
-// public String getName() {
-// return name;
-// }
-
-// public void setName(String name) {
-// this.name = name;
-// }
-
-// public List<Donation> getDonations() {
-// return donations;
-// }
-
-// public void setDonations(List<Donation> donations) {
-// this.donations = donations;
-// }
-
-// }
+}

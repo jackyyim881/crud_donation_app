@@ -1,5 +1,7 @@
 package com.donation.models.data;
 
+import java.util.Base64;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -25,6 +27,17 @@ public class Student {
     @Lob
     @Column(name = "student_image", columnDefinition = "LONGBLOB")
     private byte[] studentImage;
+
+    public Student() {
+    }
+
+    public Student(String name, int age, String school, String bio, byte[] studentImage) {
+        this.name = name;
+        this.age = age;
+        this.school = school;
+        this.bio = bio;
+        this.studentImage = studentImage;
+    }
 
     // Getters and Setters
     public int getId() {
@@ -73,5 +86,13 @@ public class Student {
 
     public void setStudentImage(byte[] studentImage) {
         this.studentImage = studentImage;
+    }
+
+    @Transient
+    public String getImageBase64() {
+        if (studentImage != null && studentImage.length > 0) {
+            return Base64.getEncoder().encodeToString(studentImage);
+        }
+        return null;
     }
 }
