@@ -95,7 +95,7 @@ public class StudentWebController {
      * Show the form to edit an existing student.
      */
     @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable("id") int id, Model model) {
+    public String showEditForm(@PathVariable("id") Long id, Model model) {
         Student student = studentService.getStudentById(id);
         if (student == null) {
             // Handle student not found
@@ -110,7 +110,7 @@ public class StudentWebController {
      * Handle the submission of the edit student form.
      */
     @PostMapping("/edit/{id}")
-    public String editStudent(@PathVariable("id") int id,
+    public String editStudent(@PathVariable("id") Long id,
             @Valid @ModelAttribute("student") Student student,
             BindingResult result,
             @RequestParam("studentImageFile") MultipartFile studentImageFile,
@@ -171,7 +171,7 @@ public class StudentWebController {
      * Delete a student by ID.
      */
     @GetMapping("/delete/{id}")
-    public String deleteStudent(@PathVariable("id") int id, Model model) {
+    public String deleteStudent(@PathVariable("id") Long id, Model model) {
         Student student = studentService.getStudentById(id);
         if (student == null) {
             // Handle student not found

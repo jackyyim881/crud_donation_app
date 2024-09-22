@@ -48,4 +48,9 @@ public class DonorFeedbackServiceImpl implements DonorFeedbackService {
                 .orElseThrow(() -> new RuntimeException("Feedback not found with id: " + id));
         donorFeedbackRepository.delete(feedback);
     }
+
+    @Override
+    public List<DonorFeedback> getFeedbacksByDonorType(String donorType) {
+        return donorFeedbackRepository.findByDonorType(donorType);
+    }
 }

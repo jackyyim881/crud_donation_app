@@ -39,7 +39,7 @@ public class StudentController {
      * @return Student object.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudentById(@PathVariable("id") int id) {
+    public ResponseEntity<Student> getStudentById(@PathVariable("id") Long id) {
         Student student = studentService.getStudentById(id);
         if (student == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -68,7 +68,7 @@ public class StudentController {
      * @return Updated student object.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable("id") int id,
+    public ResponseEntity<Student> updateStudent(@PathVariable("id") Long id,
             @Valid @RequestBody Student student) {
         Student existingStudent = studentService.getStudentById(id);
         if (existingStudent == null) {
@@ -93,7 +93,7 @@ public class StudentController {
      * @return HTTP status.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStudent(@PathVariable("id") int id) {
+    public ResponseEntity<Void> deleteStudent(@PathVariable("id") Long id) {
         Student student = studentService.getStudentById(id);
         if (student == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -51,4 +51,10 @@ public class DonorFeedbackController {
         donorFeedbackService.deleteFeedback(id);
         return ResponseEntity.noContent().build(); // HTTP 204 No Content
     }
+
+    @GetMapping("/donor-type/{donorType}")
+    public ResponseEntity<List<DonorFeedback>> getFeedbacksByDonorType(@PathVariable String donorType) {
+        List<DonorFeedback> feedbacks = donorFeedbackService.getFeedbacksByDonorType(donorType);
+        return ResponseEntity.ok(feedbacks); // HTTP 200 OK
+    }
 }

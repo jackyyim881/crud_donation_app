@@ -7,18 +7,11 @@ import com.donation.repository.StudentRepository;
 import com.donation.service.StudentService;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class StudentServiceImpl implements StudentService {
-
-    private final StudentRepository studentRepository;
-
-    // Constructor Injection
     @Autowired
-    public StudentServiceImpl(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
-    }
+    private StudentRepository studentRepository;
 
     // Fetch all students
     @Override
@@ -28,9 +21,10 @@ public class StudentServiceImpl implements StudentService {
 
     // Fetch a student by ID
     @Override
-    public Student getStudentById(int id) {
-        Optional<Student> optionalStudent = studentRepository.findById(id);
-        return optionalStudent.orElse(null);
+    public Student getStudentById(Long id) {
+        // Fetch the student by ID, or throw an exception if not found
+        return studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found with id: " + id));
     }
 
     // Save or update a student
@@ -41,7 +35,7 @@ public class StudentServiceImpl implements StudentService {
 
     // Delete a student by ID
     @Override
-    public void deleteStudentById(int id) {
+    public void deleteStudentById(Long id) {
         studentRepository.deleteById(id);
     }
 }

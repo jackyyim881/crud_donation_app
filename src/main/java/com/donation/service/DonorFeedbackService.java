@@ -14,4 +14,7 @@ public interface DonorFeedbackService {
     DonorFeedback updateFeedback(Integer id, DonorFeedback feedbackDetails);
 
     void deleteFeedback(Integer id);
+
+    List<DonorFeedback> getFeedbacksByDonorType(String donorType);
+
 }

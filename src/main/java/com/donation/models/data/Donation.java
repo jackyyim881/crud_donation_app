@@ -16,11 +16,11 @@ public class Donation {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "donor_id")
+    @JoinColumn(name = "donor_id", nullable = false) // Enforce donor not null
     private Donor donor;
 
     @ManyToOne
-    @JoinColumn(name = "student_id")
+    @JoinColumn(name = "student_id", nullable = true) // Student is optional
     private Student student; // Assuming a student entity
 
     @Column(nullable = false)
@@ -28,7 +28,7 @@ public class Donation {
 
     @Column(name = "date")
     @Temporal(TemporalType.DATE)
-    private Date donationDate;
+    private LocalDate donationDate;
 
     @ManyToOne
     @JoinColumn(name = "campaign_id")
@@ -62,14 +62,6 @@ public class Donation {
         this.student = student;
     }
 
-    public Campaign getNcampaign() {
-        return ncampaign;
-    }
-
-    public void setNcampaign(Campaign ncampaign) {
-        this.ncampaign = ncampaign;
-    }
-
     public Double getAmount() {
         return amount;
     }
@@ -78,12 +70,20 @@ public class Donation {
         this.amount = amount;
     }
 
-    public Date getDonationDate() {
+    public LocalDate getDonationDate() {
         return donationDate;
     }
 
-    public void setDonationDate(Date donationDate) {
+    public void setDonationDate(LocalDate donationDate) {
         this.donationDate = donationDate;
+    }
+
+    public Campaign getNcampaign() {
+        return ncampaign;
+    }
+
+    public void setNcampaign(Campaign ncampaign) {
+        this.ncampaign = ncampaign;
     }
 
     public PaymentMethod getPaymentMethod() {

@@ -11,10 +11,12 @@ public class Donor {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user; // Association with the User table
 
-    // Getters and Setters
+    @Column(nullable = false, name = "donor_type")
+    private String donorType; // personal or organization
+
     public Long getId() {
         return id;
     }
@@ -30,4 +32,13 @@ public class Donor {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public String getDonorType() {
+        return donorType;
+    }
+
+    public void setDonorType(String donorType) {
+        this.donorType = donorType;
+    }
+
 }

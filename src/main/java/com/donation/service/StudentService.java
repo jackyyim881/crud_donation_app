@@ -6,9 +6,9 @@ import java.util.List;
 public interface StudentService {
     List<Student> getAllStudents();
 
-    Student getStudentById(int id);
+    Student getStudentById(Long id);
 
     void saveStudent(Student student);
 
-    void deleteStudentById(int id);
+    void deleteStudentById(Long id);
 }
