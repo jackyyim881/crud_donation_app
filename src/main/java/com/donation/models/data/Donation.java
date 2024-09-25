@@ -1,11 +1,8 @@
 
 package com.donation.models.data;
 
-import lombok.Data;
-
 import jakarta.persistence.*;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
 @Entity

@@ -1,8 +1,8 @@
 package com.donation.controller.v1.api;
 
 import com.donation.dto.DonationRequest;
+import com.donation.dto.DonationResponse;
 import com.donation.models.data.Donation;
-import com.donation.repository.DonationRepository;
 import com.donation.service.DonationService;
 
 import jakarta.validation.Valid;
@@ -14,69 +14,99 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/donations")
+@RequestMapping("/api/v1/donations")
 public class DonationController {
 
     @Autowired
     private DonationService donationService;
-    @Autowired
-    private DonationRepository donationRepository;
 
-    // 1. Create a new donation
-    // @PostMapping
-    // public ResponseEntity<Donation> createDonation(@Valid @RequestBody Donation
-    // donation) {
-    // Donation createdDonation = donationService.createDonation(donation);
-    // return ResponseEntity.status(201).body(createdDonation); // HTTP 201 Created
-    // }
-
+    /**
+     * Creates a new donation.
+     */
     @PostMapping
-    public ResponseEntity<Donation> createDonation(@Valid @RequestBody DonationRequest donationRequest) {
-        Donation createdDonation = donationService.createDonation(donationRequest);
-        return ResponseEntity.status(201).body(createdDonation); // HTTP 201 Created
+    public ResponseEntity<DonationResponse> createDonation(@Valid @RequestBody DonationRequest donationRequest) {
+        Donation donation = donationService.createDonation(donationRequest);
+        DonationResponse response = mapToResponse(donation);
+        return ResponseEntity.status(201).body(response);
     }
 
+    /**
+     * Retrieves donations with optional filters.
+     */
     @GetMapping
-    public ResponseEntity<List<Donation>> getDonations(
+    public ResponseEntity<List<DonationResponse>> getDonations(
             @RequestParam(required = false) Double minAmount,
             @RequestParam(required = false) Double maxAmount,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            @RequestParam(required = false) Long campaignId,
             @RequestParam(required = false) Long donorId) {
         List<Donation> donations;
-        if (minAmount == null && maxAmount == null && startDate == null && endDate == null && campaignId == null
-                && donorId == null) {
-            // If no filters are provided, get all donations
+        if (minAmount == null && maxAmount == null && startDate == null && endDate == null && donorId == null) {
             donations = donationService.getAllDonations();
         } else {
-            // If filters are provided, use them to get filtered donations
-            donations = donationService.getDonations(minAmount, maxAmount, startDate, endDate, campaignId, donorId);
+            donations = donationService.getDonations(minAmount, maxAmount, startDate, endDate, donorId);
         }
-        return ResponseEntity.ok(donations); // HTTP 200 OK
+        List<DonationResponse> responses = donations.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(responses);
     }
 
-    // 3. Get donation by ID
+    /**
+     * Retrieves a donation by ID.
+     */
     @GetMapping("/{id}")
-    public ResponseEntity<Donation> getDonationById(@PathVariable Long id) {
+    public ResponseEntity<DonationResponse> getDonationById(@PathVariable Long id) {
         Donation donation = donationService.getDonationById(id);
-        return ResponseEntity.ok(donation); // HTTP 200 OK
+        DonationResponse response = mapToResponse(donation);
+        return ResponseEntity.ok(response);
     }
 
-    // 4. Update a donation
+    /**
+     * Updates a donation.
+     */
     @PutMapping("/{id}")
-    public ResponseEntity<Donation> updateDonation(@PathVariable Long id,
-            @Valid @RequestBody Donation donationDetails) {
-        Donation updatedDonation = donationService.updateDonation(id, donationDetails);
-        return ResponseEntity.ok(updatedDonation); // HTTP 200 OK
+    public ResponseEntity<DonationResponse> updateDonation(@PathVariable Long id,
+            @Valid @RequestBody DonationRequest donationRequest) {
+        Donation updatedDonation = donationService.updateDonation(id, donationRequest);
+        DonationResponse response = mapToResponse(updatedDonation);
+        return ResponseEntity.ok(response);
     }
 
-    // 5. Delete a donation
+    /**
+     * Deletes a donation.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDonation(@PathVariable Long id) {
         donationService.deleteDonation(id);
-        return ResponseEntity.noContent().build(); // HTTP 204 No Content
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Utility method to map Donation to DonationResponse.
+     */
+    private DonationResponse mapToResponse(Donation donation) {
+        DonationResponse response = new DonationResponse();
+        response.setId(donation.getId());
+        response.setAmount(donation.getAmount());
+        response.setDonorId(donation.getDonor().getId());
+        response.setDonorName(donation.getDonor().getUser().getUsername()); // Assuming Donor's User has getName()
+        response.setDonationDate(donation.getDonationDate());
+        response.setCampaignId(donation.getNcampaign().getId());
+        response.setCampaignName(donation.getNcampaign().getName());
+
+        if (donation.getNcampaign() != null) {
+            response.setCampaignId(donation.getNcampaign().getId());
+            response.setCampaignName(donation.getNcampaign().getName());
+        }
+
+        if (donation.getPaymentMethod() != null) {
+            response.setPaymentMethodId(donation.getPaymentMethod().getId());
+            response.setPaymentMethodName(donation.getPaymentMethod().getMethodName());
+        }
+        return response;
     }
 }

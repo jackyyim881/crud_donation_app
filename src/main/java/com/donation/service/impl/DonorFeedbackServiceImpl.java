@@ -2,6 +2,7 @@ package com.donation.service.impl;
 
 import com.donation.models.data.DonorFeedback;
 import com.donation.repository.DonorFeedbackRepository;
+import com.donation.repository.DonorRepository;
 import com.donation.service.DonorFeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,8 @@ public class DonorFeedbackServiceImpl implements DonorFeedbackService {
 
     @Autowired
     private DonorFeedbackRepository donorFeedbackRepository;
+    @Autowired
+    private DonorRepository donorRepository;
 
     @Override
     public DonorFeedback createFeedback(DonorFeedback feedback) {
@@ -49,8 +52,14 @@ public class DonorFeedbackServiceImpl implements DonorFeedbackService {
         donorFeedbackRepository.delete(feedback);
     }
 
-    @Override
+    // 根据 donorType 获取反馈
     public List<DonorFeedback> getFeedbacksByDonorType(String donorType) {
-        return donorFeedbackRepository.findByDonorType(donorType);
+        return donorFeedbackRepository.findByDonor_DonorType(donorType);
     }
+
+    @Override
+    public List<String> getAllDonorTypes() {
+        return donorRepository.findDistinctDonorType();
+    }
+
 }

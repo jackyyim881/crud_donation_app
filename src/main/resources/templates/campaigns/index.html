@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Campaign 列表</title>
+    <!-- 引入 Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 可选：配置 Tailwind -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4F46E5", // 自定义主色调
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-gray-100">
+    <header th:replace="fragments/header :: header"></header>
+
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-semibold mb-6">Campaign 列表</h1>
+      <a
+        href="/campaigns/create"
+        class="inline-block bg-primary text-white px-4 py-2 rounded hover:bg-indigo-600 mb-4"
+      >
+        创建新的 Campaign
+      </a>
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white rounded shadow">
+          <thead>
+            <tr>
+              <th
+                class="px-6 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+              >
+                ID
+              </th>
+              <th
+                class="px-6 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+              >
+                名称
+              </th>
+              <th
+                class="px-6 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+              >
+                描述
+              </th>
+              <th
+                class="px-6 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+              >
+                操作
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              th:each="campaign : ${campaigns}"
+              class="hover:bg-gray-100 transition-colors"
+            >
+              <td
+                class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700"
+              >
+                <span th:text="${campaign.id}">1</span>
+              </td>
+              <td
+                class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700"
+              >
+                <span th:text="${campaign.name}">名称</span>
+              </td>
+              <td
+                class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700"
+              >
+                <span th:text="${campaign.description}">描述</span>
+              </td>
+              <td
+                class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700"
+              >
+                <a
+                  th:href="@{/campaigns/{id}(id=${campaign.id})}"
+                  class="text-indigo-600 hover:text-indigo-900 mr-2"
+                  >查看</a
+                >
+                <a
+                  th:href="@{/campaigns/edit/{id}(id=${campaign.id})}"
+                  class="text-yellow-500 hover:text-yellow-700 mr-2"
+                  >编辑</a
+                >
+                <a
+                  th:href="@{/campaigns/delete/{id}(id=${campaign.id})}"
+                  class="text-red-600 hover:text-red-900"
+                  onclick="return confirm('确定要删除吗？')"
+                  >删除</a
+                >
+              </td>
+            </tr>
+            <!-- 如果没有 Campaign，可以添加一个空行提示 -->
+            <tr th:if="${#lists.isEmpty(campaigns)}">
+              <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+                暂无 Campaign 数据。
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

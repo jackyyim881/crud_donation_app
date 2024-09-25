@@ -2,15 +2,17 @@ package com.donation.dto;
 
 import java.time.LocalDate;
 
-public class DonationRequest {
+public class DonationResponse {
 
     private Long id;
-    private Long donorId;
-    private Long studentId;
     private Double amount;
+    private Long donorId;
+    private String donorName;
     private LocalDate donationDate;
     private Long campaignId;
+    private String campaignName;
     private Long paymentMethodId;
+    private String paymentMethodName;
 
     // Getters and Setters
 
@@ -22,6 +24,14 @@ public class DonationRequest {
         this.id = id;
     }
 
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
     public Long getDonorId() {
         return donorId;
     }
@@ -30,20 +40,12 @@ public class DonationRequest {
         this.donorId = donorId;
     }
 
-    public Long getStudentId() {
-        return studentId;
+    public String getDonorName() {
+        return donorName;
     }
 
-    public void setStudentId(Long studentId) {
-        this.studentId = studentId;
-    }
-
-    public Double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
+    public void setDonorName(String donorName) {
+        this.donorName = donorName;
     }
 
     public LocalDate getDonationDate() {
@@ -62,11 +64,27 @@ public class DonationRequest {
         this.campaignId = campaignId;
     }
 
+    public String getCampaignName() {
+        return campaignName;
+    }
+
+    public void setCampaignName(String campaignName) {
+        this.campaignName = campaignName;
+    }
+
     public Long getPaymentMethodId() {
         return paymentMethodId;
     }
 
     public void setPaymentMethodId(Long paymentMethodId) {
         this.paymentMethodId = paymentMethodId;
+    }
+
+    public String getPaymentMethodName() {
+        return paymentMethodName;
+    }
+
+    public void setPaymentMethodName(String paymentMethodName) {
+        this.paymentMethodName = paymentMethodName;
     }
 }

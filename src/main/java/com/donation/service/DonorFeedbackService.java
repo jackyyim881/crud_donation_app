@@ -17,4 +17,5 @@ public interface DonorFeedbackService {
 
     List<DonorFeedback> getFeedbacksByDonorType(String donorType);
 
+    List<String> getAllDonorTypes();
 }

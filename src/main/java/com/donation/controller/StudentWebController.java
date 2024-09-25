@@ -17,7 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 @Controller
-@RequestMapping("/web/students")
+@RequestMapping("/students")
 public class StudentWebController {
 
     private final StudentService studentService;

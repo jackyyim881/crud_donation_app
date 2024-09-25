@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Donor Feedback 列表</title>
+    <!-- 引入 Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4F46E5", // 自定义主色调
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-semibold mb-6">Donor Feedback 列表</h1>
+
+      <!-- 过滤选项 -->
+      <form method="get" action="/feedbacks" class="mb-4 flex items-center">
+        <label for="donorType" class="mr-2 text-gray-700"
+          >过滤 by Donor Type:</label
+        >
+        <select
+          id="donorType"
+          name="donorType"
+          class="border border-gray-300 rounded px-3 py-2 mr-4"
+        >
+          <option value="">所有类型</option>
+          <th:block th:each="type : ${donorTypes}">
+            <option
+              th:value="${type}"
+              th:text="${type}"
+              th:selected="${type == selectedDonorType}"
+            ></option>
+          </th:block>
+        </select>
+        <button
+          type="submit"
+          class="bg-primary text-white px-4 py-2 rounded hover:bg-indigo-600"
+        >
+          过滤
+        </button>
+      </form>
+
+      <a
+        href="/feedbacks/create"
+        class="inline-block bg-primary text-white px-4 py-2 rounded hover:bg-indigo-600 mb-4"
+      >
+        创建新的 Feedback
+      </a>
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white rounded shadow">
+          <thead>
+            <tr>
+              <th
+                class="px-6 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+              >
+                ID
+              </th>
+              <th
+                class="px-6 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+              >
+                Donor Type
+              </th>
+              <th
+                class="px-6 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+              >
+                评论
+              </th>
+              <th
+                class="px-6 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+              >
+                操作
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              th:each="feedback : ${feedbacks}"
+              class="hover:bg-gray-100 transition-colors"
+            >
+              <td
+                class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700"
+              >
+                <span th:text="${feedback.id}">1</span>
+              </td>
+              <td
+                class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700"
+              >
+                <span th:text="${feedback.donorType}">类型</span>
+              </td>
+              <td
+                class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700"
+              >
+                <span th:text="${feedback.comments}">评论</span>
+              </td>
+              <td
+                class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700"
+              >
+                <a
+                  th:href="@{/feedbacks/{id}(id=${feedback.id})}"
+                  class="text-indigo-600 hover:text-indigo-900 mr-2"
+                  >查看</a
+                >
+                <a
+                  th:href="@{/feedbacks/edit/{id}(id=${feedback.id})}"
+                  class="text-yellow-500 hover:text-yellow-700 mr-2"
+                  >编辑</a
+                >
+                <a
+                  th:href="@{/feedbacks/delete/{id}(id=${feedback.id})}"
+                  class="text-red-600 hover:text-red-900"
+                  onclick="return confirm('确定要删除吗？')"
+                  >删除</a
+                >
+              </td>
+            </tr>
+            <!-- 如果没有 Feedback，可以添加一个空行提示 -->
+            <tr th:if="${#lists.isEmpty(feedbacks)}">
+              <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+                暂无 Donor Feedback 数据。
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

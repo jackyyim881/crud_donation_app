@@ -14,4 +14,6 @@ public interface DonorFeedbackRepository extends JpaRepository<DonorFeedback, In
     // Custom query to find feedbacks by donor type (personal or organization)
     @Query("SELECT df FROM DonorFeedback df WHERE df.donor.donorType = :donorType")
     List<DonorFeedback> findByDonorType(@Param("donorType") String donorType);
+
+    List<DonorFeedback> findByDonor_DonorType(String donorType);
 }
