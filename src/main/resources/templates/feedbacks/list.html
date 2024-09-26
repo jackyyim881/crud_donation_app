@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <title>Feedback List</title>
+  </head>
+  <body class="bg-gray-100 text-gray-900">
+    <header th:replace="fragments/header :: header"></header>
+
+    <div class="container mx-auto p-4">
+      <h1 class="text-2xl font-bold mb-4">Feedback List</h1>
+
+      <form
+        th:action="@{/feedbacks/donor-type}"
+        method="get"
+        class="flex items-center space-x-4 mb-4"
+      >
+        <label for="donorType" class="block text-sm font-medium text-gray-700"
+          >Filter by Donor Type:</label
+        >
+        <select
+          name="type"
+          id="donorType"
+          class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+          required
+        >
+          <option value="" disabled selected>Select type</option>
+          <option value="personal" th:selected="${donorType == 'personal'}">
+            Personal
+          </option>
+          <option
+            value="organization"
+            th:selected="${donorType == 'organization'}"
+          >
+            Organization
+          </option>
+        </select>
+        <button
+          type="submit"
+          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+          Filter
+        </button>
+        <a
+          href="/feedbacks"
+          class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >Reset</a
+        >
+      </form>
+
+      <a
+        th:href="@{/feedbacks/add}"
+        class="inline-flex items-center px-4 py-2 mb-4 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+        >Add New Feedback</a
+      >
+
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th
+                scope="col"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                ID
+              </th>
+              <th
+                scope="col"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Message
+              </th>
+              <th
+                scope="col"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr th:each="feedback : ${feedbacks}">
+              <td class="px-6 py-4 whitespace-nowrap" th:text="${feedback.id}">
+                ID
+              </td>
+              <td
+                class="px-6 py-4 whitespace-nowrap"
+                th:text="${#strings.abbreviate(feedback.message, 50)}"
+              >
+                Message
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <a
+                  th:href="@{/feedbacks/edit/{id}(id=${feedback.id})}"
+                  class="text-indigo-600 hover:text-indigo-900"
+                  >Edit</a
+                >
+                <a
+                  th:href="@{/feedbacks/delete/{id}(id=${feedback.id})}"
+                  onclick="return confirm('Are you sure?')"
+                  class="text-red-600 hover:text-red-900 ml-4"
+                  >Delete</a
+                >
+                <a
+                  th:href="@{/feedbacks/{id}(id=${feedback.id})}"
+                  class="text-blue-600 hover:text-blue-900 ml-4"
+                  >View</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

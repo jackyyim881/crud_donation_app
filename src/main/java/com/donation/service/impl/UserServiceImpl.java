@@ -41,6 +41,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
+    @Override
+    public void delete(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    @Override
+    public User getDonorById(Long id) {
+        return userRepository.findById(id);
+    }
+
+    @Override
 
     public List<User> findAll() { // 修改方法簽名
         return userRepository.findAll(); // 返回 List<User>

@@ -36,7 +36,7 @@ public class StudentWebController {
     @GetMapping
     public String listStudents(Model model) {
         model.addAttribute("students", studentService.getAllStudents());
-        return "list";
+        return "students/list";
     }
 
     /**
@@ -46,7 +46,7 @@ public class StudentWebController {
     public String showAddForm(Model model) {
         Student student = new Student();
         model.addAttribute("student", student);
-        return "addform";
+        return "students/addform";
     }
 
     /**
@@ -59,7 +59,7 @@ public class StudentWebController {
             Model model) {
         // Check for validation errors
         if (result.hasErrors()) {
-            return "addform";
+            return "students/addform";
         }
 
         // Handle image upload
@@ -80,7 +80,7 @@ public class StudentWebController {
                 student.setStudentImage(Files.readAllBytes(filePath));
             } catch (IOException e) {
                 model.addAttribute("imageError", "Failed to upload image.");
-                return "addform";
+                return "students/addform";
             }
         }
 
@@ -88,7 +88,7 @@ public class StudentWebController {
         studentService.saveStudent(student);
 
         // Redirect to the list
-        return "redirect:/web/students";
+        return "redirect:/students";
     }
 
     /**
@@ -100,10 +100,10 @@ public class StudentWebController {
         if (student == null) {
             // Handle student not found
             model.addAttribute("errorMessage", "Student not found.");
-            return "redirect:/web/students";
+            return "redirect:/students";
         }
         model.addAttribute("student", student);
-        return "editform";
+        return "students/editform";
     }
 
     /**
@@ -117,7 +117,7 @@ public class StudentWebController {
             Model model) {
         // Check for validation errors
         if (result.hasErrors()) {
-            return "editform";
+            return "students/editform";
         }
 
         // Ensure the student exists
@@ -125,7 +125,7 @@ public class StudentWebController {
         if (existing == null) {
             // Handle student not found
             model.addAttribute("errorMessage", "Student not found.");
-            return "redirect:/web/students";
+            return "redirect:/students";
         }
 
         // Handle image upload
@@ -146,7 +146,7 @@ public class StudentWebController {
                 student.setStudentImage(Files.readAllBytes(filePath));
             } catch (IOException e) {
                 model.addAttribute("imageError", "Failed to upload image.");
-                return "editform";
+                return "student/editform";
             }
         } else {
             // If no new image uploaded, retain existing image
@@ -164,7 +164,7 @@ public class StudentWebController {
         studentService.saveStudent(existing);
 
         // Redirect to the list
-        return "redirect:/web/students";
+        return "redirect:/students";
     }
 
     /**
@@ -176,10 +176,10 @@ public class StudentWebController {
         if (student == null) {
             // Handle student not found
             model.addAttribute("errorMessage", "Student not found.");
-            return "redirect:/web/students";
+            return "redirect:/students";
         }
 
         studentService.deleteStudentById(id);
-        return "redirect:/web/students";
+        return "redirect:/students";
     }
 }

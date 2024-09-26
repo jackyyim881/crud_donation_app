@@ -1,36 +1,35 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
-    <title>Add Student</title>
+    <title>Edit Student</title>
     <meta charset="UTF-8" />
-    <!-- Tailwind CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
+
   <body>
-    <div th:replace="fragments/header :: header"></div>
+    <header th:replace="fragments/header :: header"></header>
 
     <div class="container mx-auto mt-5">
-      <h1 class="text-2xl font-bold mb-5">Add New Student</h1>
+      <h1 class="text-2xl font-bold mb-5">Edit Student</h1>
 
       <form
-        th:action="@{/web/students/add}"
+        th:action="@{'/students/edit/' + ${student.id}}"
         th:object="${student}"
         method="post"
-        class="border p-2 rounded-md"
         enctype="multipart/form-data"
+        class="space-y-4 border p-2 rounded-md"
       >
+        <!-- CSRF Token -->
+
         <!-- Name Field -->
-        <div class="mb-4">
+        <div>
           <label for="name" class="block text-sm font-medium text-gray-700"
             >Name:</label
           >
           <input
             type="text"
             th:field="*{name}"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             id="name"
           />
           <div
@@ -41,14 +40,14 @@
         </div>
 
         <!-- Age Field -->
-        <div class="mb-4">
+        <div>
           <label for="age" class="block text-sm font-medium text-gray-700"
             >Age:</label
           >
           <input
             type="number"
             th:field="*{age}"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             id="age"
             min="1"
           />
@@ -60,14 +59,14 @@
         </div>
 
         <!-- School Field -->
-        <div class="mb-4">
+        <div>
           <label for="school" class="block text-sm font-medium text-gray-700"
             >School:</label
           >
           <input
             type="text"
             th:field="*{school}"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="mt-1 block p-2 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             id="school"
           />
           <div
@@ -78,13 +77,13 @@
         </div>
 
         <!-- Bio Field -->
-        <div class="mb-4">
+        <div>
           <label for="bio" class="block text-sm font-medium text-gray-700"
             >Bio:</label
           >
           <textarea
             th:field="*{bio}"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="mt-1 block p-2 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             id="bio"
             rows="4"
           ></textarea>
@@ -95,18 +94,35 @@
           ></div>
         </div>
 
+        <!-- Existing Image Display -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700"
+            >Current Image:</label
+          >
+          <div th:if="${student.studentImage != null}">
+            <img
+              th:src="@{'data:image/jpeg;base64,' + ${T(org.apache.tomcat.util.codec.binary.Base64).encodeBase64String(student.studentImage)}}"
+              alt="Student Image"
+              class="w-36 h-36 rounded-md shadow-sm"
+            />
+          </div>
+          <div th:if="${student.studentImage == null}">
+            <span class="text-gray-500 font-medium">No Image Available</span>
+          </div>
+        </div>
+
         <!-- Image Upload Field -->
-        <div class="mb-4">
+        <div>
           <label
             for="studentImageFile"
             class="block text-sm font-medium text-gray-700"
-            >Student Image:</label
+            >Change Image:</label
           >
           <input
             type="file"
             name="studentImageFile"
             accept="image/*"
-            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             id="studentImageFile"
           />
           <div
@@ -117,17 +133,19 @@
         </div>
 
         <!-- Submit Button -->
-        <button
-          type="submit"
-          class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Add Student
-        </button>
-        <a
-          href="/students"
-          class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ml-2"
-          >Cancel</a
-        >
+        <div class="flex space-x-2">
+          <button
+            type="submit"
+            class="bg-green-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-green-600"
+          >
+            Update Student
+          </button>
+          <a
+            href="/web/students"
+            class="bg-gray-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-gray-600"
+            >Cancel</a
+          >
+        </div>
       </form>
     </div>
   </body>
