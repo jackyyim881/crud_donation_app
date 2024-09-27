@@ -1,0 +1,161 @@
+<!-- src/main/resources/templates/contact.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="fragments/head :: head">
+    <title th:text="${title}">Contact - Donation App</title>
+  </head>
+  <body>
+    <header th:replace="fragments/header :: header"></header>
+    <div th:fragment="body">
+      <!-- Contact Section -->
+      <section class="bg-gray-100 py-12">
+        <div class="container mx-auto px-4">
+          <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-gray-800">Get in Touch</h2>
+            <p class="mt-4 text-lg text-gray-600">
+              We'd love to hear from you. Reach out to us below.
+            </p>
+          </div>
+          <div class="flex flex-col lg:flex-row">
+            <!-- Contact Form -->
+            <div class="lg:w-2/3 lg:pr-8">
+              <form
+                id="contactForm"
+                th:action="@{/contact}"
+                method="post"
+                class="bg-white p-8 rounded-lg shadow-md"
+              >
+                <div class="mb-4">
+                  <label
+                    for="name"
+                    class="block text-gray-700 font-semibold mb-2"
+                    >Name</label
+                  >
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                  />
+                </div>
+                <div class="mb-4">
+                  <label
+                    for="email"
+                    class="block text-gray-700 font-semibold mb-2"
+                    >Email</label
+                  >
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                  />
+                </div>
+                <div class="mb-4">
+                  <label
+                    for="subject"
+                    class="block text-gray-700 font-semibold mb-2"
+                    >Subject</label
+                  >
+                  <input
+                    type="text"
+                    id="subject"
+                    name="subject"
+                    required
+                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                  />
+                </div>
+                <div class="mb-4">
+                  <label
+                    for="message"
+                    class="block text-gray-700 font-semibold mb-2"
+                    >Message</label
+                  >
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows="5"
+                    required
+                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                  ></textarea>
+                </div>
+                <button
+                  type="submit"
+                  class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition"
+                >
+                  Send Message
+                </button>
+              </form>
+              <!-- Success/Error Messages -->
+              <div id="formMessage" class="mt-4 text-center"></div>
+            </div>
+            <!-- Contact Information -->
+            <div class="lg:w-1/3 lg:pl-8 mt-8 lg:mt-0">
+              <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">
+                  Our Contact Information
+                </h3>
+                <p class="text-gray-700 mb-4">
+                  <strong>Address:</strong><br />
+                  123 Donation Street,<br />
+                  Charity City, Country
+                </p>
+                <p class="text-gray-700 mb-4">
+                  <strong>Email:</strong><br />
+                  contact@donationapp.com
+                </p>
+                <p class="text-gray-700 mb-4">
+                  <strong>Phone:</strong><br />
+                  +1 (234) 567-8901
+                </p>
+                <div class="flex space-x-4 mt-6">
+                  <a href="#" class="text-blue-500 hover:text-blue-700">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-6 w-6"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M19.633 7.997c.006-.237.008-.475.008-.714 0-7.071-5.73-12.8-12.8-12.8S-.967 0.212-.967 7.283c0 .356.04.71.117 1.06C-3.068 9.482-4 11.516-4 13.717v2.542c0 2.201.932 4.235 2.884 5.644.076.35.117.704.117 1.06 0 7.071 5.73 12.8 12.8 12.8s12.8-5.73 12.8-12.8c0-.356-.04-.71-.117-1.06 1.952-1.409 2.884-3.443 2.884-5.644v-2.542c0-2.201-.932-4.235-2.884-5.644-1.952-1.409-4.037-2.17-6.216-2.207zM12 19.967c-3.374 0-6.136-2.762-6.136-6.136S8.626 7.695 12 7.695s6.136 2.762 6.136 6.136-2.762 6.136-6.136 6.136z"
+                      />
+                      <path
+                        d="M12 9.967c-1.836 0-3.333 1.497-3.333 3.333S10.164 16.633 12 16.633s3.333-1.497 3.333-3.333S13.836 9.967 12 9.967z"
+                      />
+                    </svg>
+                  </a>
+                  <a href="#" class="text-blue-500 hover:text-blue-700">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-6 w-6"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M12 0C5.371 0 0 5.371 0 12c0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.016-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.744.083-.729.083-.729 1.205.085 1.838 1.237 1.838 1.237 1.07 1.834 2.807 1.304 3.492.997.108-.775.42-1.305.763-1.605-2.665-.305-5.466-1.332-5.466-5.931 0-1.31.469-2.381 1.235-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.3 1.23a11.49 11.49 0 013.003-.404c1.02.005 2.045.138 3.003.404 2.28-1.552 3.285-1.23 3.285-1.23.653 1.652.242 2.873.118 3.176.77.84 1.233 1.911 1.233 3.221 0 4.609-2.803 5.624-5.475 5.921.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .321.216.694.825.576C20.565 21.796 24 17.303 24 12c0-6.629-5.371-12-12-12z"
+                      />
+                    </svg>
+                  </a>
+                  <a href="#" class="text-blue-500 hover:text-blue-700">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-6 w-6"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M12 0C5.373 0 0 5.373 0 12c0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.016-2.04-3.338.725-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.744.083-.729.083-.729 1.205.085 1.838 1.237 1.838 1.237 1.07 1.834 2.807 1.304 3.492.997.108-.775.42-1.305.763-1.605-2.665-.305-5.466-1.332-5.466-5.931 0-1.31.469-2.381 1.235-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.3 1.23a11.49 11.49 0 013.003-.404c1.02.005 2.045.138 3.003.404 2.28-1.552 3.285-1.23 3.285-1.23.653 1.652.242 2.873.118 3.176.77.84 1.233 1.911 1.233 3.221 0 4.609-2.803 5.624-5.475 5.921.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .321.216.694.825.576C20.565 21.796 24 17.303 24 12c0-6.627-5.373-12-12-12z"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

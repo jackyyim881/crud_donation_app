@@ -2,23 +2,33 @@ package com.donation.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                ex.getMessage(),
-                LocalDateTime.now());
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    public String handleResourceNotFound(ResourceNotFoundException ex, Model model) {
+        model.addAttribute("errorMessage", ex.getMessage());
+        return "error-404"; // Ensure error-404.html exists in templates
     }
 
-    // Handle other exceptions as needed
+    /**
+     * Handles all other exceptions by directing to a generic error page.
+     *
+     * @param ex    the Exception
+     * @param model the Model to pass attributes to the view
+     * @return the name of the error template
+     */
+    @ExceptionHandler(Exception.class)
+    public String handleAllExceptions(Exception ex, Model model) {
+        model.addAttribute("errorMessage", "An unexpected error occurred. Please try again later.");
+        // Optionally, log the exception
+        // logger.error("An unexpected error occurred", ex);
+        return "error"; // Ensure error.html exists in templates
+    }
 
     // Inner class for error responses
     public static class ErrorResponse {

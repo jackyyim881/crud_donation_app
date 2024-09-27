@@ -1,0 +1,232 @@
+<!-- src/main/resources/templates/index.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="fragments/head :: head">
+    <title th:text="${title}">Home - Donation App</title>
+  </head>
+  <style>
+    .blur-row {
+      filter: blur(5px);
+      pointer-events: none; /* Prevent interaction with blurred rows */
+    }
+
+    /* Optional: Add hover effect to reveal the row */
+    .blur-row:hover {
+      filter: none;
+      pointer-events: auto;
+    }
+  </style>
+  <body class="flex flex-col min-h-screen">
+    <header th:replace="fragments/header :: header"></header>
+    <main class="flex-grow container mx-auto p-4">
+      <div th:fragment="body" class=""></div>
+
+      <!-- Hero Section -->
+      <section class="text-center p-8 rounded-lg">
+        <h2 class="text-4xl font-bold mb-4">Support Our Cause</h2>
+        <p class="text-lg mb-6">
+          Your donations help us make a significant impact.
+        </p>
+        <a
+          href="/donate"
+          class="bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-600 transition"
+          >Donate Now</a
+        >
+      </section>
+      <div
+        id="map"
+        style="width: 100%; height: 500px"
+        class="shadow-md rounded-md border-4 border-gray-200 mt-8"
+      ></div>
+
+      <!-- Recent Donations Section -->
+      <section class="mt-10">
+        <h3 class="text-3xl font-bold text-center mb-4">Recent Donations</h3>
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-white rounded-lg shadow">
+            <thead>
+              <tr>
+                <th
+                  class="py-2 px-4 border-b bg-gray-200 text-left text-sm font-semibold text-gray-700"
+                >
+                  ID
+                </th>
+                <th
+                  class="py-2 px-4 border-b bg-gray-200 text-left text-sm font-semibold text-gray-700"
+                >
+                  Amount
+                </th>
+                <th
+                  class="py-2 px-4 border-b bg-gray-200 text-left text-sm font-semibold text-gray-700"
+                >
+                  Donor Name
+                </th>
+                <th
+                  class="py-2 px-4 border-b bg-gray-200 text-left text-sm font-semibold text-gray-700"
+                >
+                  Date
+                </th>
+                <th
+                  class="py-2 px-4 border-b bg-gray-200 text-left text-sm font-semibold text-gray-700"
+                >
+                  Campaign
+                </th>
+                <th
+                  class="py-2 px-4 border-b bg-gray-200 text-left text-sm font-semibold text-gray-700"
+                >
+                  Payment Method
+                </th>
+              </tr>
+            </thead>
+            <tbody id="donationsTableBody">
+              <!-- Donations will be dynamically loaded here -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <!-- jQuery via CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Franken-UI JS (if needed) -->
+
+    <script>
+      const map = new maplibregl.Map({
+        container: "map",
+        style: "https://tiles.openfreemap.org/styles/liberty",
+        center: [114.1694, 22.3193], // Centered over Kowloon, Hong Kong
+        zoom: 9.5,
+      });
+
+      map.addControl(new maplibregl.NavigationControl());
+
+      // Student data based on the database
+      const students = [
+        {
+          id: 1,
+          name: "jameswong",
+          address: "Central, Hong Kong",
+          coordinates: [114.1694, 22.2833],
+        },
+        {
+          id: 2,
+          name: "sarahchan",
+          address: "Tsim Sha Tsui, Hong Kong",
+          coordinates: [114.1733, 22.2973],
+        },
+        {
+          id: 3,
+          name: "michaellee",
+          address: "Causeway Bay, Hong Kong",
+          coordinates: [114.182, 22.2798],
+        },
+        {
+          id: 4,
+          name: "emilyho",
+          address: "Mong Kok, Hong Kong",
+          coordinates: [114.1675, 22.3193],
+        },
+        {
+          id: 5,
+          name: "davidcheung",
+          address: "Wan Chai, Hong Kong",
+          coordinates: [114.1796, 22.276],
+        },
+        {
+          id: 6,
+          name: "amykwok",
+          address: "Shatin, Hong Kong",
+          coordinates: [114.2, 22.3964],
+        },
+        {
+          id: 7,
+          name: "benjaminng",
+          address: "Kowloon Tong, Hong Kong",
+          coordinates: [114.1789, 22.3389],
+        },
+        {
+          id: 8,
+          name: "jessicalau",
+          address: "Tseung Kwan O, Hong Kong",
+          coordinates: [114.2522, 22.308],
+        },
+        {
+          id: 9,
+          name: "alexchow",
+          address: "Tsuen Wan, Hong Kong",
+          coordinates: [114.1084, 22.3736],
+        },
+        {
+          id: 10,
+          name: "karenli",
+          address: "Tuen Mun, Hong Kong",
+          coordinates: [113.9764, 22.3964],
+        },
+      ];
+
+      // Group students by area
+      const areas = [
+        {
+          name: "Central",
+          coordinates: [114.1694, 22.2833],
+          students: students.filter((student) =>
+            student.address.includes("Central")
+          ),
+        },
+        {
+          name: "Kowloon Tong",
+          coordinates: [114.1789, 22.3389],
+          students: students.filter((student) =>
+            student.address.includes("Kowloon Tong")
+          ),
+        },
+        {
+          name: "Shatin",
+          coordinates: [114.2, 22.3964],
+          students: students.filter((student) =>
+            student.address.includes("Shatin")
+          ),
+        },
+        {
+          name: "Tsim Sha Tsui",
+          coordinates: [114.1733, 22.2973],
+          students: students.filter((student) =>
+            student.address.includes("Tsim Sha Tsui")
+          ),
+        },
+        {
+          name: "Causeway Bay",
+          coordinates: [114.182, 22.2798],
+          students: students.filter((student) =>
+            student.address.includes("Causeway Bay")
+          ),
+        },
+      ];
+
+      // Add markers and popups for each area
+      areas.forEach((area) => {
+        const el = document.createElement("div");
+        el.style.backgroundImage = `url(https://static.vecteezy.com/system/resources/previews/000/350/111/non_2x/vector-male-student-icon.jpg)`;
+        el.style.width = "50px";
+        el.style.height = "50px";
+        el.style.backgroundSize = "100%";
+
+        // Create a marker for each area
+        new maplibregl.Marker({ element: el })
+          .setLngLat(area.coordinates)
+          .setPopup(
+            new maplibregl.Popup({ offset: 25 }) // add popups
+              .setHTML(
+                `<h3>${area.name}</h3><p>Number of students: ${area.students.length}</p>`
+              )
+          )
+          .addTo(map);
+      });
+    </script>
+
+    <!-- Include your custom JS -->
+    <script src="/js/app.js"></script>
+  </body>
+</html>
