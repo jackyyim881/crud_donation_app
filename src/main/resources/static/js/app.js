@@ -27,17 +27,19 @@ $(document).ready(function () {
           const blurClass = isBlurred ? "blur-row" : "";
 
           const row = `
-            <tr class="hover:bg-gray-100 ${blurClass}">
-              <td class="py-2 px-4 border-b">${donation.id}</td>
-              <td class="py-2 px-4 border-b">$${donation.amount.toFixed(2)}</td>
-              <td class="py-2 px-4 border-b">${donation.donorName}</td>
-              <td class="py-2 px-4 border-b">${new Date(
+            <tr class="hover:bg-gray-50 transition-colors duration-200 ${blurClass}">
+              <td class="py-4 px-6 whitespace-nowrap">${donation.id}</td>
+              <td class="py-4 px-6 whitespace-nowrap">$${donation.amount.toFixed(
+                2
+              )}</td>
+              <td class="py-4 px-6 whitespace-nowrap">${donation.donorName}</td>
+              <td class="py-4 px-6 whitespace-nowrap">${new Date(
                 donation.donationDate
               ).toLocaleDateString()}</td>
-              <td class="py-2 px-4 border-b">${
+              <td class="py-4 px-6 whitespace-nowrap">${
                 donation.campaignName || "N/A"
               }</td>
-              <td class="py-2 px-4 border-b">${
+              <td class="py-4 px-6 whitespace-nowrap">${
                 donation.paymentMethodName || "N/A"
               }</td>
             </tr>

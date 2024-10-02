@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Campaign Donations</title>
+    <!-- TailwindCSS CDN -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      /* Optional: Custom styles */
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      /* Loader Styles */
+      .loader {
+        border-top-color: #3498db;
+        animation: spin 1s infinite linear;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100">
+    <!-- Loading Spinner -->
+    <header th:replace="fragments/header :: header"></header>
+    <div
+      id="loading"
+      class="hidden fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50"
+    >
+      <div
+        class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"
+      ></div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-6 text-center">
+        Campaign Donations Overview
+      </h1>
+      <div class="max-w-4xl mx-auto bg-white p-8 rounded shadow">
+        <div class="mb-4">
+          <label for="campaignSelect" class="block text-gray-700"
+            >Select Campaign:</label
+          >
+          <select id="campaignSelect" class="w-full mt-2 p-2 border rounded">
+            <option value="">-- Select a Campaign --</option>
+            <!-- Options will be populated dynamically -->
+          </select>
+        </div>
+        <canvas id="campaignChart"></canvas>
+      </div>
+    </div>
+
+    <!-- jQuery Script -->
+    <script>
+      $(document).ready(function () {
+        // Show loader on AJAX start and hide on complete
+        $(document)
+          .ajaxStart(function () {
+            $("#loading").removeClass("hidden");
+          })
+          .ajaxStop(function () {
+            $("#loading").addClass("hidden");
+          });
+
+        // Global variable to store campaigns data
+        var campaignsData = [];
+
+        // Function to fetch campaigns and populate the dropdown
+        function fetchCampaigns() {
+          $.ajax({
+            url: "/api/v1/campaigns", // Ensure this endpoint matches your backend
+            method: "GET",
+            success: function (data) {
+              campaignsData = data; // Store data globally
+              populateCampaignDropdown(data);
+              renderCampaignChart(data); // Render the chart with all campaigns initially
+            },
+            error: function () {
+              alert("Failed to load campaign data.");
+            },
+          });
+        }
+
+        // Function to populate the campaign dropdown
+        function populateCampaignDropdown(data) {
+          const campaignSelect = $("#campaignSelect");
+          campaignSelect.empty();
+          campaignSelect.append(new Option("-- Select a Campaign --", ""));
+          data.forEach(function (campaign) {
+            campaignSelect.append(new Option(campaign.name, campaign.id));
+          });
+        }
+
+        // Initialize the chart variable
+        var campaignChart;
+
+        // Function to render the campaign chart
+        function renderCampaignChart(data, selectedCampaignId = null) {
+          var filteredData = data;
+          if (selectedCampaignId) {
+            filteredData = data.filter(function (campaign) {
+              return campaign.id == selectedCampaignId;
+            });
+          }
+
+          var campaignNames = filteredData.map(function (campaign) {
+            return campaign.name;
+          });
+
+          var currentAmounts = filteredData.map(function (campaign) {
+            return parseFloat(campaign.currentAmount);
+          });
+
+          var ctx = document.getElementById("campaignChart").getContext("2d");
+
+          // If a chart already exists, destroy it before creating a new one
+          if (campaignChart) {
+            campaignChart.destroy();
+          }
+
+          campaignChart = new Chart(ctx, {
+            type: "bar",
+            data: {
+              labels: campaignNames,
+              datasets: [
+                {
+                  label: "Current Donation (USD)",
+                  data: currentAmounts,
+                  backgroundColor: "rgba(75, 192, 192, 0.6)",
+                  borderColor: "rgba(75, 192, 192, 1)",
+                  borderWidth: 1,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: {
+                    display: true,
+                    text: "Amount (USD)",
+                  },
+                },
+                x: {
+                  title: {
+                    display: true,
+                    text: "Campaigns",
+                  },
+                },
+              },
+              plugins: {
+                legend: {
+                  display: false, // Hide legend since there's only one dataset
+                },
+                tooltip: {
+                  enabled: true,
+                },
+                title: {
+                  display: false,
+                  text: "Campaign Current Donations",
+                },
+              },
+            },
+          });
+        }
+
+        // Fetch campaigns and populate the dropdown on page load
+        fetchCampaigns();
+
+        // Update the chart when a campaign is selected
+        $("#campaignSelect").change(function () {
+          var selectedCampaignId = $(this).val();
+          if (selectedCampaignId) {
+            renderCampaignChart(campaignsData, selectedCampaignId);
+          } else {
+            renderCampaignChart(campaignsData); // Render all campaigns if no selection
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

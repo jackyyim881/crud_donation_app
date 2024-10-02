@@ -27,15 +27,19 @@ $(document).ready(function () {
                             <td class="py-2 px-4 border-b">${
                               receipt.donation.paymentMethod.methodName || "N/A"
                             }</td>
-                            <td class="py-2 px-4 border-b">
-                                <a href="/receipts/edit.html?id=${
-                                  receipt.id
-                                }" class="text-blue-500 hover:text-blue-700">Edit</a>
-                                |
-                                <a href="#" class="text-red-500 hover:text-red-700 delete-receipt" data-id="${
-                                  receipt.id
-                                }">Delete</a>
-                            </td>
+                        <td class="py-2 px-4 border-b">
+                            <a href="/receipts/edit.html?id=${
+                              receipt.id
+                            }" class="text-blue-500 hover:text-blue-700">Edit</a>
+                            |
+                            <a href="#" class="text-red-500 hover:text-red-700 delete-receipt" data-id="${
+                              receipt.id
+                            }">Delete</a>
+                            |
+                            <a href="#" class="text-green-500 hover:text-green-700 download-receipt" data-id="${
+                              receipt.id
+                            }">Download PDF</a>
+                        </td>
                         </tr>
                     `;
           tableBody.append(row);
@@ -47,6 +51,32 @@ $(document).ready(function () {
       },
     });
   }
+
+  // Handle Download Receipt
+  $(document).on("click", ".download-receipt", function (e) {
+    e.preventDefault();
+    const receiptId = $(this).data("id");
+
+    $.ajax({
+      url: `/api/v1/receipts/${receiptId}/pdf`,
+      method: "GET",
+      xhrFields: {
+        responseType: "blob", // Important to handle the binary response
+      },
+      success: function (data, status, xhr) {
+        // Create a Blob from the response data
+        const blob = new Blob([data], { type: "application/pdf" });
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.download = `receipt_${receiptId}.pdf`;
+        link.click();
+      },
+      error: function (err) {
+        alert("Error downloading receipt.");
+        console.error(err);
+      },
+    });
+  });
 
   // Initial fetch on index.html
   if ($("#receiptsTableBody").length) {

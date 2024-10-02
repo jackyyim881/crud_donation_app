@@ -1,57 +1,82 @@
-<!-- src/main/resources/templates/users/list.html -->
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <title>Users List</title>
+    <!-- Tailwind CSS CDN -->
     <link
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
       rel="stylesheet"
     />
   </head>
-  <body>
-    <div th:replace="fragments/header :: header"></div>
-    <div class="container mx-auto mt-5">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-2xl font-semibold">Users</h2>
-        <a href="/users/create" class="bg-blue-500 text-white px-4 py-2 rounded"
-          >Create New User</a
+  <body class="bg-gray-100 font-sans min-h-screen">
+    <!-- Include the header fragment -->
+    <header th:replace="fragments/header :: header"></header>
+
+    <!-- Main Container -->
+    <div class="container mx-auto px-6 py-12">
+      <!-- Page Title and Create Button -->
+      <div class="flex justify-between items-center mb-8">
+        <h2 class="text-3xl font-bold text-gray-800">Users</h2>
+        <a
+          href="/users/create"
+          class="bg-blue-600 text-white font-semibold px-5 py-3 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 transform hover:scale-105"
         >
+          Create New User
+        </a>
       </div>
-      <table class="min-w-full bg-white">
-        <thead>
-          <tr>
-            <th class="py-2">ID</th>
-            <th class="py-2">Username</th>
-            <th class="py-2">Email</th>
-            <th class="py-2">Phone</th>
-            <th class="py-2">Address</th>
-            <th class="py-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="user : ${users}">
-            <td class="border px-4 py-2" th:text="${user.id}"></td>
-            <td class="border px-4 py-2" th:text="${user.username}"></td>
-            <td class="border px-4 py-2" th:text="${user.email}"></td>
-            <td class="border px-4 py-2" th:text="${user.phoneNumber}"></td>
-            <td class="border px-4 py-2" th:text="${user.address}"></td>
-            <td class="border px-4 py-2">
-              <a
-                th:href="@{'/users/edit/' + ${user.id}}"
-                class="bg-yellow-500 text-white px-2 py-1 rounded mr-2"
-                >Edit</a
-              >
-              <a
-                th:href="@{'/users/delete/' + ${user.id}}"
-                class="bg-red-500 text-white px-2 py-1 rounded"
-                onclick="return confirm('Are you sure you want to delete this user?');"
-                >Delete</a
-              >
-            </td>
-          </tr>
-        </tbody>
-      </table>
+
+      <!-- Users Table -->
+      <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <table class="min-w-full leading-normal">
+          <thead>
+            <tr class="bg-gray-800 text-white uppercase text-sm leading-normal">
+              <th class="py-3 px-6 text-left">ID</th>
+              <th class="py-3 px-6 text-left">Username</th>
+              <th class="py-3 px-6 text-left">Email</th>
+              <th class="py-3 px-6 text-left">Phone</th>
+              <th class="py-3 px-6 text-left">Address</th>
+              <th class="py-3 px-6 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="text-gray-700 text-sm">
+            <tr
+              th:each="user : ${users}"
+              class="border-b border-gray-200 hover:bg-gray-100 transition duration-150"
+            >
+              <td class="py-4 px-6 text-left" th:text="${user.id}">1</td>
+              <td class="py-4 px-6 text-left" th:text="${user.username}">
+                JohnDoe
+              </td>
+              <td class="py-4 px-6 text-left" th:text="${user.email}">
+                john@example.com
+              </td>
+              <td class="py-4 px-6 text-left" th:text="${user.phoneNumber}">
+                1234567890
+              </td>
+              <td class="py-4 px-6 text-left" th:text="${user.address}">
+                123 Main St
+              </td>
+              <td class="py-4 px-6 text-left">
+                <div class="flex space-x-2">
+                  <a
+                    th:href="@{'/users/edit/' + ${user.id}}"
+                    class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-1 px-3 rounded transition duration-200"
+                  >
+                    Edit
+                  </a>
+                  <a
+                    th:href="@{'/users/delete/' + ${user.id}}"
+                    class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded transition duration-200"
+                    onclick="return confirm('Are you sure you want to delete this user?');"
+                  >
+                    Delete
+                  </a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </body>
 </html>

@@ -19,4 +19,6 @@ public interface UserService {
     void delete(Long id);
 
     User getDonorById(Long id);
+
+    // void assignRoleToUser(String username, String roleName);
 }

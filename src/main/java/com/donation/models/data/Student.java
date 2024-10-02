@@ -28,6 +28,12 @@ public class Student {
     @Column(name = "student_image", columnDefinition = "LONGBLOB")
     private byte[] studentImage;
 
+    @Column(name = "latitude", nullable = true)
+    private Double latitude;
+
+    @Column(name = "longitude", nullable = true)
+    private Double longitude;
+
     public Student() {
     }
 
@@ -94,5 +100,21 @@ public class Student {
             return Base64.getEncoder().encodeToString(studentImage);
         }
         return null;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 }

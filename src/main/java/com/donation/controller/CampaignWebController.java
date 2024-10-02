@@ -22,6 +22,12 @@ public class CampaignWebController {
         return "campaigns/index";
     }
 
+    @GetMapping("/graph")
+    public String getGraph(Model model) {
+        model.addAttribute("campaigns", campaignService.getAllCampaigns());
+        return "campaigns/graph";
+    }
+
     // 显示创建 Campaign 的表单
     @GetMapping("/create")
     public String showCreateForm(Model model) {

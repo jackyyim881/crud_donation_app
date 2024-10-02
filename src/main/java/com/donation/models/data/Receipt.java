@@ -25,4 +25,37 @@ public class Receipt {
 
     @Column(nullable = false, name = "issued_date")
     private LocalDate issuedDate;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Donation getDonation() {
+        return donation;
+    }
+
+    public void setDonation(Donation donation) {
+        this.donation = donation;
+    }
+
+    public String getReceiptNumber() {
+        return receiptNumber;
+    }
+
+    public void setReceiptNumber(String receiptNumber) {
+        this.receiptNumber = receiptNumber;
+    }
+
+    public LocalDate getIssuedDate() {
+        return issuedDate;
+    }
+
+    public void setIssuedDate(LocalDate issuedDate) {
+        this.issuedDate = issuedDate;
+    }
+
 }

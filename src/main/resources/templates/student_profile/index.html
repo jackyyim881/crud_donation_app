@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="fragments/head :: head">
+    <title th:text="'Student Profile - ' + ${student.name}">
+      Student Profile
+    </title>
+  </head>
+  <body class="bg-gray-100 min-h-screen font-sans">
+    <header th:replace="fragments/header :: header"></header>
+
+    <div class="container mx-auto px-4 py-12">
+      <h1
+        class="text-4xl font-extrabold mb-8 text-center text-gray-800"
+        th:text="${student.name}"
+      >
+        Student Name
+      </h1>
+      <div class="max-w-3xl mx-auto bg-white p-10 rounded-lg shadow-md">
+        <p class="mb-4">
+          <strong class="text-gray-700">School:</strong>
+          <span class="text-gray-600" th:text="${student.school}"
+            >School Name</span
+          >
+        </p>
+        <p class="mb-4">
+          <strong class="text-gray-700">Age:</strong>
+          <span class="text-gray-600" th:text="${student.age}">Age</span>
+        </p>
+        <p>
+          <strong class="text-gray-700">Bio:</strong>
+          <span class="text-gray-600" th:text="${student.bio}"
+            >Student Bio</span
+          >
+        </p>
+        <!-- Add more student details as needed -->
+      </div>
+    </div>
+  </body>
+</html>

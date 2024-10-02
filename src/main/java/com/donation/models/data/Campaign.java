@@ -29,6 +29,21 @@ public class Campaign {
     @Temporal(TemporalType.DATE)
     private Date endDate;
 
+    @Column(name = "goalAmount", precision = 15, scale = 2, nullable = false)
+    private BigDecimal currentAmount = BigDecimal.ZERO;
+
+    public Campaign() {
+    }
+
+    public Campaign(String name, String description, BigDecimal goalAmount, Date startDate, Date endDate) {
+        this.name = name;
+        this.description = description;
+        this.goalAmount = goalAmount;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.currentAmount = BigDecimal.ZERO;
+    }
+
     // Getters and Setters
     public Long getId() {
         return id;
@@ -77,4 +92,13 @@ public class Campaign {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
+
+    public BigDecimal getCurrentAmount() {
+        return currentAmount;
+    }
+
+    public void setCurrentAmount(BigDecimal currentAmount) {
+        this.currentAmount = currentAmount;
+    }
+
 }

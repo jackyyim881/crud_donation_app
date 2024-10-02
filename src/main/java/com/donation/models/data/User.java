@@ -1,5 +1,7 @@
 package com.donation.models.data;
 
+import java.util.Set;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -28,6 +30,10 @@ public class User {
     @Lob
     private byte[] profileImage;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
+
     // Getters and Setters
     public Integer getId() {
         return id;
@@ -51,6 +57,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     public String getEmail() {
@@ -88,34 +102,9 @@ public class User {
     public User() {
     }
 
-    public User(String firstName, String lastName, String email) {
-        this.username = firstName + " " + lastName;
-        this.email = email;
+    public User(String username, String password, Set<Role> roles) {
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
     }
-
-    // @Override
-    // public Collection<? extends GrantedAuthority> getAuthorities() {
-    // return roles; // Since Role implements GrantedAuthority
-    // }
-
-    // @Override
-    // public boolean isAccountNonExpired() {
-    // return true; // Modify as needed
-    // }
-
-    // @Override
-    // public boolean isAccountNonLocked() {
-    // return true; // Modify as needed
-    // }
-
-    // @Override
-    // public boolean isCredentialsNonExpired() {
-    // return true; // Modify as needed
-    // }
-
-    // @Override
-    // public boolean isEnabled() {
-    // return true; // Modify as needed
-    // }
-
 }

@@ -77,4 +77,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 user.getPassword(),
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
     }
+
+    // @Override
+    // @Transactional
+    // public void assignRoleToUser(String username, String roleName) {
+    // User user = userRepository.findByUsername(username);
+    // if (user == null) {
+    // throw new RuntimeException("User not found");
+    // }
+    // Role role = roleRepository.findByName(roleName);
+    // if (role == null) {
+    // role = new Role(roleName);
+    // roleRepository.save(role);
+    // }
+    // user.getRoles().add(role);
+    // userRepository.save(user);
+    // }
 }

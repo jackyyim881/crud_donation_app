@@ -1,22 +1,121 @@
-<!-- src/main/resources/templates/fragments/header.html -->
 <header th:fragment="header">
-  <nav class="bg-blue-500 p-4 text-white">
-    <ul class="flex space-x-4">
-      <li><a href="/" class="hover:text-gray-300">Home</a></li>
-      <li><a href="/users" class="hover:text-gray-300">Users</a></li>
-      <li><a href="/about" class="hover:text-gray-300">About</a></li>
-      <li><a href="/students" class="hover:text-gray-300">Students</a></li>
-      <li><a href="/receipts" class="hover:text-gray-300">Receipts</a></li>
-      <li><a href="/donors" class="hover:text-gray-300">Donors</a></li>
-      <li><a href="/campaigns" class="hover:text-gray-300">Campaigns</a></li>
-      <li>
-        <a href="/payment-methods" class="hover:text-gray-300"
-          >Payment Methods</a
-        >
-      </li>
-      <li><a href="/donations" class="hover:text-gray-300">Donations</a></li>
+  <nav
+    class="bg-gradient-to-r from-blue-600 to-purple-600 p-5 text-white shadow-lg"
+  >
+    <div class="container mx-auto flex flex-wrap items-center justify-between">
+      <!-- Logo -->
+      <a
+        href="/"
+        class="text-2xl font-bold tracking-widest hover:text-gray-200 transition-colors duration-300"
+      >
+        DonateApp
+      </a>
 
-      <li><a href="/contact" class="hover:text-gray-300">Contact</a></li>
-    </ul>
+      <!-- Hamburger Button for Mobile -->
+      <button
+        id="menu-btn"
+        class="block lg:hidden p-2 focus:outline-none focus:ring focus:ring-purple-300"
+      >
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16m-7 6h7"
+          ></path>
+        </svg>
+      </button>
+
+      <!-- Menu Links -->
+      <ul
+        id="menu"
+        class="hidden lg:flex lg:space-x-8 mt-4 lg:mt-0 w-full lg:w-auto lg:flex-row lg:items-center flex-col space-y-4 lg:space-y-0"
+      >
+        <li>
+          <a
+            href="/"
+            class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
+            >Home</a
+          >
+        </li>
+        <li>
+          <a
+            href="/users"
+            class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
+            >Users</a
+          >
+        </li>
+        <li>
+          <a
+            href="/about"
+            class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
+            >About</a
+          >
+        </li>
+        <li>
+          <a
+            href="/students"
+            class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
+            >Students</a
+          >
+        </li>
+        <li>
+          <a
+            href="/receipts"
+            class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
+            >Receipts</a
+          >
+        </li>
+        <li>
+          <a
+            href="/donors"
+            class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
+            >Donors</a
+          >
+        </li>
+        <li>
+          <a
+            href="/campaigns"
+            class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
+            >Campaigns</a
+          >
+        </li>
+        <li>
+          <a
+            href="/payment-methods"
+            class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
+            >Payment Methods</a
+          >
+        </li>
+        <li>
+          <a
+            href="/donations"
+            class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
+            >Donations</a
+          >
+        </li>
+        <li>
+          <a
+            href="/contact"
+            class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
+            >Contact</a
+          >
+        </li>
+      </ul>
+    </div>
   </nav>
+
+  <script>
+    // JavaScript to handle the mobile menu toggle
+    document.getElementById("menu-btn").addEventListener("click", function () {
+      const menu = document.getElementById("menu");
+      menu.classList.toggle("hidden");
+    });
+  </script>
 </header>

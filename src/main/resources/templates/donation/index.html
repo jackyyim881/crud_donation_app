@@ -1,0 +1,241 @@
+<!-- src/main/resources/static/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Donate to a Student</title>
+    <!-- TailwindCSS CDN -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      /* Optional: Custom styles */
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      /* Loader Styles */
+      .loader {
+        border-top-color: #3498db;
+        animation: spin 1s infinite linear;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100">
+    <header th:replace="fragments/header :: header"></header>
+
+    <!-- Loading Spinner -->
+    <!-- <div
+      id="loading"
+      class="hidden fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50"
+    >
+      <div
+        class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"
+      ></div>
+    </div> -->
+
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-6 text-center">Donate to a Student</h1>
+      <div class="max-w-md mx-auto bg-white p-8 rounded shadow">
+        <form id="donationForm">
+          <!-- Student Selection -->
+          <div class="mb-4">
+            <label for="student" class="block text-gray-700"
+              >Select Student:</label
+            >
+            <select
+              id="student"
+              name="student"
+              class="w-full mt-2 p-2 border rounded"
+              required
+            >
+              <option value="">-- Select a Student --</option>
+              <!-- Options will be populated dynamically -->
+            </select>
+          </div>
+          <!-- Donation Amount -->
+          <div class="mb-4">
+            <label for="amount" class="block text-gray-700"
+              >Donation Amount (USD):</label
+            >
+            <input
+              type="number"
+              id="amount"
+              name="amount"
+              min="1"
+              step="0.01"
+              class="w-full mt-2 p-2 border rounded"
+              placeholder="Enter amount in USD"
+              required
+            />
+          </div>
+          <!-- Payment Method Selection -->
+          <div class="mb-4">
+            <label for="paymentMethod" class="block text-gray-700"
+              >Payment Method:</label
+            >
+            <select
+              id="paymentMethod"
+              name="paymentMethod"
+              class="w-full mt-2 p-2 border rounded"
+              required
+            >
+              <option value="">-- Select Payment Method --</option>
+              <!-- Options will be populated dynamically -->
+            </select>
+          </div>
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+          >
+            Donate
+          </button>
+        </form>
+        <!-- Message Display -->
+        <div id="message" class="mt-4"></div>
+      </div>
+    </div>
+
+    <!-- jQuery Script -->
+    <script>
+      $(document).ready(function () {
+        // Show loader on AJAX start and hide on complete
+        $(document)
+          .ajaxStart(function () {
+            $("#loading").removeClass("hidden");
+          })
+          .ajaxStop(function () {
+            $("#loading").addClass("hidden");
+          });
+
+        // Fetch students and populate the student dropdown
+        $.ajax({
+          url: "/api/v1/student", // Updated to plural
+          method: "GET",
+          success: function (data) {
+            if (data.length === 0) {
+              $("#student").append(new Option("No students available", ""));
+              return;
+            }
+            data.forEach(function (student) {
+              $("#student").append(new Option(student.name, student.id));
+            });
+          },
+          error: function () {
+            $("#message").html(
+              '<p class="text-red-500">Failed to load students.</p>'
+            );
+          },
+        });
+
+        // Fetch payment methods and populate the payment method dropdown
+        $.ajax({
+          url: "/api/v1/payment-methods", // Adjust the endpoint as per your backend
+          method: "GET",
+          success: function (data) {
+            if (data.length === 0) {
+              $("#paymentMethod").append(
+                new Option("No payment methods available", "")
+              );
+              return;
+            }
+            data.forEach(function (paymentMethod) {
+              $("#paymentMethod").append(
+                new Option(paymentMethod.methodName, paymentMethod.id)
+              );
+            });
+          },
+          error: function () {
+            $("#message").html(
+              '<p class="text-red-500">Failed to load payment methods.</p>'
+            );
+          },
+        });
+        // Handle form submission
+        $("#donationForm").submit(function (event) {
+          event.preventDefault(); // Prevent the default form submission
+
+          // Get form data
+          var studentId = $("#student").val();
+          var amount = $("#amount").val();
+          var paymentMethodId = $("#paymentMethod").val();
+
+          // Basic validation
+          if (!studentId || !amount || !paymentMethodId) {
+            $("#message").html(
+              '<p class="text-red-500">Please fill in all fields.</p>'
+            );
+            return;
+          }
+
+          // Prepare data to send
+          var donationData = {
+            student: { id: parseInt(studentId) },
+            amount: parseFloat(amount),
+            paymentMethod: { id: parseInt(paymentMethodId) },
+            // Additional fields can be included if necessary
+          };
+
+          // Include the JWT token in the request headers if using JWT authentication
+
+          // Send AJAX POST request to submit donation
+          $.ajax({
+            url: "/api/v1/donation/submit", // Adjust the endpoint as per your backend
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(donationData),
+            headers: token ? { Authorization: "Bearer " + token } : {},
+            success: function (response) {
+              $("#message").html(`
+                            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                                <strong class="font-bold">Success!</strong>
+                                <span class="block sm:inline">Thank you for your donation!</span>
+                                <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                                    <svg class="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                        <title>Close</title>
+                                        <path d="M14.348 5.652a.5.5 0 10-.707-.707L10 8.586 6.36 4.945a.5.5 0 10-.707.707L9.293 10l-3.64 3.64a.5.5 0 00.707.707L10 11.414l3.64 3.64a.5.5 0 00.707-.707L10.707 10l3.64-3.64z"/>
+                                    </svg>
+                                </span>
+                            </div>
+                        `);
+              // Reset the form
+              $("#donationForm")[0].reset();
+            },
+            error: function (xhr) {
+              var errorMsg =
+                "An error occurred while processing your donation.";
+              if (xhr.responseText) {
+                errorMsg = xhr.responseText;
+              }
+              $("#message").html(`
+                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                                <strong class="font-bold">Error!</strong>
+                                <span class="block sm:inline">${errorMsg}</span>
+                                <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                                    <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                        <title>Close</title>
+                                        <path d="M14.348 5.652a.5.5 0 10-.707-.707L10 8.586 6.36 4.945a.5.5 0 10-.707.707L9.293 10l-3.64 3.64a.5.5 0 00.707.707L10 11.414l3.64 3.64a.5.5 0 00.707-.707L10.707 10l3.64-3.64z"/>
+                                    </svg>
+                                </span>
+                            </div>
+                        `);
+            },
+          });
+        });
+
+        // Handle click on close icon in messages
+        $(document).on("click", 'svg[role="button"]', function () {
+          $(this).closest('div[role="alert"]').fadeOut();
+        });
+      });
+    </script>
+  </body>
+</html>
