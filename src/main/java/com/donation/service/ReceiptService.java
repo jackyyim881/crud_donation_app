@@ -4,6 +4,8 @@ import com.donation.models.data.Receipt;
 
 import java.util.List;
 
+import java.time.LocalDate;
+
 public interface ReceiptService {
     Receipt createReceipt(Receipt receipt);
 
@@ -14,4 +16,18 @@ public interface ReceiptService {
     Receipt updateReceipt(Integer id, Receipt receiptDetails);
 
     void deleteReceipt(Integer id);
+
+    List<Receipt> getReceiptsByDateRange(LocalDate startDate, LocalDate endDate);
+    // New methods
+    // List<Receipt> createMultipleReceipts(List<Receipt> receipts);
+
+    // List<Receipt> getReceiptsByDonorId(Integer donorId);
+
+    // ByteArrayInputStream generateBulkReceiptPdf(List<Receipt> receipts);
+
+    // Receipt updateReceiptStatus(Integer id, String status);
+
+    // Map<String, Object> getSummaryReport(LocalDate startDate, LocalDate endDate);
+
+    // List<Receipt> getReceiptsByDateRange(LocalDate startDate, LocalDate endDate);
 }

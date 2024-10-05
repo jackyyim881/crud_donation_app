@@ -1,8 +1,11 @@
 package com.donation.service;
 
+import com.donation.dto.CampaignDTO;
 import com.donation.models.data.Campaign;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public interface CampaignService {
     Campaign createCampaign(Campaign campaign);
@@ -14,4 +17,8 @@ public interface CampaignService {
     Campaign updateCampaign(Long id, Campaign campaignDetails);
 
     void deleteCampaign(Long id);
+
+    List<CampaignDTO> getAllCampaignsWithCurrentAmount();
+
+    Map<Long, BigDecimal> getTotalAmountPerCampaign();
 }

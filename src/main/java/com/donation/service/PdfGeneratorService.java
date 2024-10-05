@@ -5,6 +5,7 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
+import java.util.List;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
@@ -18,6 +19,15 @@ import java.io.ByteArrayOutputStream;
 
 @Service
 public class PdfGeneratorService {
+
+    public ByteArrayInputStream generateBulkReceiptPdf(List<Receipt> receipts) {
+        // Implement the logic to generate a PDF for multiple receipts
+        // This is a placeholder implementation
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        // Add your PDF generation logic here
+
+        return new ByteArrayInputStream(out.toByteArray());
+    }
 
     public ByteArrayInputStream generateReceiptPdf(Receipt receipt) {
         Document document = new Document(PageSize.A4);
@@ -109,4 +119,5 @@ public class PdfGeneratorService {
 
         return new ByteArrayInputStream(out.toByteArray());
     }
+
 }

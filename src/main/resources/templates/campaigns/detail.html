@@ -2,28 +2,45 @@
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
-    <title>Campaign 详情</title>
+    <title>Campaign Details</title>
     <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
       rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
     />
   </head>
   <body>
-    <div class="container">
-      <h1 class="mt-5">Campaign 详情</h1>
-      <div class="form-group">
-        <label>ID：</label>
-        <span th:text="${campaign.id}"></span>
+    <header
+      th:replace="fragments/header :: header"
+      class="bg-gray-800 p-4 text-white"
+    >
+      <div class="">
+        <h1 class="text-2xl">Campaign Details</h1>
       </div>
-      <div class="form-group">
-        <label>名称：</label>
-        <span th:text="${campaign.name}"></span>
+    </header>
+    <div
+      class="p-2 container mx-auto border border-sky-100 bg-sky-50 px-2 py-0.5 dark:text-sky-300 dark:border-sky-500/15 dark:bg-sky-500/10"
+    >
+      <h1 class="mt-5 text-2xl font-bold">Campaign Details</h1>
+      <div class="form-group mt-4">
+        <label class="block text-gray-700 font-semibold">ID:</label>
+        <span class="block text-gray-900" th:text="${campaign.id}"></span>
       </div>
-      <div class="form-group">
-        <label>描述：</label>
-        <span th:text="${campaign.description}"></span>
+      <div class="form-group mt-4">
+        <label class="block text-gray-700 font-semibold">Name:</label>
+        <span class="block text-gray-900" th:text="${campaign.name}"></span>
       </div>
-      <a href="/campaigns" class="btn btn-secondary">返回</a>
+      <div class="form-group mt-4">
+        <label class="block text-gray-700 font-semibold">Description:</label>
+        <span
+          class="block text-gray-900"
+          th:text="${campaign.description}"
+        ></span>
+      </div>
+      <a
+        href="/campaigns"
+        class="inline-block bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mt-5"
+        >Back</a
+      >
     </div>
   </body>
 </html>

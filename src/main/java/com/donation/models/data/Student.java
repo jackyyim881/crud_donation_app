@@ -3,6 +3,9 @@ package com.donation.models.data;
 import java.util.Base64;
 
 import jakarta.persistence.*;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "student")
@@ -33,6 +36,13 @@ public class Student {
 
     @Column(name = "longitude", nullable = true)
     private Double longitude;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<HomelessStudentDetails> homelessDetails;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    private List<Needs> needs;
 
     public Student() {
     }
@@ -117,4 +127,21 @@ public class Student {
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
+
+    public List<HomelessStudentDetails> getHomelessDetails() {
+        return homelessDetails;
+    }
+
+    public void setHomelessDetails(List<HomelessStudentDetails> homelessDetails) {
+        this.homelessDetails = homelessDetails;
+    }
+
+    public List<Needs> getNeeds() {
+        return needs;
+    }
+
+    public void setNeeds(List<Needs> needs) {
+        this.needs = needs;
+    }
+
 }

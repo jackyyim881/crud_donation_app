@@ -2,16 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
-    <title>Campaign 列表</title>
-    <!-- 引入 Tailwind CSS via CDN -->
+    <title>Campaign List</title>
+    <!-- Include Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 可选：配置 Tailwind -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/big.js/6.1.1/big.min.js"></script>
+    <!-- Optional: Configure Tailwind -->
     <script>
       tailwind.config = {
         theme: {
           extend: {
             colors: {
-              primary: "#4F46E5", // 自定义主色调
+              primary: "#4F46E5", // Custom primary color
             },
           },
         },
@@ -22,18 +23,18 @@
     <header th:replace="fragments/header :: header"></header>
 
     <div class="container mx-auto px-4 py-8">
-      <h1 class="text-3xl font-semibold mb-6">Campaign 列表</h1>
+      <h1 class="text-3xl font-semibold mb-6">Campaign List</h1>
       <a
         href="/campaigns/create"
         class="inline-block bg-primary text-white px-4 py-2 rounded hover:bg-indigo-600 mb-4"
       >
-        创建新的 Campaign
+        Create New Campaign
       </a>
       <a
         href="/campaigns/graph"
         class="inline-block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4"
       >
-        查看 Campaign 圖表
+        View Campaign Graph
       </a>
       <div class="overflow-x-auto">
         <table class="min-w-full bg-white rounded shadow">
@@ -47,70 +48,99 @@
               <th
                 class="px-6 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
               >
-                名称
+                Name
               </th>
               <th
                 class="px-6 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
               >
-                描述
+                Description
               </th>
               <th
                 class="px-6 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
               >
-                操作
+                Goal Amount / Current Amount
+              </th>
+              <th
+                class="px-6 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+              >
+                Progress
+              </th>
+              <th
+                class="px-6 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+              >
+                Actions
               </th>
             </tr>
           </thead>
-          <tbody>
-            <tr
-              th:each="campaign : ${campaigns}"
-              class="hover:bg-gray-100 transition-colors"
-            >
-              <td
-                class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700"
-              >
-                <span th:text="${campaign.id}">1</span>
-              </td>
-              <td
-                class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700"
-              >
-                <span th:text="${campaign.name}">名称</span>
-              </td>
-              <td
-                class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700"
-              >
-                <span th:text="${campaign.description}">描述</span>
-              </td>
-              <td
-                class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700"
-              >
-                <a
-                  th:href="@{/campaigns/{id}(id=${campaign.id})}"
-                  class="text-indigo-600 hover:text-indigo-900 mr-2"
-                  >查看</a
-                >
-                <a
-                  th:href="@{/campaigns/edit/{id}(id=${campaign.id})}"
-                  class="text-yellow-500 hover:text-yellow-700 mr-2"
-                  >编辑</a
-                >
-                <a
-                  th:href="@{/campaigns/delete/{id}(id=${campaign.id})}"
-                  class="text-red-600 hover:text-red-900"
-                  onclick="return confirm('确定要删除吗？')"
-                  >删除</a
-                >
-              </td>
-            </tr>
-            <!-- 如果没有 Campaign，可以添加一个空行提示 -->
-            <tr th:if="${#lists.isEmpty(campaigns)}">
-              <td colspan="4" class="px-6 py-4 text-center text-gray-500">
-                暂无 Campaign 数据。
-              </td>
-            </tr>
+          <tbody id="campaignsTableBody">
+            <!-- Campaign rows will be dynamically populated using jQuery -->
           </tbody>
         </table>
       </div>
     </div>
+
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        // Function to fetch and display campaigns
+        function fetchCampaigns() {
+          $.ajax({
+            url: "/api/v1/campaigns",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+              const tableBody = $("#campaignsTableBody");
+              tableBody.empty();
+              data.forEach((campaign) => {
+                const goalAmount = new Big(campaign.goalAmount);
+                const currentAmount = new Big(campaign.currentAmount);
+                const progressPercentage = goalAmount.eq(0)
+                  ? 0
+                  : currentAmount.div(goalAmount).times(100).toFixed(2);
+
+                const row = `
+              <tr class="hover:bg-gray-100 transition-colors">
+                <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700">
+                  ${campaign.id}
+                </td>
+                <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700">
+                  ${campaign.name}
+                </td>
+                <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700">
+                  ${campaign.description}
+                </td>
+                <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700">
+                  ${campaign.currentAmount} / ${campaign.goalAmount}
+                </td>
+                <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700">
+                  <div class="w-full bg-gray-200 rounded-full h-4">
+                    <div
+                      class="bg-primary h-4 rounded-full"
+                      style="width: ${progressPercentage}%"
+                    ></div>
+                  </div>
+                  <span>${progressPercentage}%</span>
+                </td>
+                <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700">
+                  <a href="/campaigns/${campaign.id}" class="text-indigo-600 hover:text-indigo-900 mr-2">View</a>
+                  <a href="/campaigns/edit/${campaign.id}" class="text-yellow-500 hover:text-yellow-700 mr-2">Edit</a>
+                  <a href="/campaigns/delete/${campaign.id}" class="text-red-600 hover:text-red-900" onclick="return confirm('Are you sure you want to delete?')">Delete</a>
+                </td>
+              </tr>
+            `;
+                tableBody.append(row);
+              });
+            },
+            error: function (err) {
+              console.error("Error fetching campaigns:", err);
+            },
+          });
+        }
+
+        // Initial fetch on page load
+        fetchCampaigns();
+      });
+    </script>
   </body>
 </html>

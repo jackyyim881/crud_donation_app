@@ -6,15 +6,16 @@ import com.donation.service.PdfGeneratorService;
 import com.donation.service.ReceiptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
-
 import java.io.ByteArrayInputStream;
 import java.util.List;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/v1/receipts")
@@ -80,4 +81,13 @@ public class ReceiptController {
         receiptService.deleteReceipt(id);
         return ResponseEntity.noContent().build(); // HTTP 204 No Content
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Receipt>> searchReceiptsByDateRange(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        List<Receipt> receipts = receiptService.getReceiptsByDateRange(startDate, endDate);
+        return ResponseEntity.ok(receipts); // HTTP 200 OK
+    }
+
 }

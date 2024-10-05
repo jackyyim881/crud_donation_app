@@ -33,14 +33,14 @@ $(document).ready(function () {
                 2
               )}</td>
               <td class="py-4 px-6 whitespace-nowrap">${donation.donorName}</td>
-              <td class="py-4 px-6 whitespace-nowrap">${new Date(
+              <td class="py-4 px-6 whitespace-nowrap">${formatDate(
                 donation.donationDate
-              ).toLocaleDateString()}</td>
+              )}</td>
               <td class="py-4 px-6 whitespace-nowrap">${
-                donation.campaignName || "N/A"
+                donation.campaignName ?? "N/A"
               }</td>
               <td class="py-4 px-6 whitespace-nowrap">${
-                donation.paymentMethodName || "N/A"
+                donation.paymentMethodName ?? "N/A"
               }</td>
             </tr>
           `;
@@ -78,3 +78,9 @@ $(document).ready(function () {
 
   // ... rest of your script remains unchanged
 });
+
+// 在文件顶部或适当位置添加以下辅助函数
+function formatDate(dateString) {
+  const options = { year: "numeric", month: "short", day: "numeric" };
+  return new Date(dateString).toLocaleDateString(undefined, options);
+}

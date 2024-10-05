@@ -5,8 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.donation.dto.StudentDTO;
 import com.donation.models.data.Student;
 import com.donation.service.StudentService;
+import com.donation.service.mapper.StudentMapperService;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -15,6 +17,9 @@ import java.util.List;
 @RequestMapping("/api/v1/student")
 public class StudentController {
     private final StudentService studentService;
+
+    @Autowired
+    private StudentMapperService studentMapperService; // Ensure this is properly autowired
 
     @Autowired
     public StudentController(StudentService studentService) {
@@ -39,13 +44,10 @@ public class StudentController {
      * @return Student object.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudentById(@PathVariable("id") Long id) {
+    public ResponseEntity<StudentDTO> getStudentById(@PathVariable Long id) {
         Student student = studentService.getStudentById(id);
-        if (student == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(student, HttpStatus.OK);
+        StudentDTO studentDTO = studentMapperService.toDTO(student);
+        return ResponseEntity.ok(studentDTO);
     }
 
     /**

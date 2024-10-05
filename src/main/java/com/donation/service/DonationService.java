@@ -3,6 +3,7 @@ package com.donation.service;
 import com.donation.dto.DonationRequest;
 import com.donation.dto.DonationResponse;
 import com.donation.models.data.Donation;
+import com.donation.models.data.Receipt;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,4 +21,5 @@ public interface DonationService {
     Donation updateDonation(Long id, DonationRequest donationRequest);
 
     void deleteDonation(Long id);
+
 }

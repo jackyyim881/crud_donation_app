@@ -2,17 +2,24 @@ package com.donation.service.impl;
 
 import com.donation.models.data.Receipt;
 import com.donation.repository.ReceiptRepository;
+import com.donation.service.PdfGeneratorService;
 import com.donation.service.ReceiptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ReceiptServiceImpl implements ReceiptService {
 
     @Autowired
     private ReceiptRepository receiptRepository;
+    @Autowired
+    private PdfGeneratorService pdfGeneratorService;
 
     @Override
     public Receipt createReceipt(Receipt receipt) {
@@ -48,4 +55,10 @@ public class ReceiptServiceImpl implements ReceiptService {
                 .orElseThrow(() -> new RuntimeException("Receipt not found with id: " + id));
         receiptRepository.delete(receipt);
     }
+
+    @Override
+    public List<Receipt> getReceiptsByDateRange(LocalDate startDate, LocalDate endDate) {
+        return receiptRepository.findByIssuedDateBetween(startDate, endDate);
+    }
+
 }
