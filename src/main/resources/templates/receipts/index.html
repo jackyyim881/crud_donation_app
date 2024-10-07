@@ -1,13 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Receipts</title>
-    <!-- Tailwind CSS CDN -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
+  <head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Receipts</title>
   </head>
   <body class="bg-gray-100 font-sans">
     <!-- Include the header fragment -->
@@ -19,7 +13,7 @@
       <div class="flex justify-between items-center mb-8">
         <h1 class="text-4xl font-bold text-gray-800">Receipts</h1>
         <a
-          href="/receipts/create.html"
+          href="/receipts/create"
           class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-5 rounded-lg shadow-lg transition duration-300 transform hover:scale-105"
         >
           Create New Receipt

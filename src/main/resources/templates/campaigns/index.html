@@ -1,23 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Campaign List</title>
-    <!-- Include Tailwind CSS via CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/big.js/6.1.1/big.min.js"></script>
-    <!-- Optional: Configure Tailwind -->
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              primary: "#4F46E5", // Custom primary color
-            },
-          },
-        },
-      };
-    </script>
+  <head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Campaign List</title>
   </head>
   <body class="bg-gray-100">
     <header th:replace="fragments/header :: header"></header>
@@ -26,7 +10,7 @@
       <h1 class="text-3xl font-semibold mb-6">Campaign List</h1>
       <a
         href="/campaigns/create"
-        class="inline-block bg-primary text-white px-4 py-2 rounded hover:bg-indigo-600 mb-4"
+        class="inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mb-4"
       >
         Create New Campaign
       </a>

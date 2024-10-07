@@ -14,12 +14,12 @@ public class MainController {
 
     @GetMapping("/contact")
     public String getContactPage() {
-        return "contact.html";
+        return "contact/index.html";
     }
 
     @GetMapping("/about")
     public String getAboutPage() {
-        return "about.html";
+        return "about/index.html";
     }
 
 }

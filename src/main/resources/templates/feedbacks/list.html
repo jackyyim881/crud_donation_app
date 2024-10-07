@@ -1,118 +1,142 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <link
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
-    <title>Feedback List</title>
+  <head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Feedback List</title>
   </head>
-  <body class="bg-gray-100 text-gray-900">
+  <style>
+    @layer utilities {
+      .card-shadow {
+        @apply shadow-2xl transition-all transform hover:scale-105 duration-300 ease-in-out;
+      }
+      .btn-gradient {
+        @apply bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out;
+      }
+      .btn-gradient:hover {
+        @apply from-purple-600 to-green-400 hover:shadow-lg;
+      }
+    }
+  </style>
+  <body
+    class="bg-gradient-to-r from-gray-900 via-black to-gray-800 text-white min-h-screen"
+  >
     <header th:replace="fragments/header :: header"></header>
 
-    <div class="container mx-auto p-4">
-      <h1 class="text-2xl font-bold mb-4">Feedback List</h1>
+    <div class="container mx-auto p-6">
+      <h1 class="text-4xl font-extrabold text-center mb-8 text-indigo-400">
+        Feedback List
+      </h1>
 
-      <form
-        th:action="@{/feedbacks/donor-type}"
-        method="get"
-        class="flex items-center space-x-4 mb-4"
+      <div
+        class="max-w-3xl mx-auto mb-10 bg-gray-800 bg-opacity-80 p-8 rounded-3xl card-shadow"
       >
-        <label for="donorType" class="block text-sm font-medium text-gray-700"
-          >Filter by Donor Type:</label
+        <form
+          th:action="@{/feedbacks/donor-type}"
+          method="get"
+          class="flex flex-col lg:flex-row items-center justify-between space-y-4 lg:space-y-0 lg:space-x-4 mb-8"
         >
-        <select
-          name="type"
-          id="donorType"
-          class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-          required
-        >
-          <option value="" disabled selected>Select type</option>
-          <option value="personal" th:selected="${donorType == 'personal'}">
-            Personal
-          </option>
-          <option
-            value="organization"
-            th:selected="${donorType == 'organization'}"
+          <label
+            for="donorType"
+            class="block text-lg font-medium text-indigo-300"
+            >Filter by Donor Type:</label
           >
-            Organization
-          </option>
-        </select>
-        <button
-          type="submit"
-          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          Filter
-        </button>
+          <select
+            name="type"
+            id="donorType"
+            class="block w-full lg:w-auto pl-4 pr-10 py-3 text-base bg-gray-700 text-indigo-100 border-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg"
+            required
+          >
+            <option value="" disabled selected>Select type</option>
+            <option value="personal" th:selected="${donorType == 'personal'}">
+              Personal
+            </option>
+            <option
+              value="organization"
+              th:selected="${donorType == 'organization'}"
+            >
+              Organization
+            </option>
+          </select>
+          <div class="flex space-x-4">
+            <button type="submit" class="btn-gradient hover:scale-105">
+              Filter
+            </button>
+            <a
+              href="/feedbacks"
+              class="btn-gradient hover:scale-105 from-gray-600 via-gray-800 to-gray-900"
+              >Reset</a
+            >
+          </div>
+        </form>
+
         <a
-          href="/feedbacks"
-          class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >Reset</a
+          th:href="@{/feedbacks/add}"
+          class="btn-gradient block w-full lg:w-auto text-center mx-auto hover:scale-105 mb-6"
+          >Add New Feedback</a
         >
-      </form>
 
-      <a
-        th:href="@{/feedbacks/add}"
-        class="inline-flex items-center px-4 py-2 mb-4 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-        >Add New Feedback</a
-      >
-
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th
-                scope="col"
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                ID
-              </th>
-              <th
-                scope="col"
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Message
-              </th>
-              <th
-                scope="col"
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <tr th:each="feedback : ${feedbacks}">
-              <td class="px-6 py-4 whitespace-nowrap" th:text="${feedback.id}">
-                ID
-              </td>
-              <td
-                class="px-6 py-4 whitespace-nowrap"
-                th:text="${#strings.abbreviate(feedback.message, 50)}"
-              >
-                Message
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <a
-                  th:href="@{/feedbacks/edit/{id}(id=${feedback.id})}"
-                  class="text-indigo-600 hover:text-indigo-900"
-                  >Edit</a
+        <div class="overflow-hidden rounded-3xl card-shadow">
+          <table class="min-w-full divide-y divide-gray-700">
+            <thead class="bg-gray-900">
+              <tr>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-indigo-400 uppercase tracking-wider"
                 >
-                <a
-                  th:href="@{/feedbacks/delete/{id}(id=${feedback.id})}"
-                  onclick="return confirm('Are you sure?')"
-                  class="text-red-600 hover:text-red-900 ml-4"
-                  >Delete</a
+                  ID
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-indigo-400 uppercase tracking-wider"
                 >
-                <a
-                  th:href="@{/feedbacks/{id}(id=${feedback.id})}"
-                  class="text-blue-600 hover:text-blue-900 ml-4"
-                  >View</a
+                  Message
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-indigo-400 uppercase tracking-wider"
                 >
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-gray-800 divide-y divide-gray-700">
+              <tr
+                th:each="feedback : ${feedbacks}"
+                class="hover:bg-gray-700 transition-all duration-300 ease-in-out"
+              >
+                <td
+                  class="px-6 py-4 whitespace-nowrap"
+                  th:text="${feedback.id}"
+                >
+                  ID
+                </td>
+                <td
+                  class="px-6 py-4 whitespace-nowrap"
+                  th:text="${#strings.abbreviate(feedback.message, 50)}"
+                >
+                  Message
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <a
+                    th:href="@{/feedbacks/edit/{id}(id=${feedback.id})}"
+                    class="text-indigo-400 hover:text-indigo-200 transition duration-200 ease-in-out"
+                    >Edit</a
+                  >
+                  <a
+                    th:href="@{/feedbacks/delete/{id}(id=${feedback.id})}"
+                    onclick="return confirm('Are you sure?')"
+                    class="text-red-500 hover:text-red-300 ml-6 transition duration-200 ease-in-out"
+                    >Delete</a
+                  >
+                  <a
+                    th:href="@{/feedbacks/{id}(id=${feedback.id})}"
+                    class="text-green-400 hover:text-green-200 ml-6 transition duration-200 ease-in-out"
+                    >View</a
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </body>

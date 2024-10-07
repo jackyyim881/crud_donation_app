@@ -1,8 +1,6 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="fragments/head :: head">
-    <title th:text="${title}">Home - Donation App</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"></script>
+  <head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Donation App Page</title>
   </head>
   <style>
     /* Keeping your blur effect for recent donations rows */

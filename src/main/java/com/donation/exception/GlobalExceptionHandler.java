@@ -12,7 +12,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public String handleResourceNotFound(ResourceNotFoundException ex, Model model) {
         model.addAttribute("errorMessage", ex.getMessage());
-        return "error-404"; // Ensure error-404.html exists in templates
+        return "error/error-404"; // Ensure error-404.html exists in templates
     }
 
     /**
@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
         model.addAttribute("errorMessage", "An unexpected error occurred. Please try again later.");
         // Optionally, log the exception
         // logger.error("An unexpected error occurred", ex);
-        return "error"; // Ensure error.html exists in templates
+        return "error/error"; // Ensure error.html exists in templates
     }
 
     // Inner class for error responses

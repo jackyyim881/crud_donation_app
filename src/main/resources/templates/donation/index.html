@@ -1,33 +1,25 @@
 <!-- src/main/resources/static/index.html -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Donate to a Student</title>
-    <!-- TailwindCSS CDN -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
-    <!-- jQuery CDN -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-      /* Optional: Custom styles */
-      body {
-        font-family: "Inter", sans-serif;
-      }
-      /* Loader Styles */
-      .loader {
-        border-top-color: #3498db;
-        animation: spin 1s infinite linear;
-      }
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-    </style>
+  <head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Donate to a Student</title>
   </head>
+  <style>
+    /* Optional: Custom styles */
+    body {
+      font-family: "Inter", sans-serif;
+    }
+    /* Loader Styles */
+    .loader {
+      border-top-color: #3498db;
+      animation: spin 1s infinite linear;
+    }
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
   <body class="bg-gray-100">
     <header th:replace="fragments/header :: header"></header>
 

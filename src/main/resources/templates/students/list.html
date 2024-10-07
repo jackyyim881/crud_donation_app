@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <title>Student List</title>
-    <meta charset="UTF-8" />
-    <script src="https://cdn.tailwindcss.com"></script>
+  <head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Student List</title>
   </head>
   <body class="bg-gray-100 font-sans">
     <!-- Header -->

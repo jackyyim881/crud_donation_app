@@ -2,12 +2,8 @@
 
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <link
-    href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-    rel="stylesheet"
-  />
-  <head>
-    <title>Edit User</title>
+  <head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Edit User Page</title>
   </head>
   <body>
     <div th:replace="fragments/header :: header"></div>

@@ -1,32 +1,102 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <title>Create Feedback</title>
+  <head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Create Feedback</title>
   </head>
-  <body>
-    <h1>Create Feedback</h1>
-    <form th:action="@{/feedbacks/add}" th:object="${feedback}" method="post">
-      <div>
-        <label for="message">Message:</label>
-        <textarea id="message" th:field="*{message}"></textarea>
-        <div th:if="${#fields.hasErrors('message')}" th:errors="*{message}">
-          Message Error
+  <style>
+    @layer utilities {
+      .card-shadow {
+        @apply shadow-2xl transition-transform transform hover:scale-105 duration-300 ease-in-out;
+      }
+      .btn-gradient {
+        @apply bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg;
+      }
+    }
+  </style>
+
+  <body
+    class="bg-gradient-to-br from-gray-900 to-gray-800 text-white min-h-screen font-sans"
+  >
+    <header th:replace="fragments/header :: header"></header>
+
+    <div class="flex justify-center items-center min-h-screen p-6">
+      <div
+        class="max-w-2xl w-full bg-gray-800 bg-opacity-60 backdrop-filter backdrop-blur-lg rounded-3xl p-8 card-shadow"
+      >
+        <h1 class="text-4xl font-bold text-center mb-8 text-indigo-400">
+          Create Feedback
+        </h1>
+        <form
+          th:action="@{/feedbacks/add}"
+          th:object="${feedback}"
+          method="post"
+        >
+          <!-- Message Field -->
+          <div class="mb-6">
+            <label
+              for="message"
+              class="block text-lg font-medium text-indigo-200 mb-2"
+              >Message:</label
+            >
+            <textarea
+              id="message"
+              th:field="*{message}"
+              class="w-full p-4 bg-gray-700 rounded-lg border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+              rows="4"
+              placeholder="Write your message here..."
+            ></textarea>
+            <div
+              th:if="${#fields.hasErrors('message')}"
+              th:errors="*{message}"
+              class="text-red-500 text-sm mt-2"
+            >
+              Message Error
+            </div>
+          </div>
+
+          <!-- Donor Select Field -->
+          <div class="mb-6">
+            <label
+              for="donor"
+              class="block text-lg font-medium text-indigo-200 mb-2"
+              >Donor:</label
+            >
+            <select
+              id="donor"
+              th:field="*{donor}"
+              class="w-full p-4 bg-gray-700 rounded-lg border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            >
+              <option
+                th:each="donor : ${donors}"
+                th:value="${donor.id}"
+                th:text="${donor.user.username}"
+              >
+                Donor Name
+              </option>
+            </select>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="flex justify-center mt-8">
+            <button
+              type="submit"
+              class="btn-gradient transform hover:scale-110 hover:shadow-lg transition-all duration-300 ease-in-out"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+
+        <!-- Back to List Link -->
+        <div class="flex justify-center mt-10">
+          <a
+            th:href="@{/feedbacks}"
+            class="text-indigo-400 underline hover:text-indigo-300 transition duration-300"
+          >
+            ← Back to List
+          </a>
         </div>
       </div>
-      <div>
-        <label for="donor">Donor:</label>
-        <select id="donor" th:field="*{donor}">
-          <option
-            th:each="donor : ${donors}"
-            th:value="${donor.id}"
-            th:text="${donor.user.username}"
-          ></option>
-        </select>
-      </div>
-      <div>
-        <button type="submit">Submit</button>
-      </div>
-    </form>
-    <a th:href="@{/feedbacks}">Back to List</a>
+    </div>
   </body>
 </html>

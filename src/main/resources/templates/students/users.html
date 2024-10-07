@@ -1,12 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <title>User List</title>
-    <!-- Include Tailwind CSS CDN -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
+  <head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Student User List</title>
   </head>
   <body class="bg-gray-100 p-4">
     <div th:replace="fragments/header :: header"></div>

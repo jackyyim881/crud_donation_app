@@ -1,34 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Campaign Donations</title>
-    <!-- TailwindCSS CDN -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
-    <!-- jQuery CDN -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-      /* Optional: Custom styles */
-      body {
-        font-family: "Inter", sans-serif;
-      }
-      /* Loader Styles */
-      .loader {
-        border-top-color: #3498db;
-        animation: spin 1s infinite linear;
-      }
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-    </style>
+  <head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Graph - Donation App</title>
   </head>
+  <!-- jQuery CDN -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Optional: Custom styles */
+    body {
+      font-family: "Inter", sans-serif;
+    }
+    /* Loader Styles */
+    .loader {
+      border-top-color: #3498db;
+      animation: spin 1s infinite linear;
+    }
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
   <body class="bg-gray-100">
     <!-- Loading Spinner -->
     <header th:replace="fragments/header :: header"></header>
