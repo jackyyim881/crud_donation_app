@@ -16,6 +16,8 @@ import java.nio.file.Paths;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/students")
 public class StudentWebController {
@@ -33,9 +35,11 @@ public class StudentWebController {
     /**
      * Display all students.
      */
+
     @GetMapping
-    public String listStudents(Model model) {
-        model.addAttribute("students", studentService.getAllStudents());
+    public String showStudents(Model model) {
+        List<Student> students = studentService.getAllStudents();
+        model.addAttribute("students", students);
         return "students/list";
     }
 

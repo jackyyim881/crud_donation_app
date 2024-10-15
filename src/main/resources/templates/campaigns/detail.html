@@ -3,39 +3,60 @@
   <head th:replace="fragments/head :: headerFragment">
     <title id="pageTitle">Campaign Details</title>
   </head>
-  <body>
+  <body class="bg-gray-100 font-sans antialiased">
+    <!-- Header -->
     <header
       th:replace="fragments/header :: header"
-      class="bg-gray-800 p-4 text-white"
+      class="bg-gradient-to-r from-blue-600 to-purple-600 p-6 shadow-md text-white"
     >
-      <div class="">
-        <h1 class="text-2xl">Campaign Details</h1>
+      <div class="container mx-auto">
+        <h1 class="text-3xl font-bold">Campaign Details</h1>
       </div>
     </header>
-    <div
-      class="p-2 container mx-auto border border-sky-100 bg-sky-50 px-2 py-0.5 dark:text-sky-300 dark:border-sky-500/15 dark:bg-sky-500/10"
-    >
-      <h1 class="mt-5 text-2xl font-bold">Campaign Details</h1>
-      <div class="form-group mt-4">
-        <label class="block text-gray-700 font-semibold">ID:</label>
-        <span class="block text-gray-900" th:text="${campaign.id}"></span>
+
+    <!-- Campaign Details Section -->
+    <div class="container mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg">
+      <h1 class="text-3xl font-semibold text-gray-800 mb-6 border-b pb-4">
+        Campaign Information
+      </h1>
+
+      <!-- Campaign Info -->
+      <div class="space-y-6">
+        <!-- ID -->
+        <div class="flex items-center">
+          <label class="w-1/3 text-gray-700 font-semibold">ID:</label>
+          <span class="text-gray-900" th:text="${campaign.id}"></span>
+        </div>
+
+        <!-- Name -->
+        <div class="flex items-center">
+          <label class="w-1/3 text-gray-700 font-semibold">Name:</label>
+          <span class="text-gray-900" th:text="${campaign.name}"></span>
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label class="block text-gray-700 font-semibold mb-1"
+            >Description:</label
+          >
+          <p
+            class="text-gray-900 leading-relaxed"
+            th:text="${campaign.description}"
+          ></p>
+        </div>
       </div>
-      <div class="form-group mt-4">
-        <label class="block text-gray-700 font-semibold">Name:</label>
-        <span class="block text-gray-900" th:text="${campaign.name}"></span>
+
+      <!-- Donations Section -->
+
+      <!-- Back Button -->
+      <div class="mt-10 flex justify-center">
+        <a
+          href="/campaigns"
+          class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 shadow-md"
+        >
+          Back to Campaigns
+        </a>
       </div>
-      <div class="form-group mt-4">
-        <label class="block text-gray-700 font-semibold">Description:</label>
-        <span
-          class="block text-gray-900"
-          th:text="${campaign.description}"
-        ></span>
-      </div>
-      <a
-        href="/campaigns"
-        class="inline-block bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mt-5"
-        >Back</a
-      >
     </div>
   </body>
 </html>

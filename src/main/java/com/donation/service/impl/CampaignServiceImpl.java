@@ -2,6 +2,7 @@ package com.donation.service.impl;
 
 import com.donation.dto.CampaignDTO;
 import com.donation.models.data.Campaign;
+import com.donation.models.data.Donation;
 import com.donation.repository.CampaignRepository;
 import com.donation.repository.DonationRepository;
 import com.donation.service.CampaignService;
@@ -88,6 +89,11 @@ public class CampaignServiceImpl implements CampaignService {
             map.put((Long) obj[0], (BigDecimal) obj[1]);
         }
         return map;
+    }
+
+    @Override
+    public List<Donation> getDonationsByCampaignId(Long campaignId) {
+        return campaignRepository.findDonationsByCampaignId(campaignId);
     }
 
 }

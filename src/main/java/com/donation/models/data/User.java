@@ -3,6 +3,7 @@ package com.donation.models.data;
 import java.util.Set;
 
 import jakarta.persistence.*;
+import java.util.HashSet;
 
 @Entity
 @Table(name = "user")
@@ -10,9 +11,9 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50, name = "username")
     private String username;
 
     @Column(nullable = false, length = 100)
@@ -29,17 +30,19 @@ public class User {
 
     @Lob
     private byte[] profileImage;
+    @Column(length = 50, nullable = false) // or nullable = true if optional
+    private String name;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     // Getters and Setters
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -106,5 +109,13 @@ public class User {
         this.username = username;
         this.password = password;
         this.roles = roles;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

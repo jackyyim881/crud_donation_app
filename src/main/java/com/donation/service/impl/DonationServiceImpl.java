@@ -15,6 +15,8 @@ import com.donation.repository.PaymentMethodRepository;
 import com.donation.repository.ReceiptRepository;
 import com.donation.repository.StudentRepository;
 import com.donation.service.DonationService;
+import com.donation.service.PaymentMethodService;
+import com.donation.service.StudentService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,7 +42,7 @@ public class DonationServiceImpl implements DonationService {
         private StudentRepository studentRepository;
 
         @Autowired
-        private ReceiptRepository receiptRepository;
+        private StudentService studentService;
 
         /**
          * Creates a new donation based on the DonationRequest DTO.
@@ -170,6 +172,29 @@ public class DonationServiceImpl implements DonationService {
                 Donation donation = donationRepository.findById(id)
                                 .orElseThrow(() -> new ResourceNotFoundException("Donation not found with id: " + id));
                 donationRepository.delete(donation);
+        }
+
+        /**
+         * Simulates a donation by creating a new donation record.
+         */
+        @Override
+        public void donate(Long studentId, Long paymentMethodId, Double amount, Long donorId) {
+                Student student = studentRepository.getStudentById(studentId);
+
+                PaymentMethod paymentMethod = paymentMethodRepository.getPaymentMethodById(paymentMethodId);
+
+                Donation donation = new Donation();
+                donation.setStudent(student);
+                donation.setPaymentMethod(paymentMethod);
+                donation.setDonor(donorRepository.getDonorById(donorId));
+                donation.setAmount(amount);
+                donation.setDonationDate(LocalDate.now());
+
+                donationRepository.save(donation);
+        }
+
+        public void saveDonation(Donation donation) {
+                donationRepository.save(donation);
         }
 
 }

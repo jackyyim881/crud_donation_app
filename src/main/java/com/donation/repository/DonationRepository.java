@@ -37,4 +37,6 @@ public interface DonationRepository extends JpaRepository<Donation, Long> {
 
         @Query("SELECT d.ncampaign.id, SUM(d.amount) FROM Donation d GROUP BY d.ncampaign.id")
         List<Object[]> getTotalAmountPerCampaign();
+
+        List<Donation> findByNcampaignId(Long campaignId);
 }

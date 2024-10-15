@@ -4,31 +4,34 @@
     <title id="pageTitle">Edit Student</title>
   </head>
 
-  <body>
+  <body class="bg-gray-100 font-sans">
     <header th:replace="fragments/header :: header"></header>
 
-    <div class="container mx-auto mt-5">
-      <h1 class="text-2xl font-bold mb-5">Edit Student</h1>
+    <div
+      class="container mx-auto mt-10 max-w-3xl p-5 bg-white shadow-md rounded-lg"
+    >
+      <h1 class="text-3xl font-extrabold text-gray-800 mb-5">Edit Student</h1>
 
       <form
         th:action="@{'/students/edit/' + ${student.id}}"
         th:object="${student}"
         method="post"
         enctype="multipart/form-data"
-        class="space-y-4 border p-2 rounded-md"
+        class="space-y-6"
       >
-        <!-- CSRF Token -->
-
         <!-- Name Field -->
         <div>
-          <label for="name" class="block text-sm font-medium text-gray-700"
+          <label
+            for="name"
+            class="block text-lg font-semibold text-gray-700 mb-1"
             >Name:</label
           >
           <input
             type="text"
             th:field="*{name}"
-            class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="mt-1 p-3 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 sm:text-md"
             id="name"
+            required
           />
           <div
             th:if="${#fields.hasErrors('name')}"
@@ -39,15 +42,18 @@
 
         <!-- Age Field -->
         <div>
-          <label for="age" class="block text-sm font-medium text-gray-700"
+          <label
+            for="age"
+            class="block text-lg font-semibold text-gray-700 mb-1"
             >Age:</label
           >
           <input
             type="number"
             th:field="*{age}"
-            class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="mt-1 p-3 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 sm:text-md"
             id="age"
             min="1"
+            required
           />
           <div
             th:if="${#fields.hasErrors('age')}"
@@ -58,14 +64,17 @@
 
         <!-- School Field -->
         <div>
-          <label for="school" class="block text-sm font-medium text-gray-700"
+          <label
+            for="school"
+            class="block text-lg font-semibold text-gray-700 mb-1"
             >School:</label
           >
           <input
             type="text"
             th:field="*{school}"
-            class="mt-1 block p-2 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="mt-1 p-3 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 sm:text-md"
             id="school"
+            required
           />
           <div
             th:if="${#fields.hasErrors('school')}"
@@ -76,14 +85,17 @@
 
         <!-- Bio Field -->
         <div>
-          <label for="bio" class="block text-sm font-medium text-gray-700"
+          <label
+            for="bio"
+            class="block text-lg font-semibold text-gray-700 mb-1"
             >Bio:</label
           >
           <textarea
             th:field="*{bio}"
-            class="mt-1 block p-2 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="mt-1 p-3 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 sm:text-md"
             id="bio"
             rows="4"
+            required
           ></textarea>
           <div
             th:if="${#fields.hasErrors('bio')}"
@@ -94,18 +106,20 @@
 
         <!-- Existing Image Display -->
         <div>
-          <label class="block text-sm font-medium text-gray-700"
+          <label class="block text-lg font-semibold text-gray-700 mb-2"
             >Current Image:</label
           >
           <div th:if="${student.studentImage != null}">
             <img
               th:src="@{'data:image/jpeg;base64,' + ${T(org.apache.tomcat.util.codec.binary.Base64).encodeBase64String(student.studentImage)}}"
               alt="Student Image"
-              class="w-36 h-36 rounded-md shadow-sm"
+              class="w-36 h-36 object-cover rounded-md shadow-md border border-gray-300"
             />
           </div>
           <div th:if="${student.studentImage == null}">
-            <span class="text-gray-500 font-medium">No Image Available</span>
+            <span class="text-gray-500 font-medium italic"
+              >No Image Available</span
+            >
           </div>
         </div>
 
@@ -113,14 +127,14 @@
         <div>
           <label
             for="studentImageFile"
-            class="block text-sm font-medium text-gray-700"
+            class="block text-lg font-semibold text-gray-700 mb-1"
             >Change Image:</label
           >
           <input
             type="file"
             name="studentImageFile"
             accept="image/*"
-            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 sm:text-md"
             id="studentImageFile"
           />
           <div
@@ -131,18 +145,19 @@
         </div>
 
         <!-- Submit Button -->
-        <div class="flex space-x-2">
+        <div class="flex space-x-4 mt-6">
           <button
             type="submit"
-            class="bg-green-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-green-600"
+            class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-400"
           >
             Update Student
           </button>
           <a
-            href="/web/students"
-            class="bg-gray-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-gray-600"
-            >Cancel</a
+            href="/students"
+            class="bg-gray-600 hover:bg-gray-700 text-black font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-400"
           >
+            Cancel
+          </a>
         </div>
       </form>
     </div>

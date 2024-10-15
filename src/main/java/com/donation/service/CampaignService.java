@@ -2,6 +2,7 @@ package com.donation.service;
 
 import com.donation.dto.CampaignDTO;
 import com.donation.models.data.Campaign;
+import com.donation.models.data.Donation;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,4 +22,6 @@ public interface CampaignService {
     List<CampaignDTO> getAllCampaignsWithCurrentAmount();
 
     Map<Long, BigDecimal> getTotalAmountPerCampaign();
+
+    List<Donation> getDonationsByCampaignId(Long campaignId);
 }

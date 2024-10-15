@@ -7,4 +7,5 @@ import com.donation.models.data.Student;
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
+    Student getStudentById(Long id);
 }

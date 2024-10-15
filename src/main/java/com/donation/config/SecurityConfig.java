@@ -1,75 +1,61 @@
-// // src/main/java/com/example/demo/config/SecurityConfig.java
-// package com.donation.config;
+package com.donation.config;
 
-// import com.donation.service.UserService;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.context.annotation.Bean;
-// import org.springframework.context.annotation.Configuration;
-// // Import other necessary classes
-// import
-// org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-// import
-// org.springframework.security.config.annotation.web.builders.HttpSecurity;
-// import org.springframework.security.config.annotation.web.configuration.*;
-// import org.springframework.security.core.userdetails.*;
-// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-// import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-// import java.util.stream.Collectors;
+import java.util.Arrays;
+import static org.springframework.security.config.Customizer.withDefaults;
 
-// @Configuration
-// @EnableWebSecurity
-// public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@Configuration
+@EnableWebSecurity
 
-// @Autowired
-// private UserService userService;
+public class SecurityConfig {
 
-// @Bean
-// public PasswordEncoder passwordEncoder() {
-// return new BCryptPasswordEncoder();
-// }
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-// @Override
-// protected void configure(AuthenticationManagerBuilder auth) throws Exception
-// {
-// auth.userDetailsService(new UserDetailsService() {
-// @Override
-// public UserDetails loadUserByUsername(String username) throws
-// UsernameNotFoundException {
-// com.example.demo.model.User user = userService.findByUsername(username);
-// if (user == null) {
-// throw new UsernameNotFoundException("User not found");
-// }
-// return new org.springframework.security.core.userdetails.User(
-// user.getUsername(),
-// user.getPassword(),
-// user.isEnabled(),
-// true,
-// true,
-// true,
-// user.getRoles().stream()
-// .map(role -> new SimpleGrantedAuthority(role.getName()))
-// .collect(Collectors.toList()));
-// }
-// }).passwordEncoder(passwordEncoder());
-// }
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/api/v1/**").permitAll() // Allow access to /api/v1/*
+                        .requestMatchers("/ /**").authenticated() // Require authentication for /dashboard/*
+                        .anyRequest().permitAll() // Allow all other requests
+                )
+                .formLogin((form) -> form
+                        .loginPage("/auth/login") // Custom login page
+                        .defaultSuccessUrl("/dashboard/home", true) // Redirect to /dashboard/home after successful
+                                                                    // login
+                        .permitAll())
+                .logout((logout) -> logout
+                        .logoutUrl("/auth/logout")
+                        .logoutSuccessUrl("/auth/login?logout")
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout", "GET"))
+                        .permitAll());
 
-// @Override
-// protected void configure(HttpSecurity http) throws Exception {
-// http
-// .csrf().disable() // Enable CSRF protection in production
-// .authorizeRequests()
-// .antMatchers("/register", "/login", "/css/**", "/js/**").permitAll()
-// .antMatchers("/api/v1/**").authenticated() // Secure API endpoints
-// .antMatchers("/admin/**").hasRole("ADMIN") // Example for admin routes
-// .anyRequest().authenticated()
-// .and()
-// .formLogin()
-// .loginPage("/login") // Custom login page
-// .defaultSuccessUrl("/home", true)
-// .permitAll()
-// .and()
-// .logout()
-// .permitAll();
-// }
-// }
+        return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // Frontend URL
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/**", configuration);
+        return source;
+    }
+}

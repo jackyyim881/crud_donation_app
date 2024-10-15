@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Notification - Donation App</title>
+  </head>
+  <body>
+    <header th:replace="fragments/header :: header"></header>
+
+    <div class="flex container">
+      <div
+        th:replace="fragments/sidebar :: sidebar"
+        class="mr-8 hidden lg:block"
+      ></div>
+      <div class="py-6 p-5 sm:px-6 lg:px-8">
+        <div class="bg-white max-w-[1500px] shadow rounded-lg p-6">
+          <h2 class="text-2xl font-semibold mb-4">Your Notifications</h2>
+
+          <!-- No Notifications Message -->
+          <div id="no-notifications" class="text-gray-500 hidden">
+            <p>No notifications to display.</p>
+          </div>
+
+          <!-- Notifications List -->
+          <ul id="notifications-list" class="divide-y divide-gray-200">
+            <!-- Sample Notification 1: Unread Donation Received -->
+            <li
+              class="notification-unread p-4 flex items-center justify-between"
+            >
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <i
+                    class="fas fa-hand-holding-usd text-green-500 text-2xl mr-4"
+                  ></i>
+                </div>
+                <div>
+                  <p class="text-gray-900">
+                    You received a donation of $50 from
+                    <strong>John Doe</strong>.
+                  </p>
+                  <p class="text-sm text-gray-500">10 Oct 2023 14:30</p>
+                </div>
+              </div>
+              <div>
+                <button
+                  data-id="1"
+                  class="mark-as-read-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                >
+                  Mark as Read
+                </button>
+              </div>
+            </li>
+
+            <!-- Sample Notification 2: Read Goal Achieved -->
+            <li class="notification-read p-4 flex items-center justify-between">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <i class="fas fa-bullseye text-blue-500 text-2xl mr-4"></i>
+                </div>
+                <div>
+                  <p class="text-gray-900">
+                    Congratulations! Your campaign "Save the Forest" has
+                    achieved its goal.
+                  </p>
+                  <p class="text-sm text-gray-500">08 Oct 2023 09:15</p>
+                </div>
+              </div>
+              <div>
+                <!-- No button for read notifications -->
+              </div>
+            </li>
+
+            <!-- Sample Notification 3: Unread New Campaign -->
+            <li
+              class="notification-unread p-4 flex items-center justify-between"
+            >
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <i
+                    class="fas fa-plus-circle text-indigo-500 text-2xl mr-4"
+                  ></i>
+                </div>
+                <div>
+                  <p class="text-gray-900">
+                    A new campaign "Clean Water Initiative" has been launched.
+                  </p>
+                  <p class="text-sm text-gray-500">05 Oct 2023 16:45</p>
+                </div>
+              </div>
+              <div>
+                <button
+                  data-id="3"
+                  class="mark-as-read-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                >
+                  Mark as Read
+                </button>
+              </div>
+            </li>
+          </ul>
+
+          <!-- Pagination -->
+          <div class="mt-6">
+            <nav class="flex justify-center">
+              <ul class="flex">
+                <li>
+                  <a
+                    href="#"
+                    class="px-3 py-2 ml-0 leading-tight text-blue-500 hover:text-blue-700 cursor-pointer"
+                  >
+                    Previous
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="px-3 py-2 leading-tight border border-gray-300 bg-blue-500 text-white"
+                  >
+                    1
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="px-3 py-2 leading-tight border border-gray-300 text-blue-500 hover:text-blue-700 cursor-pointer"
+                  >
+                    2
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="px-3 py-2 leading-tight border border-gray-300 text-blue-500 hover:text-blue-700 cursor-pointer"
+                  >
+                    3
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="px-3 py-2 leading-tight text-blue-500 hover:text-blue-700 cursor-pointer"
+                  >
+                    Next
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,12 +1,21 @@
 package com.donation.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import com.donation.dto.DonationRequest;
+import com.donation.models.data.Donation;
+import com.donation.service.DonationService;
 
 @Controller
 @RequestMapping("/donations")
 public class DonationWebController {
+
+    private final DonationService donationService;
+
+    public DonationWebController(DonationService donationService) {
+        this.donationService = donationService;
+    }
 
     // This will load the Thymeleaf template (donation.html)
     @GetMapping("/donate")
@@ -20,18 +29,16 @@ public class DonationWebController {
         return "donations/index.html";
     }
 
-    // Serve create.html at /donations/create or /donations/create.html
     @GetMapping("/create")
     public String getCreatePage() {
-        return "donations/create.html";
+        return "donations/create";
     }
 
-    @GetMapping("/create.html")
-    public String getCreatePageAlt() {
-        return "donations/create.html";
+    @PostMapping("/create")
+    public Donation createDonation(@RequestBody DonationRequest donationRequest) {
+        return donationService.createDonation(donationRequest);
     }
 
-    // Serve edit.html at /donations/edit or /donations/edit.html
     @GetMapping("/edit")
     public String getEditPage() {
         return "donations/edit.html";

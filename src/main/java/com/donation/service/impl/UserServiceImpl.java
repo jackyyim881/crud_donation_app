@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List; // 引入 List
 
@@ -61,36 +62,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.findAll(); // 返回 List<User>
     }
 
-    // 實現 UserDetailsService 介面的方法
-    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Try to find the user by username
         User user = userRepository.findByUsername(username);
         if (user == null) {
-            // If the user is not found by username, throw an exception
-            throw new UsernameNotFoundException("User not found: " + username);
+            System.out.println("Failed to find user: " + username);
+            throw new UsernameNotFoundException("User not found");
         }
-
-        // Return a UserDetails object
+        System.out.println("User found: " + user.getUsername());
         return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+                user.getUsername(), user.getPassword(), new ArrayList<>());
     }
 
-    // @Override
-    // @Transactional
-    // public void assignRoleToUser(String username, String roleName) {
-    // User user = userRepository.findByUsername(username);
-    // if (user == null) {
-    // throw new RuntimeException("User not found");
-    // }
-    // Role role = roleRepository.findByName(roleName);
-    // if (role == null) {
-    // role = new Role(roleName);
-    // roleRepository.save(role);
-    // }
-    // user.getRoles().add(role);
-    // userRepository.save(user);
-    // }
 }

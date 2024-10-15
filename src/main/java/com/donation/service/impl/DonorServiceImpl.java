@@ -12,11 +12,13 @@ import com.donation.repository.DonorRepository;
 import com.donation.repository.StudentRepository;
 import com.donation.repository.UserRepository;
 import com.donation.service.DonorService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Service
 public class DonorServiceImpl implements DonorService {
@@ -108,4 +110,15 @@ public class DonorServiceImpl implements DonorService {
     public void deleteDonor(Long id) {
         donorRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<Donor> findByUsername(String username) {
+        return donorRepository.findByUserUsername(username);
+    }
+
+    @Override
+    public Optional<Donor> findByUser(User user) {
+        return donorRepository.findByUser(user);
+    }
+
 }

@@ -22,4 +22,7 @@ public interface DonationService {
 
     void deleteDonation(Long id);
 
+    void donate(Long studentId, Long paymentMethodId, Double amount, Long donorId);
+
+    void saveDonation(Donation donation);
 }

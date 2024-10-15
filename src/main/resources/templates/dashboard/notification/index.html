@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Notification - Donation App</title>
+  </head>
+  <body>
+    <header th:replace="fragments/header :: header"></header>
+
+    <div class="flex container">
+      <div
+        th:replace="fragments/sidebar :: sidebar"
+        class="mr-8 hidden lg:block"
+      ></div>
+      <div class="py-6 p-5 sm:px-6 lg:px-8 flex-1">
+        <div class="bg-white max-w-[1500px] shadow rounded-lg p-6">
+          <h2 class="text-2xl font-semibold mb-4">Your Notifications</h2>
+
+          <!-- No Notifications Message -->
+          <div th:if="${notifications.isEmpty()}" class="text-gray-500">
+            <p>No notifications to display.</p>
+          </div>
+
+          <!-- Notifications List -->
+          <ul
+            id="notifications-list"
+            class="divide-y divide-gray-200"
+            th:if="${!notifications.isEmpty()}"
+          >
+            <li
+              th:each="notification : ${notifications}"
+              th:classappend="${notification.isRead() ? 'notification-read' : 'notification-unread'} p-4 flex items-center justify-between"
+            >
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <i
+                    class="fas"
+                    th:classappend="${notification.isRead() ? 'fa-check-circle text-green-500' : 'fa-envelope text-blue-500'} text-2xl mr-4"
+                  ></i>
+                </div>
+                <div>
+                  <p class="text-gray-900" th:text="${notification.message}">
+                    Notification Message
+                  </p>
+                  <p
+                    class="text-sm text-gray-500"
+                    th:text="${#dates.format(notification.timestamp, 'dd MMM yyyy HH:mm')}"
+                  >
+                    Date and Time
+                  </p>
+                </div>
+              </div>
+              <div th:if="${!notification.isRead()}">
+                <button
+                  th:attr="data-id=${notification.id}"
+                  class="mark-as-read-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                >
+                  Mark as Read
+                </button>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScript to Handle Mark as Read -->
+    <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".mark-as-read-btn").forEach((button) => {
+          button.addEventListener("click", function () {
+            const notificationId = this.getAttribute("data-id");
+
+            fetch(`/dashboard/notifications/mark-as-read/${notificationId}`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
+              .then((response) => {
+                if (response.ok) {
+                  // Update UI
+                  this.closest("li").classList.remove("notification-unread");
+                  this.closest("li").classList.add("notification-read");
+                  this.remove();
+                } else {
+                  alert("Failed to mark as read.");
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                alert("Error marking notification as read.");
+              });
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

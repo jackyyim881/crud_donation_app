@@ -1,12 +1,16 @@
 package com.donation.controller;
 
 import com.donation.models.data.Campaign;
+import com.donation.models.data.Donation;
 import com.donation.service.CampaignService;
+import com.donation.service.DonationService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/campaigns")
@@ -14,6 +18,7 @@ public class CampaignWebController {
 
     @Autowired
     private CampaignService campaignService;
+    private DonationService donationService;
 
     // 显示所有 Campaign
     @GetMapping
@@ -68,7 +73,9 @@ public class CampaignWebController {
     @GetMapping("/{id}")
     public String getCampaignById(@PathVariable Long id, Model model) {
         Campaign campaign = campaignService.getCampaignById(id);
+
         model.addAttribute("campaign", campaign);
+
         return "campaigns/detail";
     }
 }

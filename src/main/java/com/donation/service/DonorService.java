@@ -3,8 +3,11 @@ package com.donation.service;
 import com.donation.dto.DonationRequest;
 import com.donation.models.data.Donation;
 import com.donation.models.data.Donor;
+import com.donation.models.data.User;
 
 import java.util.List;
+
+import java.util.Optional;
 
 public interface DonorService {
     List<Donor> getAllDonors();
@@ -19,4 +22,7 @@ public interface DonorService {
 
     Donation createDonation(DonationRequest donationRequest);
 
+    Optional<Donor> findByUsername(String username);
+
+    Optional<Donor> findByUser(User user);
 }

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Calendar - Donation App</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/main.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100 min-h-screen font-sans">
+    <header th:replace="fragments/header :: header"></header>
+
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar Fragment -->
+      <div
+        th:replace="fragments/sidebar :: sidebar"
+        class="flex-shrink-0 w-64 hidden lg:block"
+      ></div>
+
+      <!-- Main Content Area -->
+      <div class="flex-grow overflow-auto p-6 lg:p-8">
+        <h1 class="text-3xl font-bold mb-6">Donation Calendar</h1>
+
+        <div
+          class="bg-white rounded-lg shadow-md p-4 lg:p-6 h-[calc(100vh-200px)] min-h-[600px]"
+        >
+          <div id="calendar" class="h-full w-full"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FullCalendar Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var calendarEl = document.getElementById("calendar");
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: "dayGridMonth",
+          headerToolbar: {
+            left: "prev,next today",
+            center: "title",
+            right: "dayGridMonth,timeGridWeek,timeGridDay",
+          },
+          editable: true,
+          selectable: true,
+          selectMirror: true,
+          dayMaxEvents: true,
+          events: "/dashboard/events", // Replace with your Spring Boot API endpoint
+
+          select: function (info) {
+            let eventTitle = prompt("Enter donation event title:");
+            if (eventTitle) {
+              axios
+                .post("/dashboard/events/create", {
+                  title: eventTitle,
+                  start: info.startStr,
+                  end: info.endStr,
+                })
+                .then((response) => {
+                  calendar.addEvent(response.data);
+                  alert("Donation event added successfully!");
+                })
+                .catch((error) => {
+                  console.error("Error adding event:", error);
+                  alert("Failed to add donation event.");
+                });
+            }
+            calendar.unselect();
+          },
+
+          eventClick: function (info) {
+            let newTitle = prompt(
+              "Edit donation event title:",
+              info.event.title
+            );
+            if (newTitle) {
+              axios
+                .put(`/dashboard/events/update/${info.event.id}`, {
+                  title: newTitle,
+                })
+                .then((response) => {
+                  info.event.setProp("title", newTitle);
+                  alert("Donation event updated successfully!");
+                })
+                .catch((error) => {
+                  console.error("Error updating event:", error);
+                  alert("Failed to update donation event.");
+                });
+            }
+          },
+
+          eventDrop: function (info) {
+            axios
+              .put(`/dashboard/events/update/${info.event.id}`, {
+                start: info.event.startStr,
+                end: info.event.endStr,
+              })
+              .then((response) => {
+                alert("Donation event updated successfully!");
+              })
+              .catch((error) => {
+                console.error("Error updating event:", error);
+                alert("Failed to update donation event.");
+                info.revert();
+              });
+          },
+        });
+
+        calendar.render();
+      });
+    </script>
+  </body>
+</html>

@@ -8,5 +8,12 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [],
+  screens: {
+    sm: "640px",
+    md: "768px",
+    lg: "1024px", // Ensure this is set as per your design
+    xl: "1280px",
+    "2xl": "1536px",
+  },
+  plugins: [require("@tailwindcss/forms")],
 };

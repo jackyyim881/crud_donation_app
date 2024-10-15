@@ -1,54 +1,54 @@
 <header th:fragment="header">
   <nav
-    class="bg-gradient-to-r from-blue-600 to-purple-600 p-5 text-white shadow-lg"
+    class="bg-gradient-to-r from-blue-600 to-purple-600 p-5 text-white shadow-lg uk-navbar-container"
   >
-    <div class="container mx-auto flex flex-wrap items-center justify-between">
-      <!-- Logo -->
-      <a
-        href="/"
-        class="text-2xl font-bold tracking-widest hover:text-gray-200 transition-colors duration-300"
-      >
-        DonateApp
-      </a>
-
-      <!-- Hamburger Button for Mobile -->
-      <button
-        id="menu-btn"
-        class="block lg:hidden p-2 focus:outline-none focus:ring focus:ring-purple-300"
-      >
-        <svg
-          class="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
+    <div class="container mx-auto">
+      <div class="flex items-center justify-between w-full">
+        <!-- Logo -->
+        <a
+          href="/"
+          class="text-sm font-bold tracking-widest hover:text-gray-200 transition-colors duration-300"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 6h16M4 12h16m-7 6h7"
-          ></path>
-        </svg>
-      </button>
+          DonateApp
+        </a>
+
+        <button
+          id="menu-btn"
+          class="block lg:hidden p-2 focus:outline-none focus:ring-2 focus:ring-purple-300 rounded"
+          aria-label="Toggle Menu"
+          aria-expanded="false"
+          aria-controls="menu"
+        >
+          <svg
+            id="menu-icon"
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              id="menu-path"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16m-7 6h7"
+            ></path>
+          </svg>
+        </button>
+      </div>
 
       <!-- Menu Links -->
       <ul
         id="menu"
-        class="hidden lg:flex lg:space-x-8 mt-4 lg:mt-0 w-full lg:w-auto lg:flex-row lg:items-center flex-col space-y-4 lg:space-y-0"
+        class="hidden lg:flex lg:space-x-8 w-full lg:w-auto lg:flex-row lg:items-center mt-4 lg:mt-0 flex-col space-y-4 lg:space-y-0 transition-all duration-300"
       >
         <li>
           <a
             href="/"
             class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
             >Home</a
-          >
-        </li>
-        <li>
-          <a
-            href="/users"
-            class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
-            >Users</a
           >
         </li>
         <li>
@@ -60,58 +60,85 @@
         </li>
         <li>
           <a
-            href="/feedbacks"
+            href="/contact"
             class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
-            >Feedback</a
+            >Contact</a
           >
         </li>
-        <li>
+
+        <!-- Show these links only if the user is logged in -->
+        <li th:if="${#authentication.name != 'anonymousUser'}">
+          <a
+            href="/users"
+            class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
+            >Users</a
+          >
+        </li>
+        <li th:if="${#authentication.name != 'anonymousUser'}">
           <a
             href="/students"
             class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
             >Students</a
           >
         </li>
-        <li>
-          <a
-            href="/receipts"
-            class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
-            >Receipts</a
-          >
-        </li>
-        <li>
-          <a
-            href="/donors"
-            class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
-            >Donors</a
-          >
-        </li>
-        <li>
-          <a
-            href="/campaigns"
-            class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
-            >Campaigns</a
-          >
-        </li>
-        <li>
-          <a
-            href="/payment-methods"
-            class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
-            >Payment Methods</a
-          >
-        </li>
-        <li>
+        <li th:if="${#authentication.name != 'anonymousUser'}">
           <a
             href="/donations"
             class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
             >Donations</a
           >
         </li>
-        <li>
+        <li th:if="${#authentication.name != 'anonymousUser'}">
           <a
-            href="/contact"
+            href="/donors"
             class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
-            >Contact</a
+            >Donors</a
+          >
+        </li>
+        <li th:if="${#authentication.name != 'anonymousUser'}">
+          <a
+            href="/campaigns"
+            class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
+            >Campaigns</a
+          >
+        </li>
+        <li th:if="${#authentication.name != 'anonymousUser'}">
+          <a
+            href="/payment-methods"
+            class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
+            >Payment Methods</a
+          >
+        </li>
+        <li th:if="${#authentication.name != 'anonymousUser'}">
+          <a
+            href="/receipts"
+            class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
+            >Receipts</a
+          >
+        </li>
+
+        <!-- Show login and register if the user is not logged in -->
+        <li th:if="${#authentication.name == 'anonymousUser'}">
+          <a
+            href="/auth/login"
+            class="block text-lg md:text-sm text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300 hover:bg-gray-300"
+            >Login</a
+          >
+        </li>
+        <li th:if="${#authentication.name == 'anonymousUser'}">
+          <a
+            href="/auth/register"
+            class="block text-lg md:text-sm bg-purple-600 text-white rounded-lg px-4 py-2 transition-colors duration-300 hover:bg-purple-700"
+            >Register</a
+          >
+        </li>
+
+        <!-- Show logout link if user is logged in -->
+        <li th:if="${#authentication.name != 'anonymousUser'}">
+          <a
+            href="/auth/logout"
+            class="block text-lg md:text-sm text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300 hover:bg-gray-300"
+            >Logout</a
           >
         </li>
       </ul>
@@ -119,10 +146,65 @@
   </nav>
 
   <script>
-    // JavaScript to handle the mobile menu toggle
-    document.getElementById("menu-btn").addEventListener("click", function () {
+    // JavaScript to handle the mobile menu toggle and responsiveness
+    document.addEventListener("DOMContentLoaded", () => {
+      const menuBtn = document.getElementById("menu-btn");
       const menu = document.getElementById("menu");
-      menu.classList.toggle("hidden");
+      const menuPath = document.getElementById("menu-path");
+
+      const toggleMenu = () => {
+        const isHidden = menu.classList.toggle("hidden");
+        menuBtn.setAttribute("aria-expanded", !isHidden);
+
+        // Toggle the icon between hamburger and close
+        if (isHidden) {
+          menuPath.setAttribute("d", "M4 6h16M4 12h16m-7 6h7"); // Hamburger icon
+        } else {
+          menuPath.setAttribute("d", "M6 18L18 6M6 6l12 12"); // Close icon
+        }
+      };
+
+      menuBtn.addEventListener("click", toggleMenu);
+
+      // Close the menu when clicking outside
+      document.addEventListener("click", (event) => {
+        if (!menu.contains(event.target) && !menuBtn.contains(event.target)) {
+          if (!menu.classList.contains("hidden")) {
+            menu.classList.add("hidden");
+            menuBtn.setAttribute("aria-expanded", "false");
+            menuPath.setAttribute("d", "M4 6h16M4 12h16m-7 6h7"); // Hamburger icon
+          }
+        }
+      });
+
+      // Handle Esc key to close the menu
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !menu.classList.contains("hidden")) {
+          menu.classList.add("hidden");
+          menuBtn.setAttribute("aria-expanded", "false");
+          menuPath.setAttribute("d", "M4 6h16M4 12h16m-7 6h7"); // Hamburger icon
+          menuBtn.focus();
+        }
+      });
+
+      // Handle window resize to reset menu state
+      const handleResize = () => {
+        if (window.innerWidth >= 1024) {
+          // Match 'lg' breakpoint
+          menu.classList.remove("hidden");
+          menuBtn.setAttribute("aria-expanded", "true");
+          menuPath.setAttribute("d", "M6 18L18 6M6 6l12 12"); // Ensure menu is open
+        } else {
+          menu.classList.add("hidden");
+          menuBtn.setAttribute("aria-expanded", "false");
+          menuPath.setAttribute("d", "M4 6h16M4 12h16m-7 6h7"); // Hamburger icon
+        }
+      };
+
+      window.addEventListener("resize", handleResize);
+
+      // Initialize menu state on page load
+      handleResize();
     });
   </script>
 </header>

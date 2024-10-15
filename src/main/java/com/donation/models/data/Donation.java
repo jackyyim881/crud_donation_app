@@ -28,7 +28,7 @@ public class Donation {
     private LocalDate donationDate;
 
     @ManyToOne
-    @JoinColumn(name = "campaign_id")
+    @JoinColumn(name = "campaign_id", nullable = true) // Campaign is optional
     private Campaign ncampaign; // Assuming a campaign entity
 
     @ManyToOne
