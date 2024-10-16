@@ -11,11 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-
+import java.nio.file.*;
 import java.util.List;
 
 @Controller
@@ -27,14 +23,9 @@ public class StudentWebController {
     // Directory to save uploaded images
     private static final String UPLOAD_DIR = "src/main/resources/static/images/";
 
-    @Autowired
     public StudentWebController(StudentService studentService) {
         this.studentService = studentService;
     }
-
-    /**
-     * Display all students.
-     */
 
     @GetMapping
     public String showStudents(Model model) {
@@ -43,9 +34,6 @@ public class StudentWebController {
         return "students/list";
     }
 
-    /**
-     * Show the form to add a new student.
-     */
     @GetMapping("/add")
     public String showAddForm(Model model) {
         Student student = new Student();
@@ -53,9 +41,6 @@ public class StudentWebController {
         return "students/addform";
     }
 
-    /**
-     * Handle the submission of the add student form.
-     */
     @PostMapping("/add")
     public String addStudent(@Valid @ModelAttribute("student") Student student,
             BindingResult result,

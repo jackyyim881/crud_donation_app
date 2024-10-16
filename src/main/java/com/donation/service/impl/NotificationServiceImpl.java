@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class NotificationServiceImpl implements NotificationService {
@@ -23,8 +22,10 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public List<Notification> getUnreadNotifications(User user) {
-        return notificationRepository.findByUserAndIsReadFalse(user);
+    public void createNotification(String message, User user, LocalDateTime timestamp) {
+        Notification notification = new Notification(user, message, timestamp);
+        notification.setRead(false);
+        notificationRepository.save(notification);
     }
 
     @Override
@@ -33,17 +34,15 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public Notification createNotification(User user, String message) {
-        Notification notification = new Notification(user, message, LocalDateTime.now());
-        return notificationRepository.save(notification);
+    public List<Notification> getUnreadNotifications(User user) {
+        return notificationRepository.findByUserAndIsReadFalse(user);
     }
 
     @Override
     public void markAsRead(Long notificationId) {
-        Optional<Notification> optionalNotification = notificationRepository.findById(notificationId);
-        optionalNotification.ifPresent(notification -> {
-            notification.setRead(true);
-            notificationRepository.save(notification);
-        });
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid notification ID"));
+        notification.setRead(true);
+        notificationRepository.save(notification);
     }
 }

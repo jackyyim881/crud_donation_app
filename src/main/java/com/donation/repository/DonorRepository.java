@@ -1,6 +1,7 @@
 package com.donation.repository;
 
 import com.donation.models.data.Donor;
+import com.donation.models.data.User;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,4 +17,6 @@ public interface DonorRepository extends JpaRepository<Donor, Long> {
     Donor getDonorById(Long id);
 
     Optional<Donor> findByUserUsername(String username);
+
+    Optional<Donor> findByUser(User user);
 }

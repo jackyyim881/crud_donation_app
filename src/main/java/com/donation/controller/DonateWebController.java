@@ -6,22 +6,22 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-import com.donation.models.data.Donor;
-import com.donation.models.data.PaymentMethod;
-import com.donation.models.data.Student;
-import com.donation.service.DonationService;
-import com.donation.service.DonorService;
-import com.donation.service.PaymentMethodService;
-import com.donation.service.StudentService;
+import com.donation.models.data.*;
+import com.donation.repository.DonorRepository;
+import com.donation.service.*;
+
 import java.util.List;
-import org.springframework.web.bind.annotation.PostMapping;
+
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Controller
 public class DonateWebController {
+    private static final Logger logger = LoggerFactory.getLogger(DonateWebController.class);
 
     @Autowired
     private StudentService studentService;
@@ -29,16 +29,13 @@ public class DonateWebController {
     @Autowired
     private PaymentMethodService paymentMethodService;
 
-    @Autowired
-    private DonationService donationService;
+    private final DonorService donorService;
+    private final DonationService donationService;
 
     @Autowired
-    private DonorService donorService;
-
-    @Autowired
-    public DonateWebController(DonationService donationService, DonorService donorService) {
-        this.donationService = donationService;
+    public DonateWebController(DonorService donorService, DonationService donationService) {
         this.donorService = donorService;
+        this.donationService = donationService;
     }
 
     @GetMapping("/donate")
@@ -61,19 +58,14 @@ public class DonateWebController {
             @RequestParam Double amount,
             RedirectAttributes redirectAttributes) {
 
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String username = authentication.getName();
-            Donor donor = donorService.findByUsername(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("Donor not found"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        Donor donor = donorService.findByUserUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Donor not found"));
+        logger.debug("Donor found: {}", donor);
 
-            donationService.donate(studentId, paymentMethodId, amount, donor.getId());
-            redirectAttributes.addFlashAttribute("message", "Donation successful!");
-        } catch (Exception e) {
-            e.printStackTrace();
-            redirectAttributes.addFlashAttribute("error", "Donation failed: " +
-                    e.getMessage());
-        }
+        donationService.donate(studentId, paymentMethodId, amount, donor.getId());
+        redirectAttributes.addFlashAttribute("message", "Donation successful!");
 
         return "redirect:/donate";
     }

@@ -2,6 +2,8 @@ package com.donation.models.data;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import java.util.HashSet;
 
@@ -34,6 +36,7 @@ public class User {
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @JsonManagedReference // Prevent circular reference with roles
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
@@ -117,5 +120,15 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public User orElseThrow(Object object) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
+    }
+
+    public Object map(Object object) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'map'");
     }
 }

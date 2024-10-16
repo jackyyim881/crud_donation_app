@@ -1,6 +1,5 @@
 package com.donation.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import com.donation.models.data.Role;
@@ -11,7 +10,6 @@ public class DataLoader implements CommandLineRunner {
 
     private final RoleRepository roleRepository;
 
-    @Autowired
     public DataLoader(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }

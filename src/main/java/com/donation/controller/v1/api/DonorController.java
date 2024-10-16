@@ -22,7 +22,6 @@ public class DonorController {
     @GetMapping("/current")
     public Donor getDonorForCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
         User user = userService.findByUsername(userDetails.getUsername());
-        return donorService.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Donor not found for user: " + userDetails.getUsername()));
+        return donorService.getDonorById(user.getId());
     }
 }

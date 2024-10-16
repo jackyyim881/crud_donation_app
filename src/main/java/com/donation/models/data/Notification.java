@@ -31,8 +31,12 @@ public class Notification {
     @Column(name = "is_read", nullable = false)
     private boolean isRead = false;
 
-    // Constructors, Getters and Setters
+    // No-argument constructor
     public Notification() {
+    }
+
+    // Custom constructors
+    public Notification(String message2, User user2) {
     }
 
     public Notification(User user, String message, LocalDateTime timestamp) {

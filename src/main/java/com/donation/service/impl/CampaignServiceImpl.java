@@ -1,12 +1,15 @@
 package com.donation.service.impl;
 
 import com.donation.dto.CampaignDTO;
+import com.donation.exception.EntityNotFoundException; // Assume you have a custom exception
+
 import com.donation.models.data.Campaign;
 import com.donation.models.data.Donation;
 import com.donation.repository.CampaignRepository;
 import com.donation.repository.DonationRepository;
 import com.donation.service.CampaignService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.donation.service.mapper.CampaignMapperService;
+
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,11 +21,18 @@ import java.util.Map;
 @Service
 public class CampaignServiceImpl implements CampaignService {
 
-    @Autowired
-    private CampaignRepository campaignRepository;
+    private final CampaignRepository campaignRepository;
+    private final DonationRepository donationRepository;
+    private final CampaignMapperService campaignMapperService; // Mapper Service for CampaignDTO
 
-    @Autowired
-    private DonationRepository donationRepository;
+    // Constructor injection (best practice for testability and immutability)
+    public CampaignServiceImpl(CampaignRepository campaignRepository,
+            DonationRepository donationRepository,
+            CampaignMapperService campaignMapperService) {
+        this.campaignRepository = campaignRepository;
+        this.donationRepository = donationRepository;
+        this.campaignMapperService = campaignMapperService;
+    }
 
     @Override
     public Campaign createCampaign(Campaign campaign) {
@@ -37,14 +47,14 @@ public class CampaignServiceImpl implements CampaignService {
     @Override
     public Campaign getCampaignById(Long id) {
         return campaignRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Campaign not found with id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Campaign not found with id: " + id));
     }
 
     @Override
     public Campaign updateCampaign(Long id, Campaign campaignDetails) {
-        Campaign campaign = campaignRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Campaign not found with id: " + id));
+        Campaign campaign = getCampaignById(id); // Use existing method for reusability
 
+        // Update fields
         campaign.setName(campaignDetails.getName());
         campaign.setDescription(campaignDetails.getDescription());
         campaign.setGoalAmount(campaignDetails.getGoalAmount());
@@ -56,8 +66,7 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     public void deleteCampaign(Long id) {
-        Campaign campaign = campaignRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Campaign not found with id: " + id));
+        Campaign campaign = getCampaignById(id); // Use existing method for reusability
         campaignRepository.delete(campaign);
     }
 
@@ -66,16 +75,12 @@ public class CampaignServiceImpl implements CampaignService {
         List<Campaign> campaigns = campaignRepository.findAll();
         Map<Long, BigDecimal> totals = getTotalAmountPerCampaign();
 
+        // Use the CampaignMapperService to map Campaign to CampaignDTO
         List<CampaignDTO> campaignDTOs = new ArrayList<>();
         for (Campaign campaign : campaigns) {
-            CampaignDTO dto = new CampaignDTO();
-            dto.setId(campaign.getId());
-            dto.setName(campaign.getName());
-            dto.setDescription(campaign.getDescription());
-            dto.setGoalAmount(campaign.getGoalAmount());
-            dto.setStartDate(campaign.getStartDate());
-            dto.setEndDate(campaign.getEndDate());
-            dto.setCurrentAmount(totals.getOrDefault(campaign.getId(), BigDecimal.ZERO));
+            CampaignDTO dto = campaignMapperService.toDTO(campaign);
+            // Set currentAmount from totals map
+            dto = dto.withCurrentAmount(totals.getOrDefault(campaign.getId(), BigDecimal.ZERO));
             campaignDTOs.add(dto);
         }
         return campaignDTOs;
@@ -95,5 +100,4 @@ public class CampaignServiceImpl implements CampaignService {
     public List<Donation> getDonationsByCampaignId(Long campaignId) {
         return campaignRepository.findDonationsByCampaignId(campaignId);
     }
-
 }

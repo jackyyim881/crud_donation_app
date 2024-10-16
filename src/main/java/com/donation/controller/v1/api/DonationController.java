@@ -2,115 +2,111 @@ package com.donation.controller.v1.api;
 
 import com.donation.dto.DonationRequest;
 import com.donation.dto.DonationResponse;
-import com.donation.models.data.Donation;
+import com.donation.exception.ResourceNotFoundException;
 import com.donation.service.DonationService;
-
-import jakarta.validation.Valid;
-
-import java.util.HashMap;
-import java.util.Map; // Ensure this import is correct
-
+import com.donation.service.mapper.DonationMapperService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import jakarta.validation.Valid;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/donations")
+@Validated // Enables input validation
 public class DonationController {
 
-    @Autowired
-    private DonationService donationService;
+    private final DonationService donationService;
+    private final DonationMapperService donationMapperService;
 
-    /**
-     * Creates a new donation.
-     */
-    @PostMapping
-    public ResponseEntity<DonationResponse> createDonation(@Valid @RequestBody DonationRequest donationRequest) {
-        Donation donation = donationService.createDonation(donationRequest);
-        DonationResponse response = mapToResponse(donation);
-        return ResponseEntity.status(201).body(response);
+    @Autowired
+    public DonationController(DonationService donationService, DonationMapperService donationMapperService) {
+        this.donationService = donationService;
+        this.donationMapperService = donationMapperService;
     }
 
     /**
-     * Retrieves donations with optional filters.
+     * Creates a new donation.
+     * 
+     * @param donationRequest DTO containing donation details.
+     * @return ResponseEntity containing the created donation.
+     */
+    @PostMapping
+    public ResponseEntity<DonationResponse> createDonation(@Valid @RequestBody DonationRequest donationRequest) {
+        var donation = donationService.createDonation(donationRequest);
+        var response = donationMapperService.toDTO(donation);
+        return ResponseEntity.status(201).body(response); // HTTP 201 Created
+    }
+
+    /**
+     * Retrieves all donations or donations filtered by optional criteria.
+     * 
+     * @param minAmount  Optional minimum donation amount.
+     * @param maxAmount  Optional maximum donation amount.
+     * @param startDate  Optional start date for donations.
+     * @param endDate    Optional end date for donations.
+     * @param campaignId Optional campaign ID to filter by campaign.
+     * @return ResponseEntity containing a list of filtered or all donations.
      */
     @GetMapping
     public ResponseEntity<List<DonationResponse>> getDonations(
             @RequestParam(required = false) Double minAmount,
             @RequestParam(required = false) Double maxAmount,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            @RequestParam(required = false) Long donorId) {
-        List<Donation> donations;
-        if (minAmount == null && maxAmount == null && startDate == null && endDate == null && donorId == null) {
-            donations = donationService.getAllDonations();
-        } else {
-            donations = donationService.getDonations(minAmount, maxAmount, startDate, endDate, donorId);
-        }
-        List<DonationResponse> responses = donations.stream()
-                .map(this::mapToResponse)
+            @RequestParam(required = false) LocalDate startDate,
+            @RequestParam(required = false) LocalDate endDate,
+            @RequestParam(required = false) Long campaignId) {
+
+        var donations = donationService.getDonations(minAmount, maxAmount, startDate, endDate, campaignId);
+        var responses = donations.stream()
+                .map(donationMapperService::toDTO)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(responses);
+
+        return ResponseEntity.ok(responses); // HTTP 200 OK
     }
 
     /**
-     * Retrieves a donation by ID.
+     * Retrieves a donation by its ID.
+     * 
+     * @param id The ID of the donation.
+     * @return ResponseEntity containing the donation if found.
      */
     @GetMapping("/{id}")
     public ResponseEntity<DonationResponse> getDonationById(@PathVariable Long id) {
-        Donation donation = donationService.getDonationById(id);
-        DonationResponse response = mapToResponse(donation);
-        return ResponseEntity.ok(response);
+        var donation = donationService.getDonationById(id);
+        var response = donationMapperService.toDTO(donation);
+        return ResponseEntity.ok(response); // HTTP 200 OK
     }
 
     /**
-     * Updates a donation.
+     * Updates an existing donation.
+     * 
+     * @param id              The ID of the donation to update.
+     * @param donationRequest DTO containing updated donation details.
+     * @return ResponseEntity containing the updated donation.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<DonationResponse> updateDonation(@PathVariable Long id,
+    public ResponseEntity<DonationResponse> updateDonation(
+            @PathVariable Long id,
             @Valid @RequestBody DonationRequest donationRequest) {
-        Donation updatedDonation = donationService.updateDonation(id, donationRequest);
-        DonationResponse response = mapToResponse(updatedDonation);
-        return ResponseEntity.ok(response);
+
+        var updatedDonation = donationService.updateDonation(id, donationRequest);
+        var response = donationMapperService.toDTO(updatedDonation);
+        return ResponseEntity.ok(response); // HTTP 200 OK
     }
 
     /**
-     * Deletes a donation.
+     * Deletes a donation by its ID.
+     * 
+     * @param id The ID of the donation to delete.
+     * @return ResponseEntity with HTTP 204 No Content status.
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDonation(@PathVariable Long id) {
         donationService.deleteDonation(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build(); // HTTP 204 No Content
     }
-
-    /**
-     * Utility method to map Donation to DonationResponse.
-     */
-    private DonationResponse mapToResponse(Donation donation) {
-        DonationResponse response = new DonationResponse();
-        response.setId(donation.getId());
-        response.setAmount(donation.getAmount());
-        response.setDonorId(donation.getDonor().getId());
-        response.setDonorName(donation.getDonor().getUser().getUsername()); // Assuming Donor's User has getName()
-        response.setDonationDate(donation.getDonationDate());
-        response.setCampaignId(donation.getNcampaign().getId());
-        response.setCampaignName(donation.getNcampaign().getName());
-
-        if (donation.getNcampaign() != null) {
-            response.setCampaignId(donation.getNcampaign().getId());
-            response.setCampaignName(donation.getNcampaign().getName());
-        }
-
-        if (donation.getPaymentMethod() != null) {
-            response.setPaymentMethodId(donation.getPaymentMethod().getId());
-            response.setPaymentMethodName(donation.getPaymentMethod().getMethodName());
-        }
-        return response;
-    }
-
 }

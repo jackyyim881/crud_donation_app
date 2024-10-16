@@ -11,32 +11,54 @@ import java.util.stream.Collectors;
 
 @Service
 public class StudentMapperService {
+
     public StudentDTO toDTO(Student student) {
-        StudentDTO dto = new StudentDTO();
-        dto.setId(student.getId());
-        dto.setName(student.getName());
-        dto.setAge(student.getAge());
-        dto.setSchool(student.getSchool());
-        dto.setBio(student.getBio());
+        return new StudentDTO(
+                student.getId(),
+                student.getName(),
+                student.getAge(),
+                student.getSchool(),
+                student.getBio(),
+                student.getLatitude(),
+                student.getLongitude(),
+                student.getImageBase64(), // Handling byte[] -> Base64 conversion
+                mapHomelessDetails(student.getHomelessDetails()) // Map homeless details to DTO
+        );
+    }
 
-        if (student.getHomelessDetails() != null) {
-            List<HomelessStudentDetailsDTO> homelessDetailsDTOList = student.getHomelessDetails().stream()
-                    .map(this::toDTO)
-                    .collect(Collectors.toList());
-            dto.setHomelessDetails(homelessDetailsDTOList);
+    // The new toEntity method
+    public Student toEntity(StudentDTO studentDTO) {
+        Student student = new Student();
+        student.setId(studentDTO.id()); // If it's an update scenario, the ID will be non-null
+        student.setName(studentDTO.name());
+        student.setAge(studentDTO.age());
+        student.setSchool(studentDTO.school());
+        student.setBio(studentDTO.bio());
+        // No need for latitude and longitude here unless you add them to StudentDTO
+        // Convert Base64 back to byte[] if needed
+        if (studentDTO.studentImageBase64() != null) {
+            student.setStudentImage(decodeBase64Image(studentDTO.studentImageBase64()));
         }
+        return student;
+    }
 
-        return dto;
+    // Utility method to decode Base64 to byte[]
+    private byte[] decodeBase64Image(String base64Image) {
+        return base64Image != null ? java.util.Base64.getDecoder().decode(base64Image) : null;
     }
 
     public HomelessStudentDetailsDTO toDTO(HomelessStudentDetails homelessDetails) {
-        HomelessStudentDetailsDTO dto = new HomelessStudentDetailsDTO();
-        dto.setId(homelessDetails.getId());
-        dto.setCurrentShelter(homelessDetails.getCurrentShelter());
-        dto.setDurationOfHomelessness(homelessDetails.getDurationOfHomelessness());
-        dto.setEmergencyContact(homelessDetails.getEmergencyContact());
-        dto.setSpecialNeeds(homelessDetails.getSpecialNeeds());
+        return new HomelessStudentDetailsDTO(
+                homelessDetails.getId(),
+                homelessDetails.getCurrentShelter(),
+                homelessDetails.getDurationOfHomelessness(),
+                homelessDetails.getEmergencyContact(),
+                homelessDetails.getSpecialNeeds());
+    }
 
-        return dto;
+    private List<HomelessStudentDetailsDTO> mapHomelessDetails(List<HomelessStudentDetails> homelessDetails) {
+        return homelessDetails != null ? homelessDetails.stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList()) : List.of(); // Return an empty list if homelessDetails is null
     }
 }

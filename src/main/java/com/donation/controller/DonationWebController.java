@@ -1,7 +1,10 @@
 package com.donation.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.donation.dto.DonationRequest;
 import com.donation.models.data.Donation;
@@ -20,7 +23,6 @@ public class DonationWebController {
     // This will load the Thymeleaf template (donation.html)
     @GetMapping("/donate")
     public String showDonationForm() {
-        // Returns the Thymeleaf template named 'donation'
         return "donation";
     }
 
@@ -41,11 +43,7 @@ public class DonationWebController {
 
     @GetMapping("/edit")
     public String getEditPage() {
-        return "donations/edit.html";
+        return "donations/edit";
     }
 
-    @GetMapping("/edit.html")
-    public String getEditPageAlt() {
-        return "donations/edit.html";
-    }
 }
