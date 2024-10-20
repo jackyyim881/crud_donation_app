@@ -63,9 +63,15 @@ public class QuickNoteWebController {
     // Display form to update an existing quick note
     @GetMapping("/quick-notes/update/{noteId}")
     public String showUpdateNoteForm(@PathVariable Long noteId, Model model) {
+        System.out.println("Attempting to fetch note with ID: " + noteId);
         Note existingNote = noteService.getNoteById(noteId);
+        if (existingNote == null) {
+            System.out.println("Note with ID " + noteId + " not found");
+        } else {
+            System.out.println("Found note: " + existingNote.getContent());
+        }
         model.addAttribute("note", existingNote);
-        return "quick-notes/update"; // Return the Thymeleaf template for updating a note
+        return "quick-notes/update";
     }
 
     // Handle form submission to update an existing quick note

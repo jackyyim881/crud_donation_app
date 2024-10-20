@@ -129,7 +129,7 @@
           <li th:if="${#authentication.name == 'anonymousUser'}">
             <a
               href="/auth/register"
-              class="block text-lg md:text-sm bg-purple-600 text-white rounded-lg px-4 py-2 transition-colors duration-300 hover:bg-purple-700"
+              class="block text-xs md:text-sm bg-purple-600 text-white rounded-lg px-4 py-2 transition-colors duration-300 hover:bg-purple-700"
               >Register</a
             >
           </li>
@@ -138,7 +138,7 @@
           <li th:if="${#authentication.name != 'anonymousUser'}">
             <a
               href="/auth/logout"
-              class="block text-lg md:text-sm text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300 hover:bg-gray-300"
+              class="block text-xs md:text-sm text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300 hover:bg-gray-300"
               >Logout</a
             >
           </li>

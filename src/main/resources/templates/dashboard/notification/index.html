@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Notifications</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css"
+    />
+  </head>
+  <body class="bg-gray-100 font-sans">
+    <header th:replace="fragments/header :: header"></header>
+
+    <div class="flex">
+      <!-- Sidebar Fragment -->
+      <div
+        th:replace="fragments/sidebar :: sidebar"
+        class="mr-8 hidden lg:block flex-none"
+      ></div>
+
+      <!-- Main Content Area -->
+      <div class="w-auto p-5 mt-10">
+        <h1 class="text-3xl font-bold mb-6">Notifications</h1>
+
+        <!-- Notification List -->
+        <div id="notificationsList" class="w-full lg:w-3/4">
+          <div th:if="${notifications.size() == 0}">
+            <p class="text-gray-600">No notifications found.</p>
+          </div>
+          <div
+            th:each="notification : ${notifications}"
+            class="notification-card p-4 mb-4 bg-white rounded-lg shadow-md gap-4"
+          >
+            <p class="text-gray-800" th:text="${notification.message}">
+              Notification Message
+            </p>
+            <p
+              class="text-gray-600 text-sm"
+              th:text="${#temporals.format(notification.timestamp, 'yyyy-MM-dd HH:mm:ss')}"
+            >
+              Timestamp
+            </p>
+
+            <div class="flex justify-end mt-4">
+              <form
+                th:action="@{/dashboard/mark-as-read/{notificationId}(notificationId=${notification.id})}"
+                method="post"
+              >
+                <button
+                  type="submit"
+                  class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300"
+                  th:if="${!notification.isRead}"
+                >
+                  Mark as Read
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

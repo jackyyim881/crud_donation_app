@@ -91,15 +91,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-<<<<<<< HEAD
-=======
-    public User getDonorById(Long id) {
-        return userRepository.getDonorById(id);
-    }
-
-    @Override
-
->>>>>>> c20a9643e4d9e22674313fe21adedf9df48d2ec9
     public List<User> findAll() { // 修改方法簽名
         return userRepository.findAll(); // 返回 List<User>
     }
