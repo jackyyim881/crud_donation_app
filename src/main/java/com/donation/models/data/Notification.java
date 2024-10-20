@@ -35,6 +35,10 @@ public class Notification {
     public Notification() {
     }
 
+    // Custom constructors
+    public Notification(String message2, User user2) {
+    }
+
     // Constructor with user, message, and timestamp
     public Notification(User user, String message, LocalDateTime timestamp) {
         this.user = user;

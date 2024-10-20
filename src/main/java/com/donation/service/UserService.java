@@ -22,4 +22,9 @@ public interface UserService {
 
     void registerUser(UserDTO userDTO, BCryptPasswordEncoder passwordEncoder);
 
+<<<<<<< HEAD
+=======
+    void registerUser(UserDTO userDTO, BCryptPasswordEncoder passwordEncoder);
+
+>>>>>>> c20a9643e4d9e22674313fe21adedf9df48d2ec9
 }

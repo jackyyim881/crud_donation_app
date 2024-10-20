@@ -19,14 +19,30 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
+<<<<<<< HEAD
     public void createNotification(User user, String message) {
         Notification notification = new Notification(user, message, LocalDateTime.now());
+=======
+    public void createNotification(String message, User user, LocalDateTime timestamp) {
+        Notification notification = new Notification(user, message, timestamp);
+        notification.setRead(false);
+>>>>>>> c20a9643e4d9e22674313fe21adedf9df48d2ec9
         notificationRepository.save(notification);
     }
 
     @Override
+<<<<<<< HEAD
     public List<Notification> getNotificationsForUser(User user) {
         return notificationRepository.findByUserOrderByTimestampDesc(user);
+=======
+    public List<Notification> getAllNotifications(User user) {
+        return notificationRepository.findByUser(user);
+    }
+
+    @Override
+    public List<Notification> getUnreadNotifications(User user) {
+        return notificationRepository.findByUserAndIsReadFalse(user);
+>>>>>>> c20a9643e4d9e22674313fe21adedf9df48d2ec9
     }
 
     @Override
