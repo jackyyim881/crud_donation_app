@@ -29,7 +29,7 @@ $(document).ready(function () {
                               donation.paymentMethodName || "N/A"
                             }</td>
                             <td class="py-2 px-4 border-b">
-                                <a href="/donations/edit.html?id=${
+                                <a href="/donations/edit?id=${
                                   donation.id
                                 }" class="text-blue-500 hover:text-blue-700">Edit</a>
                                 |

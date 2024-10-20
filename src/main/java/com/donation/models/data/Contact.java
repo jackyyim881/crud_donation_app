@@ -2,7 +2,6 @@
 package com.donation.models.data;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import jakarta.persistence.*;
 
 @Entity

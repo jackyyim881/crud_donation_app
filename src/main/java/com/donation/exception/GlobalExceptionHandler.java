@@ -1,7 +1,5 @@
 package com.donation.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,18 +13,10 @@ public class GlobalExceptionHandler {
         return "error/error-404"; // Ensure error-404.html exists in templates
     }
 
-    /**
-     * Handles all other exceptions by directing to a generic error page.
-     *
-     * @param ex    the Exception
-     * @param model the Model to pass attributes to the view
-     * @return the name of the error template
-     */
     @ExceptionHandler(Exception.class)
     public String handleAllExceptions(Exception ex, Model model) {
         model.addAttribute("errorMessage", "An unexpected error occurred. Please try again later.");
-        // Optionally, log the exception
-        // logger.error("An unexpected error occurred", ex);
+
         return "error/error"; // Ensure error.html exists in templates
     }
 

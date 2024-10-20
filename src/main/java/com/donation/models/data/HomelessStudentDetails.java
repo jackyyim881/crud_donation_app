@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "homelessstudentdetails")

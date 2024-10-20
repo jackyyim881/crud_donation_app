@@ -31,10 +31,11 @@ public class Notification {
     @Column(name = "is_read", nullable = false)
     private boolean isRead = false;
 
-    // Constructors, Getters and Setters
+    // No-argument constructor
     public Notification() {
     }
 
+    // Constructor with user, message, and timestamp
     public Notification(User user, String message, LocalDateTime timestamp) {
         this.user = user;
         this.message = message;

@@ -1,48 +1,64 @@
 package com.donation.controller.v1.api;
 
-import com.donation.models.data.Campaign;
+import com.donation.dto.CampaignDTO;
 import com.donation.service.CampaignService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.donation.service.mapper.CampaignMapperService;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/campaigns")
 public class CampaignController {
 
-    @Autowired
-    private CampaignService campaignService;
+    private final CampaignService campaignService;
+    private final CampaignMapperService campaignMapperService;
+
+    // Constructor injection (recommended for better testability and immutability)
+    public CampaignController(CampaignService campaignService, CampaignMapperService campaignMapperService) {
+        this.campaignService = campaignService;
+        this.campaignMapperService = campaignMapperService;
+    }
 
     // 1. Create a new campaign
     @PostMapping
-    public ResponseEntity<Campaign> createCampaign(@Valid @RequestBody Campaign campaign) {
-        Campaign createdCampaign = campaignService.createCampaign(campaign);
-        return ResponseEntity.status(201).body(createdCampaign); // HTTP 201 Created
+    public ResponseEntity<CampaignDTO> createCampaign(@Valid @RequestBody CampaignDTO campaignDTO) {
+        var campaign = campaignMapperService.toEntity(campaignDTO);
+        var createdCampaign = campaignService.createCampaign(campaign);
+        var createdCampaignDTO = campaignMapperService.toDTO(createdCampaign);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdCampaignDTO); // HTTP 201 Created
     }
 
     // 2. Get all campaigns
     @GetMapping
-    public ResponseEntity<List<Campaign>> getAllCampaigns() {
-        List<Campaign> campaigns = campaignService.getAllCampaigns();
+    public ResponseEntity<List<CampaignDTO>> getAllCampaigns() {
+        List<CampaignDTO> campaigns = campaignService.getAllCampaigns().stream()
+                .map(campaignMapperService::toDTO)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(campaigns); // HTTP 200 OK
     }
 
     // 3. Get campaign by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Campaign> getCampaignById(@PathVariable Long id) {
-        Campaign campaign = campaignService.getCampaignById(id);
-        return ResponseEntity.ok(campaign); // HTTP 200 OK
+    public ResponseEntity<CampaignDTO> getCampaignById(@PathVariable Long id) {
+        var campaign = campaignService.getCampaignById(id);
+        var campaignDTO = campaignMapperService.toDTO(campaign);
+        return ResponseEntity.ok(campaignDTO); // HTTP 200 OK
     }
 
     // 4. Update an existing campaign
     @PutMapping("/{id}")
-    public ResponseEntity<Campaign> updateCampaign(@PathVariable Long id,
-            @Valid @RequestBody Campaign campaignDetails) {
-        Campaign updatedCampaign = campaignService.updateCampaign(id, campaignDetails);
-        return ResponseEntity.ok(updatedCampaign); // HTTP 200 OK
+    public ResponseEntity<CampaignDTO> updateCampaign(@PathVariable Long id,
+            @Valid @RequestBody CampaignDTO campaignDTO) {
+        var campaignDetails = campaignMapperService.toEntity(campaignDTO);
+        var updatedCampaign = campaignService.updateCampaign(id, campaignDetails);
+        var updatedCampaignDTO = campaignMapperService.toDTO(updatedCampaign);
+        return ResponseEntity.ok(updatedCampaignDTO); // HTTP 200 OK
     }
 
     // 5. Delete a campaign

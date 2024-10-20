@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "roles")
 public class Role {
@@ -16,6 +18,7 @@ public class Role {
     private String name;
 
     @ManyToMany(mappedBy = "roles")
+    @JsonBackReference // Prevent circular reference with users
     private Set<User> users;
 
     // Constructors

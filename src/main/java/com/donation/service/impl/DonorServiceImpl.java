@@ -1,42 +1,38 @@
 package com.donation.service.impl;
 
 import com.donation.dto.DonationRequest;
-import com.donation.models.data.Campaign;
-import com.donation.models.data.Donation;
-import com.donation.models.data.Donor;
-import com.donation.models.data.Student;
-import com.donation.models.data.User;
-import com.donation.repository.CampaignRepository;
-import com.donation.repository.DonationRepository;
-import com.donation.repository.DonorRepository;
-import com.donation.repository.StudentRepository;
-import com.donation.repository.UserRepository;
+import com.donation.exception.ResourceNotFoundException;
+import com.donation.models.data.*;
+import com.donation.repository.*;
 import com.donation.service.DonorService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class DonorServiceImpl implements DonorService {
 
-    @Autowired
-    private DonorRepository donorRepository;
+    private final DonorRepository donorRepository;
+    private final UserRepository userRepository;
+    private final CampaignRepository campaignRepository;
+    private final StudentRepository studentRepository;
+    private final DonationRepository donationRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private CampaignRepository campaignRepository;
-
-    @Autowired
-    private StudentRepository studentRepository;
-
-    @Autowired
-    private DonationRepository donationRepository;
+    // Constructor injection for dependencies
+    public DonorServiceImpl(DonorRepository donorRepository,
+            UserRepository userRepository,
+            CampaignRepository campaignRepository,
+            StudentRepository studentRepository,
+            DonationRepository donationRepository) {
+        this.donorRepository = donorRepository;
+        this.userRepository = userRepository;
+        this.campaignRepository = campaignRepository;
+        this.studentRepository = studentRepository;
+        this.donationRepository = donationRepository;
+    }
 
     @Override
     public List<Donor> getAllDonors() {
@@ -46,7 +42,7 @@ public class DonorServiceImpl implements DonorService {
     @Override
     public Donor getDonorById(Long id) {
         return donorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Donor not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Donor not found with id: " + id));
     }
 
     @Override
@@ -56,53 +52,37 @@ public class DonorServiceImpl implements DonorService {
 
     @Override
     public Donor updateDonor(Long id, Donor donorDetails) {
-        // Fetch the existing donor by ID
-        Donor donor = getDonorById(id);
+        Donor donor = getDonorById(id); // Fetch the existing donor
 
-        // Retrieve the associated User object
-        User user = donor.getUser();
+        User user = donor.getUser(); // Retrieve the associated User object
 
         // Update the User fields using donorDetails
-        user.setEmail(donorDetails.getUser().getEmail()); // Updating email via User
-        user.setPhoneNumber(donorDetails.getUser().getPhoneNumber()); // Updating phone number via User
-        user.setAddress(donorDetails.getUser().getAddress()); // Updating address via User
+        user.setEmail(donorDetails.getUser().getEmail());
+        user.setPhoneNumber(donorDetails.getUser().getPhoneNumber());
+        user.setAddress(donorDetails.getUser().getAddress());
 
-        // Optionally update the donor's user association if needed (e.g., if changing
-        // users)
+        // Update the donor's associated user if needed
         donor.setUser(donorDetails.getUser());
 
         // Save the updated User and Donor
-        userRepository.save(user); // Save changes to the User
-        return donorRepository.save(donor); // Save changes to the Donor
+        userRepository.save(user);
+        return donorRepository.save(donor);
     }
 
     @Override
     public Donation createDonation(DonationRequest donationRequest) {
-        // Fetch the donor by donorId
-        Donor donor = donorRepository.findById(donationRequest.getDonorId())
-                .orElseThrow(() -> new RuntimeException("Donor not found with id: " + donationRequest.getDonorId()));
+        Donor donor = findDonorById(donationRequest.donorId());
+        Campaign campaign = findCampaignById(donationRequest.campaignId());
 
-        // Fetch the campaign by campaignId
-        Campaign campaign = campaignRepository.findById(donationRequest.getCampaignId())
-                .orElseThrow(
-                        () -> new RuntimeException("Campaign not found with id: " + donationRequest.getCampaignId()));
+        Student student = donationRequest.studentId() != null ? findStudentById(donationRequest.studentId()) : null;
 
-        // Check if student exists (optional)
-        Student student = null;
-        if (donationRequest.getStudentId() != null) {
-            student = studentRepository.findById(donationRequest.getStudentId())
-                    .orElseThrow(
-                            () -> new RuntimeException("Student not found with id: " + donationRequest.getStudentId()));
-        }
-
-        // Create a new donation
         Donation donation = new Donation();
         donation.setDonor(donor);
         donation.setNcampaign(campaign);
-        donation.setStudent(student); // Set student if present
-        donation.setAmount(donationRequest.getAmount());
-        donation.setDonationDate(LocalDate.now()); // Automatically set to current date
-        // Save and return the donation
+        donation.setStudent(student);
+        donation.setAmount(donationRequest.amount());
+        donation.setDonationDate(LocalDate.now());
+
         return donationRepository.save(donation);
     }
 
@@ -112,13 +92,29 @@ public class DonorServiceImpl implements DonorService {
     }
 
     @Override
-    public Optional<Donor> findByUsername(String username) {
+    public Optional<Donor> findByUserUsername(String username) {
         return donorRepository.findByUserUsername(username);
     }
 
     @Override
-    public Optional<Donor> findByUser(User user) {
-        return donorRepository.findByUser(user);
+    public Donor save(Donor donor) {
+        return donorRepository.save(donor);
     }
 
+    // Helper methods for fetching related entities
+
+    private Donor findDonorById(Long donorId) {
+        return donorRepository.findById(donorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Donor not found with id: " + donorId));
+    }
+
+    private Campaign findCampaignById(Long campaignId) {
+        return campaignRepository.findById(campaignId)
+                .orElseThrow(() -> new ResourceNotFoundException("Campaign not found with id: " + campaignId));
+    }
+
+    private Student findStudentById(Long studentId) {
+        return studentRepository.findById(studentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + studentId));
+    }
 }

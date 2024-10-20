@@ -1,13 +1,6 @@
 package com.donation.controller;
 
-import com.donation.models.data.Donor;
-import com.donation.models.data.Role;
-import com.donation.models.data.User;
-import com.donation.repository.DonorRepository;
-import com.donation.repository.RoleRepository;
-import com.donation.repository.UserRepository;
-import com.donation.service.UserService;
-
+import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +11,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import java.util.HashSet;
+
+import com.donation.models.data.Donor;
+import com.donation.models.data.Role;
+import com.donation.models.data.User;
+import com.donation.repository.DonorRepository;
+import com.donation.repository.RoleRepository;
+import com.donation.service.UserService;
 
 @Controller
 @RequestMapping("/auth")

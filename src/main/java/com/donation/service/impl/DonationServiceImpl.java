@@ -2,199 +2,140 @@ package com.donation.service.impl;
 
 import com.donation.dto.DonationRequest;
 import com.donation.exception.ResourceNotFoundException;
-import com.donation.models.data.Campaign;
-import com.donation.models.data.Donation;
-import com.donation.models.data.Donor;
-import com.donation.models.data.PaymentMethod;
-import com.donation.models.data.Receipt;
-import com.donation.models.data.Student;
-import com.donation.repository.CampaignRepository;
-import com.donation.repository.DonationRepository;
-import com.donation.repository.DonorRepository;
-import com.donation.repository.PaymentMethodRepository;
-import com.donation.repository.ReceiptRepository;
-import com.donation.repository.StudentRepository;
+import com.donation.models.data.*;
+import com.donation.repository.*;
 import com.donation.service.DonationService;
-import com.donation.service.PaymentMethodService;
-import com.donation.service.StudentService;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public class DonationServiceImpl implements DonationService {
 
-        @Autowired
-        private DonationRepository donationRepository;
+        private final DonationRepository donationRepository;
+        private final DonorRepository donorRepository;
+        private final CampaignRepository campaignRepository;
+        private final PaymentMethodRepository paymentMethodRepository;
+        private final StudentRepository studentRepository;
 
-        @Autowired
-        private DonorRepository donorRepository;
+        // Constructor injection
+        public DonationServiceImpl(DonationRepository donationRepository,
+                        DonorRepository donorRepository,
+                        CampaignRepository campaignRepository,
+                        PaymentMethodRepository paymentMethodRepository,
+                        StudentRepository studentRepository) {
+                this.donationRepository = donationRepository;
+                this.donorRepository = donorRepository;
+                this.campaignRepository = campaignRepository;
+                this.paymentMethodRepository = paymentMethodRepository;
+                this.studentRepository = studentRepository;
+        }
 
-        @Autowired
-        private CampaignRepository campaignRepository;
-
-        @Autowired
-        private PaymentMethodRepository paymentMethodRepository;
-
-        @Autowired
-        private StudentRepository studentRepository;
-
-        @Autowired
-        private StudentService studentService;
-
-        /**
-         * Creates a new donation based on the DonationRequest DTO.
-         */
         @Override
         public Donation createDonation(DonationRequest donationRequest) {
-                // Fetch the donor by donorId
-                Donor donor = donorRepository.findById(donationRequest.getDonorId())
-                                .orElseThrow(() -> new ResourceNotFoundException(
-                                                "Donor not found with id: " + donationRequest.getDonorId()));
+                Donor donor = findDonorById(donationRequest.donorId());
+                Campaign campaign = findCampaignById(donationRequest.campaignId());
+                PaymentMethod paymentMethod = findPaymentMethodById(donationRequest.paymentMethodId());
+                Student student = donationRequest.studentId() != null
+                                ? findStudentById(donationRequest.studentId())
+                                : null;
 
-                // Fetch the campaign by campaignId
-                Campaign campaign = campaignRepository.findById(donationRequest.getCampaignId())
-                                .orElseThrow(() -> new ResourceNotFoundException(
-                                                "Campaign not found with id: " + donationRequest.getCampaignId()));
-
-                // Fetch the payment method by paymentMethodId
-                PaymentMethod paymentMethod = paymentMethodRepository.findById(donationRequest.getPaymentMethodId())
-                                .orElseThrow(() -> new ResourceNotFoundException(
-                                                "Payment Method not found with id: "
-                                                                + donationRequest.getPaymentMethodId()));
-
-                // Check if student exists (optional)
-                Student student = null;
-                if (donationRequest.getStudentId() != null) {
-                        student = studentRepository.findById(donationRequest.getStudentId())
-                                        .orElseThrow(() -> new ResourceNotFoundException(
-                                                        "Student not found with id: "
-                                                                        + donationRequest.getStudentId()));
-                }
-
-                // Create a new donation
                 Donation donation = new Donation();
                 donation.setDonor(donor);
                 donation.setNcampaign(campaign);
                 donation.setPaymentMethod(paymentMethod);
-                donation.setStudent(student); // Set student if present
-                donation.setAmount(donationRequest.getAmount());
-                donation.setDonationDate(donationRequest.getDonationDate()); // Use the date from the request
+                donation.setStudent(student);
+                donation.setAmount(donationRequest.amount());
+                donation.setDonationDate(donationRequest.donationDate());
 
-                // Save the donation
                 return donationRepository.save(donation);
         }
 
-        /**
-         * Retrieves donations based on filter criteria.
-         */
         @Override
         public List<Donation> getDonations(Double minAmount, Double maxAmount, LocalDate startDate, LocalDate endDate,
                         Long campaignId) {
-                // Implement filtering logic
-                // For simplicity, using a custom query method in DonationRepository
                 return donationRepository.findDonations(minAmount, maxAmount, startDate, endDate, campaignId,
                                 campaignId);
         }
 
-        /**
-         * Retrieves all donations.
-         */
         @Override
         public List<Donation> getAllDonations() {
                 return donationRepository.findAll();
         }
 
-        /**
-         * Retrieves a donation by its ID.
-         */
         @Override
         public Donation getDonationById(Long id) {
                 return donationRepository.findById(id)
                                 .orElseThrow(() -> new ResourceNotFoundException("Donation not found with id: " + id));
         }
 
-        /**
-         * Updates an existing donation based on the DonationRequest DTO.
-         */
         @Override
         public Donation updateDonation(Long id, DonationRequest donationDetails) {
-                Donation donation = donationRepository.findById(id)
-                                .orElseThrow(() -> new ResourceNotFoundException("Donation not found with id: " + id));
+                Donation donation = getDonationById(id);
 
-                // Update amount
-                donation.setAmount(donationDetails.getAmount());
+                Donor donor = findDonorById(donationDetails.donorId());
+                Campaign campaign = findCampaignById(donationDetails.campaignId());
+                PaymentMethod paymentMethod = findPaymentMethodById(donationDetails.paymentMethodId());
+                Student student = donationDetails.studentId() != null
+                                ? findStudentById(donationDetails.studentId())
+                                : null;
 
-                // Update donor
-                Donor donor = donorRepository.findById(donationDetails.getDonorId())
-                                .orElseThrow(() -> new ResourceNotFoundException(
-                                                "Donor not found with id: " + donationDetails.getDonorId()));
                 donation.setDonor(donor);
-
-                // Update campaign
-                Campaign campaign = campaignRepository.findById(donationDetails.getCampaignId())
-                                .orElseThrow(() -> new ResourceNotFoundException(
-                                                "Campaign not found with id: " + donationDetails.getCampaignId()));
                 donation.setNcampaign(campaign);
-
-                // Update payment method
-                PaymentMethod paymentMethod = paymentMethodRepository.findById(donationDetails.getPaymentMethodId())
-                                .orElseThrow(() -> new ResourceNotFoundException(
-                                                "Payment Method not found with id: "
-                                                                + donationDetails.getPaymentMethodId()));
                 donation.setPaymentMethod(paymentMethod);
+                donation.setStudent(student);
+                donation.setAmount(donationDetails.amount());
+                donation.setDonationDate(donationDetails.donationDate());
 
-                // Update student (optional)
-                if (donationDetails.getStudentId() != null) {
-                        Student student = studentRepository.findById(donationDetails.getStudentId())
-                                        .orElseThrow(() -> new ResourceNotFoundException(
-                                                        "Student not found with id: "
-                                                                        + donationDetails.getStudentId()));
-                        donation.setStudent(student);
-                } else {
-                        donation.setStudent(null); // Remove association if student is not provided
-                }
-
-                // Update donation date
-                donation.setDonationDate(donationDetails.getDonationDate());
-
-                // Save the updated donation
                 return donationRepository.save(donation);
         }
 
-        /**
-         * Deletes a donation by its ID.
-         */
         @Override
         public void deleteDonation(Long id) {
-                Donation donation = donationRepository.findById(id)
-                                .orElseThrow(() -> new ResourceNotFoundException("Donation not found with id: " + id));
+                Donation donation = getDonationById(id);
                 donationRepository.delete(donation);
         }
 
-        /**
-         * Simulates a donation by creating a new donation record.
-         */
         @Override
         public void donate(Long studentId, Long paymentMethodId, Double amount, Long donorId) {
-                Student student = studentRepository.getStudentById(studentId);
-
-                PaymentMethod paymentMethod = paymentMethodRepository.getPaymentMethodById(paymentMethodId);
+                Student student = findStudentById(studentId);
+                PaymentMethod paymentMethod = findPaymentMethodById(paymentMethodId);
+                Donor donor = findDonorById(donorId);
 
                 Donation donation = new Donation();
                 donation.setStudent(student);
                 donation.setPaymentMethod(paymentMethod);
-                donation.setDonor(donorRepository.getDonorById(donorId));
+                donation.setDonor(donor);
                 donation.setAmount(amount);
                 donation.setDonationDate(LocalDate.now());
 
                 donationRepository.save(donation);
         }
 
-        public void saveDonation(Donation donation) {
-                donationRepository.save(donation);
+        // Helper methods to clean up redundant code
+
+        private Donor findDonorById(Long donorId) {
+                return donorRepository.findById(donorId)
+                                .orElseThrow(() -> new ResourceNotFoundException(
+                                                "Donor not found with id: " + donorId));
         }
 
+        private Campaign findCampaignById(Long campaignId) {
+                return campaignRepository.findById(campaignId)
+                                .orElseThrow(() -> new ResourceNotFoundException(
+                                                "Campaign not found with id: " + campaignId));
+        }
+
+        private PaymentMethod findPaymentMethodById(Long paymentMethodId) {
+                return paymentMethodRepository.findById(paymentMethodId)
+                                .orElseThrow(() -> new ResourceNotFoundException(
+                                                "Payment Method not found with id: " + paymentMethodId));
+        }
+
+        private Student findStudentById(Long studentId) {
+                return studentRepository.findById(studentId)
+                                .orElseThrow(() -> new ResourceNotFoundException(
+                                                "Student not found with id: " + studentId));
+        }
 }

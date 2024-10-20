@@ -4,7 +4,6 @@ package com.donation.controller;
 
 import com.donation.models.data.User;
 import com.donation.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +16,6 @@ public class UserWebController {
 
     private final UserService userService;
 
-    @Autowired
     public UserWebController(UserService userService) {
         this.userService = userService;
     }

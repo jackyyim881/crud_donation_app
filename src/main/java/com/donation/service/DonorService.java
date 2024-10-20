@@ -22,7 +22,7 @@ public interface DonorService {
 
     Donation createDonation(DonationRequest donationRequest);
 
-    Optional<Donor> findByUsername(String username);
+    Optional<Donor> findByUserUsername(String username);
 
-    Optional<Donor> findByUser(User user);
+    Donor save(Donor donor);
 }

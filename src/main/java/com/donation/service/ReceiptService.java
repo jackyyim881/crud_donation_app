@@ -15,6 +15,8 @@ public interface ReceiptService {
 
     Receipt updateReceipt(Integer id, Receipt receiptDetails);
 
+    Receipt saveReceipt(Receipt receipt);
+
     void deleteReceipt(Integer id);
 
     List<Receipt> getReceiptsByDateRange(LocalDate startDate, LocalDate endDate);

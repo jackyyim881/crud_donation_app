@@ -1,9 +1,10 @@
 package com.donation.controller.v1.api;
 
-import com.donation.models.data.Receipt;
-import com.donation.repository.ReceiptRepository;
-import com.donation.service.PdfGeneratorService;
+import com.donation.dto.ReceiptRequest;
+import com.donation.dto.ReceiptResponse;
 import com.donation.service.ReceiptService;
+import com.donation.service.mapper.ReceiptMapperService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -14,65 +15,57 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import java.io.ByteArrayInputStream;
-import java.util.List;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/receipts")
 public class ReceiptController {
+
+    private final ReceiptService receiptService;
+    private final ReceiptMapperService receiptMapper;
+
     @Autowired
-    private PdfGeneratorService pdfGeneratorService;
-    @Autowired
-    private ReceiptService receiptService;
-    @Autowired
-    private ReceiptRepository receiptRepository;
-
-    @GetMapping("/{receiptId}/pdf")
-    public ResponseEntity<InputStreamResource> downloadReceiptPdf(@PathVariable Integer receiptId) {
-
-        // Retrieve the Receipt entity from the database
-        Receipt receipt = receiptRepository.findById(receiptId)
-                .orElseThrow(() -> new RuntimeException("Receipt not found for ID: " + receiptId));
-
-        // Generate the PDF
-        ByteArrayInputStream bis = pdfGeneratorService.generateReceiptPdf(receipt);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=receipt_" + receipt.getReceiptNumber() + ".pdf");
-
-        return ResponseEntity
-                .ok()
-                .headers(headers)
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(new InputStreamResource(bis));
+    public ReceiptController(ReceiptService receiptService, ReceiptMapperService receiptMapper) {
+        this.receiptService = receiptService;
+        this.receiptMapper = receiptMapper;
     }
 
     // 1. Create a new receipt
     @PostMapping
-    public ResponseEntity<Receipt> createReceipt(@Valid @RequestBody Receipt receipt) {
-        Receipt createdReceipt = receiptService.createReceipt(receipt);
-        return ResponseEntity.status(201).body(createdReceipt); // HTTP 201 Created
+    public ResponseEntity<ReceiptResponse> createReceipt(@Valid @RequestBody ReceiptRequest receiptRequest) {
+        var receipt = receiptMapper.toEntity(receiptRequest);
+        var createdReceipt = receiptService.createReceipt(receipt);
+        var response = receiptMapper.toDTO(createdReceipt);
+        return ResponseEntity.status(201).body(response); // HTTP 201 Created
     }
 
     // 2. Get all receipts
     @GetMapping
-    public ResponseEntity<List<Receipt>> getAllReceipts() {
-        List<Receipt> receipts = receiptService.getAllReceipts();
+    public ResponseEntity<List<ReceiptResponse>> getAllReceipts() {
+        List<ReceiptResponse> receipts = receiptService.getAllReceipts().stream()
+                .map(receiptMapper::toDTO)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(receipts); // HTTP 200 OK
     }
 
     // 3. Get receipt by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Receipt> getReceiptById(@PathVariable Integer id) {
-        Receipt receipt = receiptService.getReceiptById(id);
-        return ResponseEntity.ok(receipt); // HTTP 200 OK
+    public ResponseEntity<ReceiptResponse> getReceiptById(@PathVariable Integer id) {
+        var receipt = receiptService.getReceiptById(id);
+        var response = receiptMapper.toDTO(receipt);
+        return ResponseEntity.ok(response); // HTTP 200 OK
     }
 
     // 4. Update an existing receipt
     @PutMapping("/{id}")
-    public ResponseEntity<Receipt> updateReceipt(@PathVariable Integer id, @Valid @RequestBody Receipt receiptDetails) {
-        Receipt updatedReceipt = receiptService.updateReceipt(id, receiptDetails);
-        return ResponseEntity.ok(updatedReceipt); // HTTP 200 OK
+    public ResponseEntity<ReceiptResponse> updateReceipt(@PathVariable Integer id,
+            @Valid @RequestBody ReceiptRequest receiptRequest) {
+        var receiptDetails = receiptMapper.toEntity(receiptRequest);
+        var updatedReceipt = receiptService.updateReceipt(id, receiptDetails);
+        var response = receiptMapper.toDTO(updatedReceipt);
+        return ResponseEntity.ok(response); // HTTP 200 OK
     }
 
     // 5. Delete a receipt
@@ -82,12 +75,14 @@ public class ReceiptController {
         return ResponseEntity.noContent().build(); // HTTP 204 No Content
     }
 
+    // 6. Search receipts by date range
     @GetMapping("/search")
-    public ResponseEntity<List<Receipt>> searchReceiptsByDateRange(
+    public ResponseEntity<List<ReceiptResponse>> searchReceiptsByDateRange(
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        List<Receipt> receipts = receiptService.getReceiptsByDateRange(startDate, endDate);
+        List<ReceiptResponse> receipts = receiptService.getReceiptsByDateRange(startDate, endDate).stream()
+                .map(receiptMapper::toDTO)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(receipts); // HTTP 200 OK
     }
-
 }

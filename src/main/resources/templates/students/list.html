@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="fragments/head :: headerFragment">
-    <title id="pageTitle">Student List</title>
+  <head th:replace="~{fragments/head :: headerFragment}">
+    <title th:replace="${pageTitle}">
+      Student List - Student Management App
+    </title>
   </head>
   <body class="bg-gray-100 font-sans">
     <!-- Header -->
-    <header th:replace="fragments/header :: header"></header>
+    <header
+      th:replace="~{fragments/header :: header}"
+      class="bg-gradient-to-r from-blue-600 to-purple-600 p-6 shadow-md text-white"
+    >
 
     <!-- Main Container -->
     <div class="container mx-auto mt-10 px-4">
@@ -30,7 +35,7 @@
 
       <!-- Students Table -->
       <div class="mt-8 flow-root">
-        <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div
             class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8"
           >
