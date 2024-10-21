@@ -35,14 +35,43 @@ public class User {
     @Column(length = 50, nullable = false) // or nullable = true if optional
     private String name;
 
+    @Column(length = 10, nullable = false)
+    private String language = "en"; // Default language
+
+    // New Fields
+    @Column(name = "email_notifications")
+    private boolean emailNotifications;
+
+    @Column(name = "sms_notifications")
+    private boolean smsNotifications;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JsonManagedReference // Prevent circular reference with roles
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @Column(length = 10, nullable = false)
+    private String currency = "USD"; // Default currency
+
     // Getters and Setters
     public Long getId() {
         return id;
+    }
+
+    public boolean isEmailNotifications() {
+        return emailNotifications;
+    }
+
+    public void setEmailNotifications(boolean emailNotifications) {
+        this.emailNotifications = emailNotifications;
+    }
+
+    public boolean isSmsNotifications() {
+        return smsNotifications;
+    }
+
+    public void setSmsNotifications(boolean smsNotifications) {
+        this.smsNotifications = smsNotifications;
     }
 
     public void setId(Long id) {
@@ -130,5 +159,21 @@ public class User {
     public Object map(Object object) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'map'");
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 }

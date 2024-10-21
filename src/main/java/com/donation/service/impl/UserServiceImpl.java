@@ -2,11 +2,15 @@ package com.donation.service.impl;
 
 import com.donation.dto.UserDTO;
 import com.donation.exception.ResourceNotFoundException;
+import com.donation.exception.UserNotFoundException;
+import com.donation.exception.UserUpdateException;
 import com.donation.models.data.Role;
 import com.donation.models.data.User;
 import com.donation.repository.RoleRepository;
 import com.donation.repository.UserRepository;
 import com.donation.service.UserService;
+
+import jakarta.transaction.Transactional;
 
 import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -109,6 +113,30 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(), user.getPassword(), authorities);
+    }
+
+    @Override
+    @Transactional
+    public User updateUser(User user) throws UserUpdateException {
+        try {
+            // Additional business logic can be added here (e.g., validation)
+
+            // Save the updated user to the database
+            return userRepository.save(user);
+        } catch (Exception e) {
+            // Log the exception (you might want to use a logger instead of printStackTrace)
+            e.printStackTrace();
+            throw new UserUpdateException("Failed to update user: " + e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void deleteByUsername(String username) throws UserNotFoundException {
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user == null) {
+            throw new UserNotFoundException("User not found with username: " + username);
+        }
+        userRepository.deleteByUsername(username);
     }
 
 }

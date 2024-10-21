@@ -1,7 +1,10 @@
+// src/main/java/com/donation/controller/dashboard/SettingWebController.java
+
 package com.donation.controller.dashboard;
 
 import com.donation.models.data.User;
 import com.donation.service.UserService;
+import com.donation.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,16 +12,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.util.Optional;
+import java.util.Arrays;
+import java.util.List;
 
 @Controller
 @RequestMapping("/dashboard/settings")
 public class SettingWebController {
 
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public SettingWebController(UserService userService) {
+        this.userService = userService;
+    }
 
     // Display Settings Page
     @GetMapping
@@ -28,17 +37,28 @@ public class SettingWebController {
         }
 
         String username = userDetails.getUsername();
-        User user = userService.findByUsername(username);
+        try {
+            User user = userService.findByUsername(username);
+            model.addAttribute("user", user);
 
-        model.addAttribute("user", user);
-        return "dashboard/settings/index"; // Points to a Thymeleaf settings template
+            // Add supported languages and currencies
+            List<String> supportedLanguages = Arrays.asList("en", "es", "fr", "zh"); // Add more as needed
+            List<String> supportedCurrencies = Arrays.asList("USD", "EUR", "CNY", "JPY"); // Add more as needed
+            model.addAttribute("supportedLanguages", supportedLanguages);
+            model.addAttribute("supportedCurrencies", supportedCurrencies);
+        } catch (UserNotFoundException e) {
+            // Handle exception, possibly redirect to login with an error
+            return "redirect:/login";
+        }
+
+        return "dashboard/settings/index"; // Points to the Thymeleaf template
     }
 
     // Handle User Information Update
     @PostMapping("/update-user")
     public String updateUserInformation(@AuthenticationPrincipal UserDetails userDetails,
             @ModelAttribute("user") User updatedUser,
-            Model model) {
+            RedirectAttributes redirectAttributes) {
         if (userDetails == null) {
             return "redirect:/login";
         }
@@ -47,15 +67,18 @@ public class SettingWebController {
             String username = userDetails.getUsername();
             User currentUser = userService.findByUsername(username);
 
+            // Update fields
             currentUser.setEmail(updatedUser.getEmail());
             currentUser.setPhoneNumber(updatedUser.getPhoneNumber());
             currentUser.setAddress(updatedUser.getAddress());
             currentUser.setName(updatedUser.getName());
 
             userService.updateUser(currentUser);
-            model.addAttribute("message", "User information updated successfully!");
+            redirectAttributes.addFlashAttribute("message", "user.info.update.success"); // Message key
+        } catch (UserNotFoundException e) {
+            redirectAttributes.addFlashAttribute("error", "user.info.update.error");
         } catch (Exception e) {
-            model.addAttribute("error", "Error updating user information: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "user.info.update.error");
         }
         return "redirect:/dashboard/settings";
     }
@@ -63,9 +86,9 @@ public class SettingWebController {
     // Handle Notification Preferences Update
     @PostMapping("/update-notifications")
     public String updateNotificationPreferences(@AuthenticationPrincipal UserDetails userDetails,
-            @RequestParam(required = false, defaultValue = "false") boolean emailNotifications,
-            @RequestParam(required = false, defaultValue = "false") boolean smsNotifications,
-            Model model) {
+            @RequestParam(required = false) Boolean emailNotifications,
+            @RequestParam(required = false) Boolean smsNotifications,
+            RedirectAttributes redirectAttributes) {
         if (userDetails == null) {
             return "redirect:/login";
         }
@@ -74,13 +97,15 @@ public class SettingWebController {
             String username = userDetails.getUsername();
             User currentUser = userService.findByUsername(username);
 
-            currentUser.setEmailNotifications(emailNotifications);
-            currentUser.setSmsNotifications(smsNotifications);
+            currentUser.setEmailNotifications(emailNotifications != null ? emailNotifications : false);
+            currentUser.setSmsNotifications(smsNotifications != null ? smsNotifications : false);
 
             userService.updateUser(currentUser);
-            model.addAttribute("message", "Notification preferences updated successfully!");
+            redirectAttributes.addFlashAttribute("message", "notification.preferences.update.success");
+        } catch (UserNotFoundException e) {
+            redirectAttributes.addFlashAttribute("error", "notification.preferences.update.error");
         } catch (Exception e) {
-            model.addAttribute("error", "Error updating notification preferences: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "notification.preferences.update.error");
         }
         return "redirect:/dashboard/settings";
     }
@@ -90,9 +115,23 @@ public class SettingWebController {
     public String updateAppConfig(@AuthenticationPrincipal UserDetails userDetails,
             @RequestParam String currency,
             @RequestParam String language,
-            Model model) {
+            RedirectAttributes redirectAttributes) {
         if (userDetails == null) {
             return "redirect:/login";
+        }
+
+        // Define supported languages and currencies
+        List<String> supportedLanguages = Arrays.asList("en", "es", "fr", "zh"); // Must match controller's list
+        List<String> supportedCurrencies = Arrays.asList("USD", "EUR", "CNY", "JPY"); // Must match controller's list
+
+        if (!supportedLanguages.contains(language)) {
+            redirectAttributes.addFlashAttribute("error", "app.config.language.unsupported");
+            return "redirect:/dashboard/settings";
+        }
+
+        if (!supportedCurrencies.contains(currency)) {
+            redirectAttributes.addFlashAttribute("error", "app.config.currency.unsupported");
+            return "redirect:/dashboard/settings";
         }
 
         try {
@@ -103,9 +142,11 @@ public class SettingWebController {
             currentUser.setLanguage(language);
 
             userService.updateUser(currentUser);
-            model.addAttribute("message", "App configuration updated successfully!");
+            redirectAttributes.addFlashAttribute("message", "app.config.update.success");
+        } catch (UserNotFoundException e) {
+            redirectAttributes.addFlashAttribute("error", "app.config.update.error");
         } catch (Exception e) {
-            model.addAttribute("error", "Error updating app configuration: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "app.config.update.error");
         }
         return "redirect:/dashboard/settings";
     }
@@ -114,7 +155,7 @@ public class SettingWebController {
     @PostMapping("/upload-image")
     public String uploadProfileImage(@AuthenticationPrincipal UserDetails userDetails,
             @RequestParam("image") MultipartFile image,
-            Model model) {
+            RedirectAttributes redirectAttributes) {
         if (userDetails == null) {
             return "redirect:/login";
         }
@@ -126,12 +167,37 @@ public class SettingWebController {
             if (!image.isEmpty()) {
                 currentUser.setProfileImage(image.getBytes());
                 userService.updateUser(currentUser);
-                model.addAttribute("message", "Profile image updated successfully!");
+                redirectAttributes.addFlashAttribute("message", "profile.image.upload.success");
             } else {
-                model.addAttribute("error", "Please select a valid image file.");
+                redirectAttributes.addFlashAttribute("error", "profile.image.upload.error.empty");
             }
+        } catch (UserNotFoundException e) {
+            redirectAttributes.addFlashAttribute("error", "profile.image.upload.error.user");
         } catch (IOException e) {
-            model.addAttribute("error", "Error uploading profile image: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "profile.image.upload.error.io");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "profile.image.upload.error.unexpected");
+        }
+        return "redirect:/dashboard/settings";
+    }
+
+    // Handle Account Deletion
+    @PostMapping("/delete-account")
+    public String deleteAccount(@AuthenticationPrincipal UserDetails userDetails,
+            RedirectAttributes redirectAttributes) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+
+        try {
+            String username = userDetails.getUsername();
+            userService.deleteByUsername(username);
+            redirectAttributes.addFlashAttribute("message", "account.deletion.success");
+            return "redirect:/logout"; // Redirect to logout after deletion
+        } catch (UserNotFoundException e) {
+            redirectAttributes.addFlashAttribute("error", "account.deletion.error.user");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "account.deletion.error.unexpected");
         }
         return "redirect:/dashboard/settings";
     }
