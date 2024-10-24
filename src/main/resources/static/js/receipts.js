@@ -43,23 +43,33 @@ function displayReceipts(data) {
   tableBody.empty();
   data.forEach((receipt) => {
     const row = `
-      <tr>
-        <td class="py-2 px-4 border-b">${receipt.id}</td>
-        <td class="py-2 px-4 border-b">${receipt.receiptNumber}</td>
-        <td class="py-2 px-4 border-b">${receipt.donorUsername}</td>
-        <td class="py-2 px-4 border-b">${receipt.donationDate}</td>
-        <td class="py-2 px-4 border-b">${receipt.campaignName || "N/A"}</td>
-        <td class="py-2 px-4 border-b">${
+      <tr class="bg-white dark:bg-gray-800">
+        <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100">${
+          receipt.id
+        }</td>
+        <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100">${
+          receipt.receiptNumber
+        }</td>
+        <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100">${
+          receipt.donorUsername
+        }</td>
+        <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100">${
+          receipt.donationDate
+        }</td>
+        <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100">${
+          receipt.campaignName || "N/A"
+        }</td>
+        <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100">${
           receipt.paymentMethodName || "N/A"
         }</td>
-        <td class="py-2 px-4 border-b">
+        <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100">
           <a href="/receipts/edit.html?id=${
             receipt.id
-          }" class="text-blue-500 hover:text-blue-700">Edit</a> |
-          <a href="#" class="text-red-500 hover:text-red-700 delete-receipt" data-id="${
+          }" class="text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">Edit</a> |
+          <a href="#" class="text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 delete-receipt" data-id="${
             receipt.id
           }">Delete</a> |
-          <a href="#" class="text-green-500 hover:text-green-700 download-receipt" data-id="${
+          <a href="#" class="text-green-500 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 download-receipt" data-id="${
             receipt.id
           }">Download PDF</a>
         </td>

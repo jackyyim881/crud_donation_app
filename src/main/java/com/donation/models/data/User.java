@@ -29,9 +29,13 @@ public class User {
 
     @Column(length = 255)
     private String address;
-
     @Lob
+    @Column(name = "profileImage", nullable = true)
     private byte[] profileImage;
+
+    @Column(name = "profile_image_path", nullable = true)
+    private String profileImagePath; // Store the path to the image in the file system
+
     @Column(length = 50, nullable = false) // or nullable = true if optional
     private String name;
 
@@ -45,13 +49,17 @@ public class User {
     @Column(name = "sms_notifications")
     private boolean smsNotifications;
 
+    @Column(length = 10, nullable = false)
+    private String currency = "USD"; // Default currency
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JsonManagedReference // Prevent circular reference with roles
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @Column(length = 10, nullable = false)
-    private String currency = "USD"; // Default currency
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private Set<Event> events = new HashSet<>();
 
     // Getters and Setters
     public Long getId() {
@@ -134,13 +142,12 @@ public class User {
         this.profileImage = profileImage;
     }
 
-    public User() {
+    public String getProfileImagePath() {
+        return profileImagePath;
     }
 
-    public User(String username, String password, Set<Role> roles) {
-        this.username = username;
-        this.password = password;
-        this.roles = roles;
+    public void setProfileImagePath(String profileImagePath) {
+        this.profileImagePath = profileImagePath;
     }
 
     public String getName() {
@@ -149,16 +156,6 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public User orElseThrow(Object object) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
-    }
-
-    public Object map(Object object) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'map'");
     }
 
     public String getLanguage() {
@@ -176,4 +173,24 @@ public class User {
     public void setCurrency(String currency) {
         this.currency = currency;
     }
+
+    public User() {
+    }
+
+    public User(String username, String password, Set<Role> roles) {
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
+    }
+
+    public void addEvent(Event event) {
+        events.add(event);
+        event.setUser(this);
+    }
+
+    public void removeEvent(Event event) {
+        events.remove(event);
+        event.setUser(null);
+    }
+
 }

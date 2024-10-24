@@ -19,19 +19,4 @@ public class LocaleConfig {
         return slr;
     }
 
-    // Optionally, add a LocaleChangeInterceptor to allow changing the locale via
-    // request parameter
-    /*
-     * @Bean
-     * public LocaleChangeInterceptor localeChangeInterceptor() {
-     * LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
-     * lci.setParamName("lang");
-     * return lci;
-     * }
-     * 
-     * @Override
-     * public void addInterceptors(InterceptorRegistry registry) {
-     * registry.addInterceptor(localeChangeInterceptor());
-     * }
-     */
 }

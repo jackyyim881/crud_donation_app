@@ -15,7 +15,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
-
 public class SecurityConfig {
 
     @Bean
@@ -26,6 +25,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf().disable() // Disable CSRF protection
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/api/v1/**").permitAll() // Allow access to /api/v1/*
                         .requestMatchers("/ /**").authenticated() // Require authentication for /dashboard/*

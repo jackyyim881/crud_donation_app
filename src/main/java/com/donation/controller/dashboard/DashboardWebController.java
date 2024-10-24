@@ -1,5 +1,8 @@
 package com.donation.controller.dashboard;
 
+import com.donation.models.data.User;
+import com.donation.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/dashboard")
 public class DashboardWebController {
+
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/home")
     public String getHome(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -21,17 +28,21 @@ public class DashboardWebController {
 
         String username = getUsername(authentication);
         model.addAttribute("username", username);
-        System.out.println("Navigating to dashboard home page with username: " + username); // Debug logging
+
+        // Fetch user details and add profile image path to model
+        User user = userService.findByUsername(username);
+        String profileImagePath = (user != null && user.getProfileImagePath() != null)
+                ? "/uploads/" + user.getProfileImagePath()
+                : "/images/default-profile.jpg"; // Default image
+        model.addAttribute("profileImagePath", profileImagePath);
+
         return "dashboard/home";
     }
 
     private String getUsername(Authentication authentication) {
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            return userDetails.getUsername();
-        } else if (authentication != null) {
-            return authentication.getPrincipal().toString();
+        if (authentication.getPrincipal() instanceof UserDetails) {
+            return ((UserDetails) authentication.getPrincipal()).getUsername();
         }
-        return "Guest";
+        return authentication.getPrincipal().toString();
     }
 }

@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.nav-tab {
+  @apply text-gray-500 pb-3 border-b-2 border-transparent hover:text-gray-900 transition;
+}

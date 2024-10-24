@@ -5,6 +5,7 @@ module.exports = {
     "./src/main/resources/templates/**/*.html", // Adjust the path to match your HTML templates
     "./src/main/resources/static/**/*.js", // Include any custom JavaScript files
   ],
+  darkMode: "class",
   theme: {
     extend: {},
   },

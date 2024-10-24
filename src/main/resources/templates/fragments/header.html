@@ -6,12 +6,24 @@
       <div class="container mx-auto">
         <div class="flex items-center justify-between w-full">
           <!-- Logo -->
-          <a
-            href="/"
-            class="text-sm font-bold tracking-widest hover:text-gray-200 transition-colors duration-300"
-          >
-            DonateApp
-          </a>
+          <div class="">
+            <a
+              href="/"
+              class="text-sm font-bold tracking-widest hover:text-gray-200 transition-colors duration-300"
+            >
+              DonateApp
+            </a>
+            <button
+              id="darkModeToggle"
+              class="text-gray-800 px-4 py-2 rounded-full transition hover:text-gray-900"
+              aria-label="Toggle Dark Mode"
+            >
+              <i
+                id="darkModeIcon"
+                class="fa-solid fa-moon hover:bg-gray-300 rounded-full p-4 focus:outline-none focus:ring-2 focus:ring-purple-300"
+              ></i>
+            </button>
+          </div>
 
           <button
             id="menu-btn"
@@ -43,7 +55,7 @@
         <!-- Menu Links -->
         <ul
           id="menu"
-          class="hidden lg:flex lg:space-x-8 w-full lg:w-auto lg:flex-row lg:items-center mt-4 lg:mt-0 flex-col space-y-4 lg:space-y-0 transition-all duration-300"
+          class="flex flex-wrap lg:space-x-8 w-full lg:w-auto lg:flex-row lg:items-center mt-8 lg:mt-0 flex-col space-y-4 lg:space-y-0 transition-all duration-300"
         >
           <li>
             <a
@@ -122,7 +134,7 @@
           <li th:if="${#authentication.name == 'anonymousUser'}">
             <a
               href="/auth/login"
-              class="block text-lg md:text-sm text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300 hover:bg-gray-300"
+              class="block text-lg md:text-sm text-white rounded-lg px-4 py-2 transition-colors duration-300 hover:bg-white hover:text-blue-600"
               >Login</a
             >
           </li>
@@ -138,14 +150,15 @@
           <li th:if="${#authentication.name != 'anonymousUser'}">
             <a
               href="/auth/logout"
-              class="block text-xs md:text-sm text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300 hover:bg-gray-300"
-              >Logout</a
+              class="block text-xs md:text-sm text-white bg-blue-500 rounded-lg px-4 py-2 transition-colors duration-300 hover:bg-blue-600 active:bg-blue-700 active:text-white focus:outline-none focus:ring-2 focus:ring-blue-300"
+            >
+              Logout</a
             >
           </li>
         </ul>
       </div>
     </nav>
-
+    <script src="/js/switch_mode.js"></script>
     <script>
       // JavaScript to handle the mobile menu toggle and responsiveness
       document.addEventListener("DOMContentLoaded", () => {

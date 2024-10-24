@@ -3,7 +3,9 @@
   <head th:replace="fragments/head :: headerFragment">
     <title id="pageTitle">Receipts</title>
   </head>
-  <body class="bg-gray-100 font-sans">
+  <body
+    class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans"
+  >
     <!-- Include the header fragment -->
     <header th:replace="fragments/header :: header"></header>
 
@@ -11,7 +13,7 @@
     <div class="container mx-auto px-4 py-10">
       <!-- Page Title and Add Button -->
       <div class="flex justify-between items-center mb-8">
-        <h1 class="text-4xl font-bold text-gray-800">Receipts</h1>
+        <h1 class="text-4xl font-bold dark:text-gray-800">Receipts</h1>
         <a
           href="/receipts/create"
           class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-5 rounded-lg shadow-lg transition duration-300 transform hover:scale-105"
@@ -25,13 +27,13 @@
         <input
           type="date"
           id="startDate"
-          class="p-3 rounded-lg shadow-sm border border-gray-300"
+          class="p-3 rounded-lg shadow-sm border border-gray-300 dark:bg-gray-800"
           placeholder="Start Date"
         />
         <input
           type="date"
           id="endDate"
-          class="p-3 rounded-lg shadow-sm border border-gray-300"
+          class="p-3 rounded-lg shadow-sm border border-gray-300 dark:bg-gray-800"
           placeholder="End Date"
         />
         <button
@@ -43,10 +45,11 @@
       </div>
       <!-- Receipts Table -->
       <div class="overflow-x-auto shadow-lg rounded-lg">
-        <table class="min-w-full bg-white rounded-lg">
+        <table class="min-w-full bg-white rounded-lg dark:bg-gray-800">
           <thead>
             <tr class="bg-gray-800 text-white uppercase text-sm leading-normal">
-              <th class="py-4 px-6 text-left">ID</th>
+              <th class="py-4 px-6 text-left dark:text-gray-300">ID</th>
+
               <th class="py-4 px-6 text-left">ID Number</th>
               <th class="py-4 px-6 text-left">Donor Name</th>
               <th class="py-4 px-6 text-left">Donation Date</th>

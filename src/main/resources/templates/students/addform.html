@@ -3,29 +3,35 @@
   <head th:replace="fragments/head :: headerFragment">
     <title id="pageTitle">Add Students</title>
   </head>
-  <body>
+  <body
+    class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans"
+  >
     <div th:replace="fragments/header :: header"></div>
 
-    <div class="container mx-auto mt-5">
-      <h1 class="text-2xl font-bold mb-5">Add New Student</h1>
-
+    <div class="container mx-auto mt-10 px-4">
+      <h1 class="text-3xl font-bold mb-6 dark:text-gray-100">
+        Add New Student
+      </h1>
       <form
         th:action="@{/web/students/add}"
         th:object="${student}"
         method="post"
-        class="border p-2 rounded-md"
+        class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-8"
         enctype="multipart/form-data"
       >
         <!-- Name Field -->
         <div class="mb-4">
-          <label for="name" class="block text-sm font-medium text-gray-700"
+          <label
+            for="name"
+            class="block text-sm font-medium mb-2 dark:text-gray-300"
             >Name:</label
           >
           <input
             type="text"
             th:field="*{name}"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             id="name"
+            placeholder="Enter student's name"
           />
           <div
             th:if="${#fields.hasErrors('name')}"
@@ -36,15 +42,18 @@
 
         <!-- Age Field -->
         <div class="mb-4">
-          <label for="age" class="block text-sm font-medium text-gray-700"
+          <label
+            for="age"
+            class="block text-sm font-medium mb-2 dark:text-gray-300"
             >Age:</label
           >
           <input
             type="number"
             th:field="*{age}"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             id="age"
             min="1"
+            placeholder="Enter student's age"
           />
           <div
             th:if="${#fields.hasErrors('age')}"
@@ -55,13 +64,15 @@
 
         <!-- School Field -->
         <div class="mb-4">
-          <label for="school" class="block text-sm font-medium text-gray-700"
+          <label
+            for="school"
+            class="block text-sm font-medium mb-2 dark:text-gray-300"
             >School:</label
           >
           <input
             type="text"
             th:field="*{school}"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             id="school"
           />
           <div
@@ -73,12 +84,14 @@
 
         <!-- Bio Field -->
         <div class="mb-4">
-          <label for="bio" class="block text-sm font-medium text-gray-700"
+          <label
+            for="bio"
+            class="block text-sm font-medium mb-2 dark:text-gray-300"
             >Bio:</label
           >
           <textarea
             th:field="*{bio}"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             id="bio"
             rows="4"
           ></textarea>
@@ -93,21 +106,49 @@
         <div class="mb-4">
           <label
             for="studentImageFile"
-            class="block text-sm font-medium text-gray-700"
+            class="block text-sm font-medium mb-2 dark:text-gray-300"
             >Student Image:</label
           >
-          <input
-            type="file"
-            name="studentImageFile"
-            accept="image/*"
-            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-            id="studentImageFile"
-          />
-          <div
-            th:if="${imageError}"
-            th:text="${imageError}"
-            class="text-red-500 text-sm mt-1"
-          ></div>
+          <label
+            for="studentImageFile"
+            class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-md cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-300"
+          >
+            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+              <svg
+                class="mb-3 w-8 h-8 text-gray-400 dark:text-gray-300"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a4 4 0 014 4v1M4 20h16a2 2 0 002-2v-6a2 2 0 00-2-2H4a2 2 0 00-2 2v6a2 2 0 002 2z"
+                ></path>
+              </svg>
+              <p class="mb-2 text-sm text-gray-500 dark:text-gray-300">
+                <span class="font-semibold">Click to upload</span> or drag and
+                drop
+              </p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">
+                PNG, JPG, JPEG
+              </p>
+              <input
+                type="file"
+                name="studentImageFile"
+                accept="image/*"
+                class="hidden"
+                id="studentImageFile"
+              />
+              <div
+                th:if="${imageError}"
+                th:text="${imageError}"
+                class="text-red-500 text-sm mt-1"
+              ></div>
+            </div>
+          </label>
         </div>
 
         <!-- Submit Button -->

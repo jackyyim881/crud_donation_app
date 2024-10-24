@@ -120,12 +120,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public User updateUser(User user) throws UserUpdateException {
         try {
             // Additional business logic can be added here (e.g., validation)
-
+            logger.info("Updating user with ID: {}", user.getId());
             // Save the updated user to the database
             return userRepository.save(user);
         } catch (Exception e) {
-            // Log the exception (you might want to use a logger instead of printStackTrace)
-            e.printStackTrace();
+            logger.error("Error updating user: {}", e.getMessage());
             throw new UserUpdateException("Failed to update user: " + e.getMessage());
         }
     }

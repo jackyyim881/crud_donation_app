@@ -27,23 +27,27 @@ $(document).ready(function () {
           const blurClass = isBlurred ? "blur-row" : "";
 
           const row = `
-            <tr class="hover:bg-gray-50 transition-colors duration-200 ${blurClass}">
-              <td class="py-4 px-6 whitespace-nowrap">${donation.id}</td>
-              <td class="py-4 px-6 whitespace-nowrap">$${donation.amount.toFixed(
-                2
-              )}</td>
-              <td class="py-4 px-6 whitespace-nowrap">${donation.donorName}</td>
-              <td class="py-4 px-6 whitespace-nowrap">${formatDate(
-                donation.donationDate
-              )}</td>
-              <td class="py-4 px-6 whitespace-nowrap">${
-                donation.campaignName ?? "N/A"
-              }</td>
-              <td class="py-4 px-6 whitespace-nowrap">${
-                donation.paymentMethodName ?? "N/A"
-              }</td>
-            </tr>
-          `;
+  <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 ${blurClass}">
+    <td class="py-4 px-6 whitespace-nowrap dark:text-gray-300">${
+      donation.id
+    }</td>
+    <td class="py-4 px-6 whitespace-nowrap dark:text-gray-300">$${donation.amount.toFixed(
+      2
+    )}</td>
+    <td class="py-4 px-6 whitespace-nowrap dark:text-gray-300">${
+      donation.donorName
+    }</td>
+    <td class="py-4 px-6 whitespace-nowrap dark:text-gray-300">${formatDate(
+      donation.donationDate
+    )}</td>
+    <td class="py-4 px-6 whitespace-nowrap dark:text-gray-300">${
+      donation.campaignName ?? "N/A"
+    }</td>
+    <td class="py-4 px-6 whitespace-nowrap dark:text-gray-300">${
+      donation.paymentMethodName ?? "N/A"
+    }</td>
+  </tr>
+`;
           tableBody.append(row);
         });
 

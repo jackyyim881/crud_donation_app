@@ -3,35 +3,47 @@
   <head th:replace="~{fragments/head :: headerFragment}">
     <title id="pageTitle">Login - Donation App</title>
   </head>
-  <body>
+  <body
+    class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans"
+  >
     <header th:replace="~{fragments/header :: header}"></header>
     <div
-      class="bg-white md:flex md:items-center min-h-full mt-10 justify-center items-center mx-auto p-8 rounded-lg shadow-md w-full max-w-md"
+      class="bg-white dark:bg-gray-800 min-h-full mt-10 mx-auto p-8 rounded-lg shadow-md w-full max-w-md transition-colors duration-300"
     >
-      <h1 class="text-2xl font-bold mb-6 text-center">Login</h1>
+      <h1 class="text-2xl font-bold text-center text-black dark:text-gray-100">
+        Login
+      </h1>
       <form th:action="@{/auth/login}" method="post" class="space-y-4">
         <div>
-          <label for="username" class="block text-sm font-medium text-gray-700"
+          <label
+            for="username"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
             >Username:</label
           >
+
           <input
             type="text"
             id="username"
             name="username"
             required
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            placeholder="Enter your username"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-300"
           />
         </div>
         <div>
-          <label for="password" class="block text-sm font-medium text-gray-700"
+          <label
+            for="password"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
             >Password:</label
           >
+
           <input
             type="password"
             id="password"
             name="password"
             required
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            placeholder="Enter your password"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-300"
           />
         </div>
         <div>
@@ -44,7 +56,7 @@
         <div>
           <button
             type="submit"
-            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-300"
           >
             Login
           </button>
