@@ -7,99 +7,119 @@
     class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300"
   >
     <header th:replace="fragments/header :: header"></header>
-    <h1>个人资料设置</h1>
+    <div class="flex container">
+      <div
+        th:replace="fragments/sidebar :: sidebar"
+        class="mr-8 hidden lg:block"
+      ></div>
 
-    <!-- 显示成功消息 -->
-    <div th:if="${param.success}" class="alert alert-success">
-      个人资料更新成功！
+      <div class="">
+        <h1>个人资料设置</h1>
+
+        <!-- 显示成功消息 -->
+        <div th:if="${param.success}" class="alert alert-success">
+          个人资料更新成功！
+        </div>
+
+        <!-- 显示错误消息 -->
+        <div
+          th:if="${errorMessage}"
+          class="alert alert-danger"
+          th:text="${errorMessage}"
+        ></div>
+
+        <!-- 用户表单，已自动填充数据 -->
+        <form
+          th:action="@{/dashboard/settings/setting-profile}"
+          method="post"
+          th:object="${userProfileForm}"
+          enctype="multipart/form-data"
+          class="bg-white dark:bg-gray-700 dark:text-gray-100 p-8 rounded-lg shadow-md"
+        >
+          <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" th:field="*{name}" required />
+            <span
+              th:if="${#fields.hasErrors('name')}"
+              th:errors="*{name}"
+            ></span>
+          </div>
+
+          <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" th:field="*{email}" required />
+            <span
+              th:if="${#fields.hasErrors('email')}"
+              th:errors="*{email}"
+            ></span>
+          </div>
+
+          <div>
+            <label for="phoneNumber">Phone Number:</label>
+            <input type="tel" id="phoneNumber" th:field="*{phoneNumber}" />
+            <span
+              th:if="${#fields.hasErrors('phoneNumber')}"
+              th:errors="*{phoneNumber}"
+            ></span>
+          </div>
+
+          <div>
+            <label for="address">Address:</label>
+            <textarea id="address" th:field="*{address}"></textarea>
+            <span
+              th:if="${#fields.hasErrors('address')}"
+              th:errors="*{address}"
+            ></span>
+          </div>
+          <div>
+            <label for="currency">Currency:</label>
+            <select id="currency" th:field="*{currency}" required>
+              <option value="" disabled>Select a currency</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="CNY">CNY</option>
+              <!-- Add other currency options here -->
+            </select>
+            <span
+              th:if="${#fields.hasErrors('currency')}"
+              th:errors="*{currency}"
+            ></span>
+          </div>
+          <div>
+            <label for="language">Language:</label>
+            <select id="language" th:field="*{language}" required>
+              <option value="" disabled>Select a language</option>
+              <option value="en" th:selected="*{language} == 'en'">
+                English
+              </option>
+              <option value="zh" th:selected="*{language} == 'zh'">
+                Chinese
+              </option>
+              <!-- Add more language options here -->
+            </select>
+            <span
+              th:if="${#fields.hasErrors('language')}"
+              th:errors="*{language}"
+            ></span>
+          </div>
+          <div>
+            <label for="profileImage">Profile Image:</label>
+            <input
+              type="file"
+              id="profileImage"
+              name="profileImage"
+              accept="image/*"
+              th:field="*{profileImage}"
+            />
+            <span
+              th:if="${#fields.hasErrors('profileImage')}"
+              th:errors="*{profileImage}"
+            ></span>
+          </div>
+
+          <button type="submit">Save Changes</button>
+        </form>
+      </div>
     </div>
-
-    <!-- 显示错误消息 -->
-    <div
-      th:if="${errorMessage}"
-      class="alert alert-danger"
-      th:text="${errorMessage}"
-    ></div>
-
-    <!-- 用户表单，已自动填充数据 -->
-    <form
-      th:action="@{/dashboard/settings/setting-profile}"
-      method="post"
-      th:object="${userProfileForm}"
-      enctype="multipart/form-data"
-    >
-      <div>
-        <label for="name">Name:</label>
-        <input type="text" id="name" th:field="*{name}" required />
-        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
-      </div>
-
-      <div>
-        <label for="email">Email:</label>
-        <input type="email" id="email" th:field="*{email}" required />
-        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
-      </div>
-
-      <div>
-        <label for="phoneNumber">Phone Number:</label>
-        <input type="tel" id="phoneNumber" th:field="*{phoneNumber}" />
-        <span
-          th:if="${#fields.hasErrors('phoneNumber')}"
-          th:errors="*{phoneNumber}"
-        ></span>
-      </div>
-
-      <div>
-        <label for="address">Address:</label>
-        <textarea id="address" th:field="*{address}"></textarea>
-        <span
-          th:if="${#fields.hasErrors('address')}"
-          th:errors="*{address}"
-        ></span>
-      </div>
-      <div>
-        <label for="currency">Currency:</label>
-        <select id="currency" th:field="*{currency}" required>
-          <option value="" disabled>Select a currency</option>
-          <option value="USD">USD</option>
-          <option value="EUR">EUR</option>
-          <option value="CNY">CNY</option>
-          <!-- Add other currency options here -->
-        </select>
-        <span
-          th:if="${#fields.hasErrors('currency')}"
-          th:errors="*{currency}"
-        ></span>
-      </div>
-      <div>
-        <label for="language">Language:</label>
-        <select id="language" th:field="*{language}" required>
-          <option value="" disabled>Select a language</option>
-          <option value="en" th:selected="*{language} == 'en'">English</option>
-          <option value="zh" th:selected="*{language} == 'zh'">Chinese</option>
-          <!-- Add more language options here -->
-        </select>
-        <span
-          th:if="${#fields.hasErrors('language')}"
-          th:errors="*{language}"
-        ></span>
-      </div>
-      <div>
-        <label for="profileImage">Profile Image:</label>
-        <input
-          type="file"
-          id="profileImage"
-          name="profileImage"
-          accept="image/*"
-          th:field="*{profileImage}"
-        />
-        <span
-          th:if="${#fields.hasErrors('profileImage')}"
-          th:errors="*{profileImage}"
-        ></span>
-      </div>
-
-      <button type="submit">Save Changes</button>
-    </form>
   </body>
 </html>

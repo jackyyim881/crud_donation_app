@@ -14,7 +14,6 @@ public class AuthController {
     private final UserService userService;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    @Autowired
     public AuthController(UserService userService, BCryptPasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;

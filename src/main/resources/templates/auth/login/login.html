@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="~{fragments/head :: headerFragment}">
+  <head th:replace="fragments/head :: headerFragment">
     <title id="pageTitle">Login - Donation App</title>
   </head>
+
   <body
     class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans"
   >
-    <header th:replace="~{fragments/header :: header}"></header>
+    <header th:replace="fragments/header :: header"></header>
     <div
       class="bg-white dark:bg-gray-800 min-h-full mt-10 mx-auto p-8 rounded-lg shadow-md w-full max-w-md transition-colors duration-300"
     >
@@ -46,13 +47,7 @@
             class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-300"
           />
         </div>
-        <div>
-          <input
-            type="hidden"
-            th:name="${_csrf.parameterName}"
-            th:value="${_csrf.token}"
-          />
-        </div>
+        <div></div>
         <div>
           <button
             type="submit"

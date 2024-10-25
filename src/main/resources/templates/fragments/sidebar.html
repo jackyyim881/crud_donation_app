@@ -1,3 +1,4 @@
+<!-- src/main/resources/templates/fragments/sidebar.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
   <div th:fragment="sidebar">
@@ -16,7 +17,11 @@
               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white dark:hover:bg-gray-700 group"
             >
               <i class="fas fa-home h-5 w-5 mr-2"></i>
-              <span class="flex-1 ms-3 whitespace-nowrap">Home</span>
+              <span
+                class="flex-1 ms-3 whitespace-nowrap"
+                th:text="#{sidebar.home}"
+                >Home</span
+              >
             </a>
           </li>
 
@@ -26,95 +31,113 @@
               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white dark:hover:bg-gray-700 group"
             >
               <i class="fas fa-search h-5 w-5 mr-2"></i>
-              <span class="flex-1 ms-3 whitespace-nowrap">Search</span>
+              <span
+                class="flex-1 ms-3 whitespace-nowrap"
+                th:text="#{sidebar.search}"
+                >Search</span
+              >
             </a>
           </li>
+
           <li class="p-4 cursor-pointer flex items-center">
             <a
               href="/dashboard/notifications"
               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white dark:hover:bg-gray-700 group"
             >
               <i class="fas fa-bell h-5 w-5 mr-2"></i>
-              <span class="flex-1 ms-3 whitespace-nowrap">Notification</span>
+              <span
+                class="flex-1 ms-3 whitespace-nowrap"
+                th:text="#{sidebar.notifications}"
+                >Notifications</span
+              >
             </a>
           </li>
+
           <li class="p-4 cursor-pointer flex items-center">
             <a
               href="/dashboard/calendar"
               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white dark:hover:bg-gray-700 group"
             >
               <i class="fas fa-calendar-alt h-5 w-5 mr-2"></i>
-              <span>Calendar</span>
+              <span th:text="#{sidebar.calendar}">Calendar</span>
             </a>
           </li>
+
           <li class="p-4 cursor-pointer flex items-center">
             <a
               href="/dashboard/settings"
               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white dark:hover:bg-gray-700 group"
             >
               <i class="fas fa-cog h-5 w-5 mr-2"></i>
-              <span>Settings</span>
+              <span th:text="#{sidebar.settings}">Settings</span>
             </a>
           </li>
 
           <!-- Onboarding Section -->
           <h3
             class="px-4 pt-2 text-sm font-bold text-gray-600 dark:text-gray-400"
+            th:text="#{sidebar.onboarding}"
           >
             ONBOARDING
           </h3>
+
           <li class="p-4 cursor-pointer flex items-center">
             <a
               href="/dashboard/getting-started"
               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
             >
               <i class="fas fa-play-circle h-5 w-5 mr-2"></i>
-              <span>Getting Started</span>
+              <span th:text="#{sidebar.gettingStarted}">Getting Started</span>
             </a>
           </li>
+
           <li class="p-4 cursor-pointer flex items-center">
             <a
               href="/dashboard/quick-notes"
               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
             >
               <i class="fas fa-sticky-note h-5 w-5 mr-2"></i>
-              <span>Quick Notes</span>
+              <span th:text="#{sidebar.quickNotes}">Quick Notes</span>
             </a>
           </li>
+
           <li class="p-4 cursor-pointer flex items-center">
             <a
               href="/dashboard/tasks"
               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
             >
               <i class="fas fa-tasks h-5 w-5 mr-2"></i>
-              <span>My Tasks</span>
+              <span th:text="#{sidebar.myTasks}">My Tasks</span>
             </a>
           </li>
+
           <li class="p-4 cursor-pointer flex items-center">
             <a
               href="/dashboard/reading-list"
               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
             >
               <i class="fas fa-book h-5 w-5 mr-2"></i>
-              <span>Reading List</span>
+              <span th:text="#{sidebar.readingList}">Reading List</span>
             </a>
           </li>
+
           <li class="p-4 cursor-pointer flex items-center">
             <a
               href="/dashboard/templates"
               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
             >
               <i class="fas fa-file-alt h-5 w-5 mr-2"></i>
-              <span>Template</span>
+              <span th:text="#{sidebar.templates}">Templates</span>
             </a>
           </li>
+
           <li class="p-4 cursor-pointer flex items-center">
             <a
               href="/dashboard/create-new"
               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
             >
               <i class="fas fa-plus-circle h-5 w-5 mr-2"></i>
-              <span>Create New</span>
+              <span th:text="#{sidebar.createNew}">Create New</span>
             </a>
           </li>
         </ul>

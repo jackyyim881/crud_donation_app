@@ -28,6 +28,9 @@ import org.springframework.http.HttpHeaders;
 @RequestMapping("/dashboard/settings")
 public class SettingWebController {
 
+    private static final List<String> SUPPORTED_LANGUAGES = Arrays.asList("en", "es", "fr", "zh");
+    private static final List<String> SUPPORTED_CURRENCIES = Arrays.asList("USD", "EUR", "CNY", "JPY");
+
     private final UserService userService;
 
     @Autowired
@@ -48,10 +51,8 @@ public class SettingWebController {
             model.addAttribute("user", user);
 
             // Add supported languages and currencies
-            List<String> supportedLanguages = Arrays.asList("en", "es", "fr", "zh"); // Add more as needed
-            List<String> supportedCurrencies = Arrays.asList("USD", "EUR", "CNY", "JPY"); // Add more as needed
-            model.addAttribute("supportedLanguages", supportedLanguages);
-            model.addAttribute("supportedCurrencies", supportedCurrencies);
+            model.addAttribute("supportedLanguages", SUPPORTED_LANGUAGES);
+            model.addAttribute("supportedCurrencies", SUPPORTED_CURRENCIES);
         } catch (UserNotFoundException e) {
             // Handle exception, possibly redirect to login with an error
             return "redirect:/login";
@@ -127,8 +128,8 @@ public class SettingWebController {
         }
 
         // Define supported languages and currencies
-        List<String> supportedLanguages = Arrays.asList("en", "es", "fr", "zh"); // Must match controller's list
-        List<String> supportedCurrencies = Arrays.asList("USD", "EUR", "CNY", "JPY"); // Must match controller's list
+        List<String> supportedLanguages = SUPPORTED_LANGUAGES;
+        List<String> supportedCurrencies = SUPPORTED_CURRENCIES;
 
         if (!supportedLanguages.contains(language)) {
             redirectAttributes.addFlashAttribute("error", "app.config.language.unsupported");
