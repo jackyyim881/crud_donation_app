@@ -99,11 +99,13 @@ public class StudentWebController {
      * Handle the submission of the edit student form.
      */
     @PostMapping("/edit/{id}")
-    public String editStudent(@PathVariable("id") Long id,
+    public String editStudent(
+            @PathVariable("id") Long id,
             @Valid @ModelAttribute("student") Student student,
             BindingResult result,
             @RequestParam("studentImageFile") MultipartFile studentImageFile,
             Model model) {
+
         // Check for validation errors
         if (result.hasErrors()) {
             return "students/editform";
@@ -126,33 +128,36 @@ public class StudentWebController {
                     Files.createDirectories(uploadPath);
                 }
 
-                // Generate unique filename
+                // Generate unique filename and path
                 String filename = System.currentTimeMillis() + "_" + studentImageFile.getOriginalFilename();
                 Path filePath = uploadPath.resolve(filename);
                 Files.copy(studentImageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-                // Set the image bytes in the student entity
-                student.setStudentImage(Files.readAllBytes(filePath));
+                // Read the image as byte array and set it
+                existing.setStudentImage(Files.readAllBytes(filePath));
+
+                // Optionally, delete the temporary file after reading its bytes (for cleanup)
+                Files.delete(filePath);
+
             } catch (IOException e) {
                 model.addAttribute("imageError", "Failed to upload image.");
-                return "student/editform";
+                return "students/editform";
             }
         } else {
             // If no new image uploaded, retain existing image
             student.setStudentImage(existing.getStudentImage());
         }
 
-        // Update student details
+        // Update other student details
         existing.setName(student.getName());
         existing.setAge(student.getAge());
         existing.setSchool(student.getSchool());
         existing.setBio(student.getBio());
-        existing.setStudentImage(student.getStudentImage());
 
-        // Save the updated student
+        // Save the updated student entity
         studentService.saveStudent(existing);
 
-        // Redirect to the list
+        // Redirect to the list view
         return "redirect:/students";
     }
 

@@ -7,6 +7,7 @@ import com.donation.repository.*;
 import com.donation.service.DonationService;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -98,7 +99,14 @@ public class DonationServiceImpl implements DonationService {
         }
 
         @Override
-        public void donate(Long studentId, Long paymentMethodId, Double amount, Long donorId) {
+        public void donate(Long studentId, Long paymentMethodId, Double donationAmount, Long donorId, Long campaignId) {
+
+                Campaign campaign = campaignRepository.findById(campaignId)
+                                .orElseThrow(() -> new ResourceNotFoundException(
+                                                "Campaign not found with id: " + campaignId));
+                if (campaign == null) {
+                        throw new IllegalArgumentException("Campaign not found.");
+                }
                 Student student = findStudentById(studentId);
                 PaymentMethod paymentMethod = findPaymentMethodById(paymentMethodId);
                 Donor donor = findDonorById(donorId);
@@ -107,10 +115,12 @@ public class DonationServiceImpl implements DonationService {
                 donation.setStudent(student);
                 donation.setPaymentMethod(paymentMethod);
                 donation.setDonor(donor);
-                donation.setAmount(amount);
+                donation.setAmount(donationAmount);
+                donation.setNcampaign(findCampaignById(campaignId));
                 donation.setDonationDate(LocalDate.now());
 
                 donationRepository.save(donation);
+
         }
 
         // Helper methods to clean up redundant code
@@ -138,4 +148,13 @@ public class DonationServiceImpl implements DonationService {
                                 .orElseThrow(() -> new ResourceNotFoundException(
                                                 "Student not found with id: " + studentId));
         }
+
+        public List<CampaignAmountProjection> findCampaignIdAndAmount() {
+                return donationRepository.findCampaignIdAndAmount();
+        }
+
+        public List<CampaignTotalAmountProjection> findTotalAmountByCampaign() {
+                return donationRepository.findTotalAmountByCampaign();
+        }
+
 }

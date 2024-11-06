@@ -30,6 +30,7 @@ CREATE TABLE `campaign` (
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
   `goalAmount` decimal(15,2) NOT NULL,
+  `amountRaised` decimal(38,2) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -40,8 +41,36 @@ CREATE TABLE `campaign` (
 
 LOCK TABLES `campaign` WRITE;
 /*!40000 ALTER TABLE `campaign` DISABLE KEYS */;
-INSERT INTO `campaign` VALUES (1,'Education Support HK','Providing educational resources to underprivileged students in Hong Kong.',200000.00,'2023-01-01','2023-12-31',1001.00),(2,'Health Care Initiative','Supporting local clinics in remote areas.',150000.00,'2023-02-01','2023-11-30',1500.00),(3,'Environmental Awareness HK','Promoting recycling and waste reduction in the city.',100000.00,'2023-03-01','2023-10-31',1200.00),(4,'Elderly Care Program','Assisting elderly citizens living alone.',120000.00,'2023-04-01','2023-09-30',800.00),(5,'Community Development','Improving community facilities in urban areas.',180000.00,'2023-05-01','2023-08-31',900.00),(6,'Youth Empowerment','Providing mentorship programs for youth.',160000.00,'2023-06-01','2023-12-31',1100.00),(7,'Arts and Culture Support','Funding local artists and cultural events.',110000.00,'2023-07-01','2023-11-30',700.00),(8,'Disaster Relief HK','Emergency response for natural disasters.',250000.00,'2023-08-01','2023-12-31',1300.00),(9,'Animal Welfare','Supporting animal shelters and adoption programs.',90000.00,'2023-09-01','2023-12-31',950.00),(10,'Public Health Education','Raising awareness about health and hygiene.',130000.00,'2023-10-01','2023-12-31',850.00);
+INSERT INTO `campaign` VALUES (1,'Education Support HK','Providing educational resources to underprivileged students in Hong Kong.',200000.00,'2023-01-01','2023-12-31',1001.00,NULL),(2,'Health Care Initiative','Supporting local clinics in remote areas.',150000.00,'2023-02-01','2023-11-30',1500.00,NULL),(3,'Environmental Awareness HK','Promoting recycling and waste reduction in the city.',100000.00,'2023-03-01','2023-10-31',1200.00,NULL),(4,'Elderly Care Program','Assisting elderly citizens living alone.',120000.00,'2023-04-01','2023-09-30',800.00,NULL),(5,'Community Development','Improving community facilities in urban areas.',180000.00,'2023-05-01','2023-08-31',900.00,NULL),(6,'Youth Empowerment','Providing mentorship programs for youth.',160000.00,'2023-06-01','2023-12-31',1100.00,NULL),(7,'Arts and Culture Support','Funding local artists and cultural events.',110000.00,'2023-07-01','2023-11-30',700.00,NULL),(8,'Disaster Relief HK','Emergency response for natural disasters.',250000.00,'2023-08-01','2023-12-31',1300.00,NULL),(9,'Animal Welfare','Supporting animal shelters and adoption programs.',90000.00,'2023-09-01','2023-12-31',950.00,NULL),(10,'Public Health Education','Raising awareness about health and hygiene.',130000.00,'2023-10-01','2023-12-31',850.00,NULL);
 /*!40000 ALTER TABLE `campaign` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `contact`
+--
+
+DROP TABLE IF EXISTS `contact`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `contact` (
+  `contact_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `subject` varchar(255) DEFAULT NULL,
+  `message` varchar(255) DEFAULT NULL,
+  `submitted_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`contact_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `contact`
+--
+
+LOCK TABLES `contact` WRITE;
+/*!40000 ALTER TABLE `contact` DISABLE KEYS */;
+INSERT INTO `contact` VALUES (1,'jacky','jacky@gmail.com','1234','hello','2024-10-08 10:38:45'),(2,'hello','hello@gmail.com','hi','hi','2024-10-23 01:30:57');
+/*!40000 ALTER TABLE `contact` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -53,7 +82,7 @@ DROP TABLE IF EXISTS `donation`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `donation` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `donor_id` int NOT NULL,
+  `donor_id` bigint NOT NULL,
   `student_id` int NOT NULL,
   `amount` double DEFAULT NULL,
   `date` date DEFAULT NULL,
@@ -68,11 +97,10 @@ CREATE TABLE `donation` (
   KEY `campaign_id` (`campaign_id`),
   KEY `idx_donation_amount` (`amount`),
   KEY `idx_donation_date` (`date`),
-  CONSTRAINT `donation_ibfk_1` FOREIGN KEY (`donor_id`) REFERENCES `donor` (`id`),
   CONSTRAINT `donation_ibfk_2` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`),
   CONSTRAINT `donation_ibfk_3` FOREIGN KEY (`payment_method_id`) REFERENCES `paymentmethod` (`id`),
   CONSTRAINT `donation_ibfk_4` FOREIGN KEY (`campaign_id`) REFERENCES `campaign` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -81,7 +109,7 @@ CREATE TABLE `donation` (
 
 LOCK TABLES `donation` WRITE;
 /*!40000 ALTER TABLE `donation` DISABLE KEYS */;
-INSERT INTO `donation` VALUES (1,1,1,1000,'2023-01-15',1,1,0,NULL),(2,2,2,1500,'2023-02-20',2,2,0,NULL),(3,3,3,1200,'2023-03-10',3,3,0,NULL),(4,4,4,800,'2023-04-05',4,4,0,NULL),(5,5,5,900,'2023-05-18',5,5,0,NULL),(6,6,6,1100,'2023-06-22',6,6,0,NULL),(7,7,7,700,'2023-07-13',7,7,0,NULL),(8,8,8,1300,'2023-08-29',8,8,0,NULL),(9,9,9,950,'2023-09-07',9,9,0,NULL),(10,10,10,850,'2023-10-16',10,10,0,NULL),(11,1,1,1,'2024-09-22',NULL,1,0,NULL);
+INSERT INTO `donation` VALUES (1,1,1,1000,'2023-01-15',1,1,0,NULL),(2,2,2,1500,'2023-02-20',2,2,0,NULL),(3,3,3,1200,'2023-03-10',3,3,0,NULL),(4,4,4,800,'2023-04-05',4,4,0,NULL),(5,5,5,900,'2023-05-18',5,5,0,NULL),(6,6,6,1100,'2023-06-22',6,6,0,NULL),(7,7,7,700,'2023-07-13',7,7,0,NULL),(8,8,8,1300,'2023-08-29',8,8,0,NULL),(9,9,9,950,'2023-09-07',9,9,0,NULL),(10,10,10,850,'2023-10-16',10,10,0,NULL);
 /*!40000 ALTER TABLE `donation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -97,9 +125,9 @@ CREATE TABLE `donor` (
   `user_id` int NOT NULL,
   `donor_type` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `donor_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `unique_user_id` (`user_id`),
+  CONSTRAINT `donor_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -138,6 +166,37 @@ LOCK TABLES `donorfeedback` WRITE;
 /*!40000 ALTER TABLE `donorfeedback` DISABLE KEYS */;
 INSERT INTO `donorfeedback` VALUES (1,1,'Happy to support education in Hong Kong.','2023-01-17'),(2,2,'Great initiative for healthcare.','2023-02-22'),(3,3,'Proud to be part of environmental awareness.','2023-03-12'),(4,4,'Elderly care is important for our society.','2023-04-07'),(5,5,'Community development makes a difference.','2023-05-20'),(6,6,'Youth empowerment is the key to the future.','2023-06-24'),(7,7,'Supporting local arts and culture.','2023-07-15'),(8,8,'Disaster relief efforts are crucial.','2023-08-31'),(9,9,'Animal welfare is close to my heart.','2023-09-09'),(10,10,'Public health education benefits everyone.','2023-10-18'),(11,1,'ok','2024-10-06');
 /*!40000 ALTER TABLE `donorfeedback` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `event`
+--
+
+DROP TABLE IF EXISTS `event`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `event` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) NOT NULL,
+  `description` varchar(1000) DEFAULT NULL,
+  `start` timestamp NOT NULL,
+  `end` timestamp NOT NULL,
+  `category` varchar(50) DEFAULT NULL,
+  `color` varchar(7) DEFAULT NULL,
+  `user_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_event_user` (`user_id`),
+  CONSTRAINT `fk_event_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `event`
+--
+
+LOCK TABLES `event` WRITE;
+/*!40000 ALTER TABLE `event` DISABLE KEYS */;
+/*!40000 ALTER TABLE `event` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -226,6 +285,66 @@ LOCK TABLES `needs` WRITE;
 /*!40000 ALTER TABLE `needs` DISABLE KEYS */;
 INSERT INTO `needs` VALUES (1,1,'Winter clothing and shoes',200.00,50.00),(2,2,'Science lab equipment',150.00,25.00),(3,3,'Art supplies for painting',300.00,100.00),(4,4,'Mathematics tutoring',250.00,150.00),(5,5,'Engineering learning kits',400.00,80.00),(6,6,'Books for reading and writing',120.00,40.00),(7,7,'Sports equipment',180.00,60.00),(8,8,'Environmental project supplies',200.00,70.00),(9,9,'Music sheets and practice time',150.00,90.00),(10,10,'Teaching training books',300.00,150.00);
 /*!40000 ALTER TABLE `needs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `notes`
+--
+
+DROP TABLE IF EXISTS `notes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `notes` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `content` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `notes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `notes`
+--
+
+LOCK TABLES `notes` WRITE;
+/*!40000 ALTER TABLE `notes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `notes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `notification`
+--
+
+DROP TABLE IF EXISTS `notification`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `notification` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `donor_id` int DEFAULT NULL,
+  `user_id` int NOT NULL,
+  `campaign_id` int DEFAULT NULL,
+  `message` varchar(255) NOT NULL,
+  `timestamp` datetime NOT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `donor_id` (`donor_id`),
+  KEY `user_id` (`user_id`),
+  KEY `campaign_id` (`campaign_id`),
+  CONSTRAINT `notification_ibfk_1` FOREIGN KEY (`donor_id`) REFERENCES `donor` (`id`),
+  CONSTRAINT `notification_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `notification_ibfk_3` FOREIGN KEY (`campaign_id`) REFERENCES `campaign` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `notification`
+--
+
+LOCK TABLES `notification` WRITE;
+/*!40000 ALTER TABLE `notification` DISABLE KEYS */;
+/*!40000 ALTER TABLE `notification` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -319,7 +438,7 @@ CREATE TABLE `roles` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -328,6 +447,7 @@ CREATE TABLE `roles` (
 
 LOCK TABLES `roles` WRITE;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
+INSERT INTO `roles` VALUES (1,'ROLE_USER'),(2,'ROLE_ADMIN');
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -388,7 +508,7 @@ CREATE TABLE `student` (
 
 LOCK TABLES `student` WRITE;
 /*!40000 ALTER TABLE `student` DISABLE KEYS */;
-INSERT INTO `student` VALUES (1,'Thomas LeeDs',10,'Hong Kong Primary School','A diligent student from a low-income family',NULL,NULL,22.2849,114.1586,0),(2,'Emily Chan',12,'Kowloon Middle School','Passionate about science and dreams of becoming a doctor.',NULL,NULL,22.3364,114.1601,0),(3,'Jason Wong',15,'New Territories High School','An aspiring artist who loves painting.',NULL,NULL,22.3721,114.1115,0),(4,'Sophia Ho',11,'Island District School','Enjoys mathematics and problem-solving.',NULL,NULL,22.2809,114.2005,0),(5,'Daniel Lam',14,'Harbour Secondary School','Wants to study engineering in the future.',NULL,NULL,22.3152,114.1695,0),(6,'Grace Cheung',13,'Peak Academy','Avid reader and aspiring writer.',NULL,NULL,22.2569,114.1831,0),(7,'Matthew Ng',9,'Happy Valley School','Loves sports and outdoor activities.',NULL,NULL,22.2783,114.1825,0),(8,'Chloe Lau',16,'Victoria High School','Interested in environmental conservation.',NULL,NULL,22.3193,114.1751,0),(9,'Andrew Tsang',10,'Aberdeen School','Enjoys music and plays the piano.',NULL,NULL,22.2827,114.1365,0),(10,'Natalie Kwok',12,'Stanley School','Dreams of becoming a teacher.',NULL,NULL,22.2933,114.2007,0);
+INSERT INTO `student` VALUES (1,'Thomas LeeDs',11,'Hong Kong Primary School','A diligent student from a low-income family',NULL,NULL,22.2849,114.1586,0),(2,'Emily Chan',12,'Kowloon Middle School','Passionate about science and dreams of becoming a doctor.',NULL,NULL,22.3364,114.1601,0),(3,'Jason Wong',15,'New Territories High School','An aspiring artist who loves painting.',NULL,NULL,22.3721,114.1115,0),(4,'Sophia Ho',11,'Island District School','Enjoys mathematics and problem-solving.',NULL,NULL,22.2809,114.2005,0),(5,'Daniel Lam',14,'Harbour Secondary School','Wants to study engineering in the future.',NULL,NULL,22.3152,114.1695,0),(6,'Grace Cheung',13,'Peak Academy','Avid reader and aspiring writer.',NULL,NULL,22.2569,114.1831,0),(7,'Matthew Ng',9,'Happy Valley School','Loves sports and outdoor activities.',NULL,NULL,22.2783,114.1825,0),(8,'Chloe Lau',16,'Victoria High School','Interested in environmental conservation.',NULL,NULL,22.3193,114.1751,0),(9,'Andrew Tsang',10,'Aberdeen School','Enjoys music and plays the piano.',NULL,NULL,22.2827,114.1365,0),(10,'Natalie Kwok',12,'Stanley School','Dreams of becoming a teacher.',NULL,NULL,22.2933,114.2007,0);
 /*!40000 ALTER TABLE `student` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -434,14 +554,17 @@ CREATE TABLE `user` (
   `email` varchar(100) NOT NULL,
   `phone_number` varchar(20) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
-  `profile_image` longblob,
-  `phoneNumber` varchar(20) DEFAULT NULL,
-  `profileImage` tinyblob,
-  `name` varchar(50) NOT NULL,
+  `profileImage` longblob,
+  `name` varchar(50) DEFAULT NULL,
   `role` varchar(50) NOT NULL DEFAULT 'ROLE_USER',
+  `currency` varchar(10) NOT NULL,
+  `language` varchar(10) NOT NULL,
+  `email_notifications` tinyint(1) NOT NULL DEFAULT '0',
+  `sms_notifications` tinyint(1) NOT NULL DEFAULT '0',
+  `profile_image_path` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -450,7 +573,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'jameswong','password123','james.wong@example.hk','85291234567','Central, Hong Kong',NULL,NULL,NULL,'','ROLE_USER'),(2,'sarahchan','password123','sarah.chan@example.hk','85291234568','Tsim Sha Tsui, Hong Kong',NULL,NULL,NULL,'','ROLE_USER'),(3,'michaellee','password123','michael.lee@example.hk','85291234569','Causeway Bay, Hong Kong',NULL,NULL,NULL,'','ROLE_USER'),(4,'emilyho','password123','emily.ho@example.hk','85291234570','Mong Kok, Hong Kong',NULL,NULL,NULL,'','ROLE_USER'),(5,'davidcheung','password123','david.cheung@example.hk','85291234571','Wan Chai, Hong Kong',NULL,NULL,NULL,'','ROLE_USER'),(6,'amykwok','password123','amy.kwok@example.hk','85291234572','Shatin, Hong Kong',NULL,NULL,NULL,'','ROLE_USER'),(7,'benjaminng','password123','benjamin.ng@example.hk','85291234573','Kowloon Tong, Hong Kong',NULL,NULL,NULL,'','ROLE_USER'),(8,'jessicalau','password123','jessica.lau@example.hk','85291234574','Tseung Kwan O, Hong Kong',NULL,NULL,NULL,'','ROLE_USER'),(9,'alexchow','password123','alex.chow@example.hk','85291234575','Tsuen Wan, Hong Kong',NULL,NULL,NULL,'','ROLE_USER'),(10,'karenli','password123','karen.li@example.hk','85291234576','Tuen Mun, Hong Kong',NULL,NULL,NULL,'','ROLE_USER'),(11,'admin','$2a$10$EixZaYVK1fsbw1ZfbX3OXe.PxRyrS1S/1Pw8E1z/7EgFy1i57Z3Cy','admin@example.com','1234567890','123 Admin St',NULL,NULL,NULL,'','ROLE_USER');
+INSERT INTO `user` VALUES (1,'jameswong','password123','james.wong@example.hk','85291234567','Central, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(2,'sarahchan','password123','sarah.chan@example.hk','85291234568','Tsim Sha Tsui, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(3,'michaellee','password123','michael.lee@example.hk','85291234569','Causeway Bay, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(4,'emilyho','password123','emily.ho@example.hk','85291234570','Mong Kok, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(5,'davidcheung','password123','david.cheung@example.hk','85291234571','Wan Chai, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(6,'amykwok','password123','amy.kwok@example.hk','85291234572','Shatin, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(7,'benjaminng','password123','benjamin.ng@example.hk','85291234573','Kowloon Tong, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(8,'jessicalau','password123','jessica.lau@example.hk','85291234574','Tseung Kwan O, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(9,'alexchow','password123','alex.chow@example.hk','85291234575','Tsuen Wan, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(10,'karenli','password123','karen.li@example.hk','85291234576','Tuen Mun, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -513,4 +636,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-07 12:58:56
+-- Dump completed on 2024-11-06 17:16:25

@@ -1,5 +1,7 @@
 package com.donation.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.donation.models.data.Campaign;
+import com.donation.models.data.CampaignAmountProjection;
 import com.donation.service.CampaignService;
 import com.donation.service.DonationService;
 
@@ -21,6 +24,8 @@ public class CampaignWebController {
 
     @Autowired
     private CampaignService campaignService;
+
+    @Autowired
     private DonationService donationService;
 
     // 显示所有 Campaign
@@ -80,5 +85,16 @@ public class CampaignWebController {
         model.addAttribute("campaign", campaign);
 
         return "campaigns/detail";
+    }
+
+    @GetMapping("/campaign-amounts")
+    public String showCampaignAmounts(Model model) {
+        // Fetch campaign ID and amount data
+        List<CampaignAmountProjection> campaignAmounts = donationService.findCampaignIdAndAmount();
+
+        // Add data to the model
+        model.addAttribute("campaignAmounts", campaignAmounts);
+
+        return "campaigns/campaign-amounts"; // Returns the Thymeleaf template name
     }
 }

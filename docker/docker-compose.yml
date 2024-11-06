@@ -14,6 +14,11 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql # Persist database 
       - ./sql/backup.sql:/docker-entrypoint-initdb.d/backup.sql # Load the backup.sql script
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "--password=root_password"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   spring-app:
     build:
       context: . # Use current directory as context
@@ -22,7 +27,8 @@ services:
     ports:
       - "8080:8080" # Map Spring Boot port to host
     depends_on:
-      - mysql # Ensure MySQL starts before Spring Boot app
+      mysql:
+        condition: service_healthy # Ensure MySQL is healthy before starting Spring Boot
     environment:
       SERVER_PORT: 8080
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mydatabase

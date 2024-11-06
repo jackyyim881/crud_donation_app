@@ -1,6 +1,8 @@
 package com.donation.service;
 
 import com.donation.dto.DonationRequest;
+import com.donation.models.data.CampaignAmountProjection;
+import com.donation.models.data.CampaignTotalAmountProjection;
 import com.donation.models.data.Donation;
 
 import java.time.LocalDate;
@@ -24,6 +26,9 @@ public interface DonationService {
     void deleteDonation(Long id);
 
     // Simulate a donation
-    void donate(Long studentId, Long paymentMethodId, Double amount, Long donorId);
+    void donate(Long studentId, Long paymentMethodId, Double amount, Long donorId, Long campaignId);
 
+    List<CampaignAmountProjection> findCampaignIdAndAmount();
+
+    List<CampaignTotalAmountProjection> findTotalAmountByCampaign();
 }

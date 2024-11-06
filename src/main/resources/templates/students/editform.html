@@ -116,26 +116,11 @@
           ></div>
         </div>
 
-        <!-- Existing Image Display -->
+        <!-- Current Image Display -->
         <div>
-          <label class="block text-sm font-medium mb-2 dark:text-gray-300">
-            Current Image:
-          </label>
-          <div class="flex items-center">
-            <div th:if="${student.studentImage != null}">
-              <img
-                th:src="@{'data:image/jpeg;base64,' + ${T(org.apache.tomcat.util.codec.binary.Base64).encodeBase64String(student.studentImage)}}"
-                alt="Student Image"
-                class="w-36 h-36 object-cover rounded-md shadow-md border border-gray-300 dark:border-gray-600"
-              />
-            </div>
-            <div
-              th:if="${student.studentImage == null}"
-              class="text-gray-500 dark:text-gray-400 italic"
-            >
-              No Image Available
-            </div>
-          </div>
+          <p
+            th:text="${student.studentImage != null ? 'Image available' : 'Image not available'}"
+          ></p>
         </div>
 
         <!-- Image Upload Field -->
@@ -177,9 +162,18 @@
                 accept="image/*"
                 class="hidden"
                 id="studentImageFile"
+                onchange="previewImage(event)"
               />
             </div>
           </label>
+          <!-- Image preview will appear here -->
+          <div class="mt-4">
+            <img
+              id="imagePreview"
+              class="w-36 h-36 object-cover rounded-md shadow-md border border-gray-300 dark:border-gray-600"
+              style="display: none"
+            />
+          </div>
           <div
             th:if="${imageError}"
             th:text="${imageError}"
@@ -204,5 +198,24 @@
         </div>
       </form>
     </div>
+    <script>
+      function previewImage(event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById("imagePreview");
+
+        if (file) {
+          const reader = new FileReader();
+
+          reader.onload = function (e) {
+            preview.src = e.target.result;
+            preview.style.display = "block";
+          };
+
+          reader.readAsDataURL(file);
+        } else {
+          preview.style.display = "none";
+        }
+      }
+    </script>
   </body>
 </html>

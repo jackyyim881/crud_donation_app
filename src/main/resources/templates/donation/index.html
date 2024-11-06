@@ -1,12 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head th:replace="fragments/head :: headerFragment">
-    <title id="pageTitle">Donate to a Student</title>
+    <title id="pageTitle">Make a Donation - Donation App</title>
     <style>
-      /* Optional: Custom styles */
-      body {
-        font-family: "Inter", sans-serif;
-      }
       /* Loader Styles */
       .loader {
         border-top-color: #3498db;
@@ -19,92 +15,132 @@
       }
     </style>
   </head>
-  <body class="bg-gray-100">
+  <body
+    class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans"
+  >
+    <!-- Header -->
     <header th:replace="fragments/header :: header"></header>
 
-    <div class="container mx-auto px-4 py-8">
-      <div class="mt-10">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">
-          Make a Donation
-        </h2>
-        <form th:action="@{/donate}" method="post" id="donationForm">
-          <!-- Student Selection -->
-          <div class="mb-4">
-            <label for="student" class="block text-gray-700"
-              >Select Student:</label
-            >
-            <select
-              id="student"
-              name="studentId"
-              class="w-full mt-2 p-2 border rounded"
-              required
-            >
-              <option value="">-- Select a Student --</option>
-              <option
-                th:each="student : ${students}"
-                th:value="${student.id}"
-                th:text="${student.name}"
-              ></option>
-            </select>
-          </div>
-          <!-- Donation Amount -->
-          <div class="mb-4">
-            <label for="amount" class="block text-gray-700"
-              >Donation Amount (USD):</label
-            >
-            <input
-              type="number"
-              id="amount"
-              name="amount"
-              min="1"
-              step="0.01"
-              class="w-full mt-2 p-2 border rounded"
-              placeholder="Enter amount in USD"
-              required
-            />
-          </div>
-          <!-- Payment Method Selection -->
-          <div class="mb-4">
-            <label for="paymentMethod" class="block text-gray-700"
-              >Payment Method:</label
-            >
-            <select
-              id="paymentMethod"
-              name="paymentMethodId"
-              class="w-full mt-2 p-2 border rounded"
-              required
-            >
-              <option value="">-- Select Payment Method --</option>
-              <option
-                th:each="method : ${paymentMethods}"
-                th:value="${method.id}"
-                th:text="${method.methodName}"
-              ></option>
-            </select>
-          </div>
-          <!-- Submit Button -->
-          <button
-            type="submit"
-            class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
-          >
-            Donate
-          </button>
-        </form>
+    <!-- Main Container -->
+    <div class="container mx-auto mt-10 px-4 max-w-3xl">
+      <!-- Page Title -->
+      <h1 class="text-3xl font-extrabold text-gray-800 dark:text-gray-100 mb-6">
+        Make a Donation
+      </h1>
 
-        <!-- Flash Message Display -->
-        <div th:if="${message}" class="alert alert-success mt-4">
+      <!-- Donation Form -->
+      <form
+        th:action="@{/donate}"
+        method="post"
+        id="donationForm"
+        class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-8 space-y-6"
+      >
+        <!-- Student Selection -->
+        <div>
+          <label
+            for="student"
+            class="block text-sm font-medium mb-2 dark:text-gray-300"
+            >Select Student:</label
+          >
+          <select
+            id="student"
+            name="studentId"
+            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            required
+          >
+            <option value="">-- Select a Student --</option>
+            <option
+              th:each="student : ${students}"
+              th:value="${student.id}"
+              th:text="${student.name}"
+            ></option>
+          </select>
+        </div>
+
+        <!-- Donation Amount -->
+        <div>
+          <label
+            for="amount"
+            class="block text-sm font-medium mb-2 dark:text-gray-300"
+            >Donation Amount (USD):</label
+          >
+          <input
+            type="number"
+            id="amount"
+            name="amount"
+            min="1"
+            step="0.01"
+            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            placeholder="Enter amount in USD"
+            required
+          />
+        </div>
+
+        <!-- Payment Method Selection -->
+        <div>
+          <label
+            for="paymentMethod"
+            class="block text-sm font-medium mb-2 dark:text-gray-300"
+            >Payment Method:</label
+          >
+          <select
+            id="paymentMethod"
+            name="paymentMethodId"
+            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            required
+          >
+            <option value="">-- Select Payment Method --</option>
+            <option
+              th:each="method : ${paymentMethods}"
+              th:value="${method.id}"
+              th:text="${method.methodName}"
+            ></option>
+          </select>
+        </div>
+        <!-- campaign selection -->
+        <div class="">
+          <label
+            for="campaign"
+            class="block text-sm font-medium mb-2 dark:text-gray-300"
+            >Select Campaign:</label
+          >
+          <select
+            id="campaign"
+            name="campaignId"
+            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            required
+          >
+            <option value="">-- Select a Campaign --</option>
+            <option
+              th:each="campaign : ${campaigns}"
+              th:value="${campaign.id}"
+              th:text="${campaign.name}"
+            ></option>
+          </select>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="w-full bg-blue-600 text-white p-2 rounded-lg shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-400"
+        >
+          Donate
+        </button>
+
+        <!-- Flash Messages -->
+        <div th:if="${message}" class="text-green-500 text-sm mt-4">
           <p th:text="${message}"></p>
         </div>
-        <div th:if="${error}" class="alert alert-danger mt-4">
+        <div th:if="${error}" class="text-red-500 text-sm mt-4">
           <p th:text="${error}"></p>
         </div>
-      </div>
+      </form>
 
       <!-- Back Button -->
       <div class="mt-10 flex justify-center">
         <a
           href="/campaigns"
-          class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 shadow-md"
+          class="inline-block bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-400"
         >
           Back to Campaigns
         </a>

@@ -19,6 +19,8 @@ public interface CampaignService {
 
     void deleteCampaign(Long id);
 
+    void saveCampaign(Campaign campaign);
+
     List<CampaignDTO> getAllCampaignsWithCurrentAmount();
 
     Map<Long, BigDecimal> getTotalAmountPerCampaign();

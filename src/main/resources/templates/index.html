@@ -224,9 +224,11 @@
               .setLngLat([student.longitude, student.latitude])
               .setPopup(
                 new maplibregl.Popup({ offset: 25 }).setHTML(
-                  `<h3>${student.name}</h3>
-               <p>${student.school}</p>
-               <a href="/student-profile?id=${student.id}" target="_blank" style="color: blue; text-decoration: underline;">View Profile</a>`
+                  `<h3 class="text-lg text-black dark:text-black font-semibold">${student.name}</h3>
+               <p 
+                  class="text-sm text-black dark:text-black"
+               >${student.school}</p>
+               <a href="/student-profile?id=${student.id}" target="_blank" class="text-blue-500 dark:text-blue-500">View Profile</a>`
                 )
               )
               .addTo(map);

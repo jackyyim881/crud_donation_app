@@ -20,7 +20,7 @@
 
 // @Controller
 // @RequestMapping("/donors")
-// public class DonorWebController {
+// public class DonorWedbController {
 
 // private final DonorService donorService;
 // private final UserService userService;

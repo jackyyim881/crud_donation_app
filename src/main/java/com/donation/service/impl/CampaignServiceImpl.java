@@ -10,6 +10,8 @@ import com.donation.repository.DonationRepository;
 import com.donation.service.CampaignService;
 import com.donation.service.mapper.CampaignMapperService;
 
+import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -99,5 +101,10 @@ public class CampaignServiceImpl implements CampaignService {
     @Override
     public List<Donation> getDonationsByCampaignId(Long campaignId) {
         return campaignRepository.findDonationsByCampaignId(campaignId);
+    }
+
+    @Transactional
+    public void saveCampaign(Campaign campaign) {
+        campaignRepository.save(campaign);
     }
 }

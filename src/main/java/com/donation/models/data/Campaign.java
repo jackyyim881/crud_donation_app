@@ -2,7 +2,9 @@ package com.donation.models.data;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "campaign")
@@ -31,6 +33,8 @@ public class Campaign {
 
     @Column(name = "goalAmount", precision = 15, scale = 2, nullable = false)
     private BigDecimal currentAmount = BigDecimal.ZERO;
+    @OneToMany(mappedBy = "ncampaign", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Donation> donations = new ArrayList<>();
 
     public Campaign() {
     }
@@ -42,6 +46,14 @@ public class Campaign {
         this.startDate = startDate;
         this.endDate = endDate;
         this.currentAmount = BigDecimal.ZERO;
+    }
+
+    public List<Donation> getDonations() {
+        return donations;
+    }
+
+    public void setDonations(List<Donation> donations) {
+        this.donations = donations;
     }
 
     // Getters and Setters

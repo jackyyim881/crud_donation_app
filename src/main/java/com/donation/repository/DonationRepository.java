@@ -1,5 +1,7 @@
 package com.donation.repository;
 
+import com.donation.models.data.CampaignAmountProjection;
+import com.donation.models.data.CampaignTotalAmountProjection;
 import com.donation.models.data.Donation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -39,4 +41,15 @@ public interface DonationRepository extends JpaRepository<Donation, Long> {
         List<Object[]> getTotalAmountPerCampaign();
 
         List<Donation> findByNcampaignId(Long campaignId);
+
+        @Query("SELECT d.ncampaign.id AS campaignId, d.amount AS amount FROM Donation d")
+        List<CampaignAmountProjection> findCampaignIdAndAmount();
+
+        // Or use a native SQL query
+        @Query(value = "SELECT campaign_id AS campaignId, amount AS amount FROM donation", nativeQuery = true)
+        List<CampaignAmountProjection> findCampaignIdAndAmountNative();
+
+        @Query("SELECT d.ncampaign.id AS campaignId, SUM(d.amount) AS totalAmount " +
+                        "FROM Donation d GROUP BY d.ncampaign.id")
+        List<CampaignTotalAmountProjection> findTotalAmountByCampaign();
 }
