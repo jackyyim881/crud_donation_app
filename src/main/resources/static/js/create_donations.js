@@ -14,6 +14,9 @@ $(document).ready(function () {
       paymentMethodId: $("#paymentMethodId").val(),
       donationDate: new Date().toISOString(), // Assuming the current date
     };
+  
+ 
+
 
     // Make AJAX request to create a donation
     $.ajax({

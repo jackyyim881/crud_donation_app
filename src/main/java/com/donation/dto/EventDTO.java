@@ -1,5 +1,3 @@
-// src/main/java/com/donation/dto/EventDTO.java
-
 package com.donation.dto;
 
 import jakarta.validation.constraints.*;
@@ -28,14 +26,14 @@ public class EventDTO {
     @Pattern(regexp = "^#(?:[0-9a-fA-F]{3}){1,2}$", message = "Color must be a valid hex code")
     private String color;
 
-    private Long userId; // ID of the user who created the event
+    private Long userId; // ID of the user who created the event, set by the backend
 
     // Constructors
     public EventDTO() {
     }
 
     public EventDTO(Long id, String title, String description, LocalDateTime start, LocalDateTime end, String category,
-            String color, Long userId) {
+            String color) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -43,9 +41,9 @@ public class EventDTO {
         this.end = end;
         this.category = category;
         this.color = color;
-        this.userId = userId;
     }
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -107,9 +105,15 @@ public class EventDTO {
     }
 
     public void setUserId(Long userId) {
-        this.userId = userId;
+        this.userId = userId; // This can be set by the backend when mapping entities to DTO
     }
 
-    // Getters and Setters
+    // Optional: Add helper methods for formatted dates, if needed for display
+    public String getFormattedStart() {
+        return start != null ? start.toString() : null; // Customize formatting if required
+    }
 
+    public String getFormattedEnd() {
+        return end != null ? end.toString() : null; // Customize formatting if required
+    }
 }

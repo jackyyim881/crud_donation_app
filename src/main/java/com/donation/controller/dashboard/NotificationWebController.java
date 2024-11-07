@@ -47,31 +47,37 @@ public class NotificationWebController {
             return "redirect:/dashboard"; // Redirect to dashboard home page
         }
 
-        List<Notification> notifications = notificationService.getNotificationsForUser(user);
+        List<Notification> notifications = notificationService.getNotificationsForUser(user.getId());
         logger.info("Number of notifications found for user {}: {}", username, notifications.size());
 
         model.addAttribute("notifications", notifications);
-
         return "dashboard/notification/index"; // Ensure this view exists and displays notifications
     }
 
-    @PostMapping("/create")
-    public Notification createNotification(@RequestParam Long userId, @RequestParam String message) {
-        return notificationService.createNotificationForUser(userId, message);
-    }
+    // @PostMapping("/create")
+    // @ResponseBody // Assuming this is a REST-like endpoint
+    // public Notification createNotification(@RequestParam Long userId, @RequestParam String message) {
+    //     try {
+    //         Notification notification = notificationService.createNotificationForUser(userId, message);
+    //         logger.info("Notification created successfully for userId: {}", userId);
+    //         return notification;
+    //     } catch (Exception e) {
+    //         logger.error("Failed to create notification: {}", e.getMessage());
+    //         throw new RuntimeException("Failed to create notification");
+    //     }
+    // }
 
     @PostMapping("/mark-as-read/{notificationId}")
-    @ResponseBody
-    public String markAsRead(@PathVariable Long notificationId) {
+    public String markAsRead(@PathVariable Long notificationId, RedirectAttributes redirectAttributes) {
         logger.info("Attempting to mark notification with ID {} as read", notificationId);
         try {
             notificationService.markAsRead(notificationId);
             logger.info("Notification {} marked as read successfully", notificationId);
             redirectAttributes.addFlashAttribute("success", "Notification marked as read successfully");
-            return "redirect:/dashboard/notifications";
         } catch (Exception e) {
             logger.error("Failed to mark notification as read: {}", e.getMessage());
-            return "error";
+            redirectAttributes.addFlashAttribute("error", "Failed to mark notification as read");
         }
+        return "redirect:/dashboard/notifications";
     }
 }

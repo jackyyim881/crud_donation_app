@@ -1,320 +1,51 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="fragments/head :: headerFragment">
-    <title id="pageTitle">Calendar - Donation App</title>
-
-    <!-- Tailwind CSS -->
-    <style>
-      /* Custom Styles for Enhanced UX/UI */
-
-      /* Highlight current week */
-      .fc-highlighted-week {
-        background-color: rgba(79, 70, 229, 0.2);
-      }
-
-      /* Tooltip Styling */
-      .tooltip {
-        position: absolute;
-        background-color: rgba(0, 0, 0, 0.75);
-        color: #fff;
-        padding: 0.5rem;
-        border-radius: 0.25rem;
-        pointer-events: none;
-        z-index: 1000;
-        font-size: 0.875rem;
-      }
-
-      /* Notification Styling */
-      #notification {
-        transition: opacity 0.5s ease-in-out;
-      }
-    </style>
-  </head>
-
-  <body
-    class="bg-gray-100 font-sans text-gray-900 transition-colors duration-300 dark:bg-gray-900 dark:text-gray-100"
-  >
-    <header th:replace="fragments/header :: header" class="shadow-md">
-      <!-- Header with dark mode toggle -->
-    </header>
-
+<head th:replace="fragments/head :: head">
+    <title id="pageTitle">Calendar - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/main.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/locales-all.min.js"></script>
+</head>
+<body class="bg-gray-100 font-sans text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+    <header th:replace="fragments/header :: header" class="shadow-md"></header>
+    
     <div class="flex h-screen overflow-hidden">
-      <!-- Sidebar Fragment -->
-      <div
-        th:replace="fragments/sidebar :: sidebar"
-        class="hidden h-full w-64 flex-shrink-0 bg-white shadow-lg transition-colors duration-300 dark:bg-gray-800 lg:block sidebar"
-      ></div>
-
-      <!-- Main Content Area -->
-      <div class="flex-grow overflow-auto p-4 lg:p-8">
-        <!-- Search Bar -->
-        <div class="mb-4 flex justify-between items-center">
-          <h1 class="text-3xl font-bold">My Calendar</h1>
-          <input
-            type="text"
-            id="searchEvents"
-            placeholder="Search events..."
-            class="w-1/3 rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 sm:text-sm"
-            aria-label="Search Events"
-          />
+        <div th:replace="fragments/sidebar :: sidebar" class="hidden h-full w-64 flex-shrink-0 bg-white shadow-lg dark:bg-gray-800 lg:block sidebar"></div>
+        <div class="flex-grow overflow-auto p-4 lg:p-8">
+                        <div class="mb-6">
+                <a href="/dashboard/calendar/new" class="inline-block rounded-md bg-blue-600 px-4 py-2 text-white shadow-md hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
+                    <i class="fas fa-plus mr-2"></i> Create New Event
+                </a>
+            </div>
+            <div id="calendar"></div>
         </div>
-
-        <div class="mb-6 flex items-center justify-between">
-          <div class="flex items-center space-x-2">
-            <button
-              id="prevWeek"
-              class="text-gray-700 transition hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
-              aria-label="Previous Week"
-            >
-              <i class="fas fa-chevron-left"></i>
-            </button>
-            <span
-              id="weeklyDateRange"
-              class="text-sm text-gray-700 dark:text-gray-300"
-            >
-              <!-- Date Range will be injected here via JavaScript -->
-            </span>
-            <button
-              id="nextWeek"
-              class="text-gray-700 transition hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
-              aria-label="Next Week"
-            >
-              <i class="fas fa-chevron-right"></i>
-            </button>
-          </div>
-          <button
-            class="rounded-md bg-blue-600 px-4 py-2 text-white shadow-md transition hover:bg-blue-700 dark:bg-blue-500 dark:text-gray-100 dark:hover:bg-blue-600 flex items-center"
-            id="create-schedule-btn"
-            aria-label="Create New Schedule"
-          >
-            <i class="fas fa-plus mr-2"></i> Create Schedule
-          </button>
-        </div>
-
-        <!-- Calendar Tab Bar -->
-        <div
-          class="mb-6 flex items-center space-x-8 border-b-2 border-gray-200 dark:border-gray-700"
-        >
-          <!-- Weekly View with Date Range and Navigation -->
-          <button
-            id="weeklyView"
-            class="nav-tab border-b-2 border-indigo-600 pb-3 text-indigo-600 transition hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 flex items-center"
-            aria-label="Weekly View"
-          >
-            <i class="fas fa-calendar-week mr-2"></i> Weekly
-          </button>
-
-          <!-- Monthly View Tab -->
-          <button
-            id="monthlyView"
-            class="nav-tab border-b-2 border-transparent pb-3 text-gray-700 transition hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 flex items-center"
-            aria-label="Monthly View"
-          >
-            <i class="fas fa-calendar-alt mr-2"></i> Monthly
-          </button>
-
-          <!-- Yearly View Tab -->
-          <button
-            id="yearlyView"
-            class="nav-tab border-b-2 border-transparent pb-3 text-gray-700 transition hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 flex items-center"
-            aria-label="Yearly View"
-          >
-            <i class="fas fa-calendar mr-2"></i> Yearly
-          </button>
-        </div>
-
-        <!-- Notification -->
-        <div
-          id="notification"
-          class="hidden fixed top-4 right-4 p-4 bg-green-500 text-white rounded shadow-md"
-          role="alert"
-          aria-live="assertive"
-        >
-          Event created successfully!
-        </div>
-
-        <!-- Loading Spinner -->
-        <div
-          id="loadingSpinner"
-          class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-        >
-          <svg
-            class="animate-spin h-10 w-10 text-white"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              class="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              stroke-width="4"
-            ></circle>
-            <path
-              class="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8v8H4z"
-            ></path>
-          </svg>
-        </div>
-
-        <!-- Calendar Container -->
-        <div
-          class="h-[calc(100vh-300px)] min-h-[600px] rounded-lg border border-gray-200 bg-white p-4 shadow-md transition-colors duration-300 dark:border-gray-700 dark:bg-gray-800 lg:p-6"
-        >
-          <!-- Full Calendar -->
-          <div id="calendar" class="h-full w-full"></div>
-          <!-- Yearly Calendar Grid -->
-          <div
-            id="yearlyCalendar"
-            class="grid hidden grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4"
-          >
-            <!-- Individual Month Calendars will be injected here via JavaScript -->
-          </div>
-        </div>
-      </div>
     </div>
-
-    <!-- Modal for Creating Schedule -->
-    <div
-      id="scheduleModal"
-      class="fixed inset-0 flex hidden items-center justify-center bg-black bg-opacity-50 z-50"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="scheduleModalTitle"
-    >
-      <div
-        class="w-full max-w-md rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800"
-      >
-        <h2
-          id="scheduleModalTitle"
-          class="mb-4 text-xl font-semibold text-gray-900 dark:text-gray-100"
-        >
-          Create New Schedule
-        </h2>
-        <form id="scheduleForm" class="space-y-4">
-          <div>
-            <label
-              for="eventTitle"
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >Title</label
-            >
-            <input
-              type="text"
-              id="eventTitle"
-              name="title"
-              required
-              class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm transition-colors duration-300 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 sm:text-sm"
-              placeholder="Event title"
-            />
-          </div>
-          <div>
-            <label
-              for="eventDescription"
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >Description</label
-            >
-            <textarea
-              id="eventDescription"
-              name="description"
-              class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm transition-colors duration-300 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 sm:text-sm"
-              placeholder="Event description"
-            ></textarea>
-          </div>
-          <div>
-            <label
-              for="eventStart"
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >Start</label
-            >
-            <input
-              type="datetime-local"
-              id="eventStart"
-              name="start"
-              required
-              class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm transition-colors duration-300 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 sm:text-sm"
-            />
-          </div>
-          <div>
-            <label
-              for="eventEnd"
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >End</label
-            >
-            <input
-              type="datetime-local"
-              id="eventEnd"
-              name="end"
-              required
-              class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm transition-colors duration-300 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 sm:text-sm"
-            />
-          </div>
-          <div>
-            <label
-              for="eventColor"
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >Category</label
-            >
-            <select
-              id="eventCategory"
-              name="category"
-              class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm transition-colors duration-300 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 sm:text-sm"
-            >
-              <option value="default" selected>Default</option>
-              <option value="meeting">Meeting</option>
-              <option value="birthday">Birthday</option>
-              <option value="holiday">Holiday</option>
-              <!-- Add more categories as needed -->
-            </select>
-          </div>
-          <div>
-            <label
-              for="eventColor"
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >Color</label
-            >
-            <input
-              type="color"
-              id="eventColor"
-              name="color"
-              value="#3788d8"
-              class="mt-1 block h-10 w-16 cursor-pointer rounded-md border-0 p-0 shadow-sm"
-            />
-          </div>
-          <div class="flex justify-end space-x-2">
-            <button
-              type="button"
-              id="cancelScheduleBtn"
-              class="rounded-md bg-gray-300 px-4 py-2 text-gray-800 transition hover:bg-gray-400 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              class="rounded-md bg-indigo-600 px-4 py-2 text-white transition hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600"
-            >
-              Add Event
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- Tooltip Element -->
-    <div id="tooltip" class="tooltip hidden"></div>
-
-    <!-- FullCalendar Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <!-- Moment.js for Date Formatting (optional, but useful) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-
-    <script type="text/javascript">
-      var currentUserId = [[${currentUser.id}]]; // Thymeleaf syntax for passing the current logged-in user's ID
-      console.log(currentUserId);
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'en',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                events: {
+                    url: '/api/v1/events/user/' + [[${currentUser.id}]],
+                    method: 'GET',
+                    failure: function() {
+                        alert('there was an error while fetching events!');
+                    }
+                },
+                eventClick: function(info) {
+                    alert('Event: ' + info.event.title);
+                    // Change the border color just for fun
+                    info.el.style.borderColor = 'red';
+                }
+            });
+            calendar.render();
+        });
     </script>
-    <script src="/js/calendar.js"></script>
-  </body>
+</body>
 </html>

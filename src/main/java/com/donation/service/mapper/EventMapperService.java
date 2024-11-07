@@ -19,17 +19,21 @@ public class EventMapperService {
 
     // Convert Event entity to EventDTO
     public EventDTO toDTO(Event event) {
-        return new EventDTO(
-                event.getId(),
-                event.getTitle(),
-                event.getDescription(),
-                event.getStart(),
-                event.getEnd(),
-                event.getCategory(),
-                event.getColor(),
-                event.getUser().getId());
-    }
+        EventDTO eventDTO = new EventDTO();
+        eventDTO.setId(event.getId());
+        eventDTO.setTitle(event.getTitle());
+        eventDTO.setDescription(event.getDescription());
+        eventDTO.setStart(event.getStart());
+        eventDTO.setEnd(event.getEnd());
+        eventDTO.setCategory(event.getCategory());
+        eventDTO.setColor(event.getColor());
 
+        if (event.getUser() != null) {
+            eventDTO.setUserId(event.getUser().getId());
+        }
+
+        return eventDTO;
+    }
     // Convert EventDTO to Event entity
     public Event toEntity(EventDTO eventDTO) {
         Event event = new Event();

@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.donation.models.data.*;
-import com.donation.repository.DonorRepository;
 import com.donation.service.*;
 
 import java.util.List;
@@ -32,23 +31,31 @@ public class DonateWebController {
     private final DonationService donationService;
 
     private final CampaignService campaignService;
-
+    private final NotificationService notificationService;
+    private final UserService userService;
     @Autowired
     public DonateWebController(DonorService donorService, DonationService donationService,
+            NotificationService notificationService, UserService userService,
             CampaignService campaignService) {
         this.donorService = donorService;
         this.campaignService = campaignService;
         this.donationService = donationService;
+        this.notificationService = notificationService;
+        this.userService = userService;
+
     }
 
     @GetMapping("/donate")
     public String showDonationForm(Model model) {
-        List<Student> students = studentService.getAllStudents(); // Assuming a student service to get the list of
-                                                                  // students
-        List<PaymentMethod> paymentMethods = paymentMethodService.getAllPaymentMethods(); // Assuming a payment method
-                                                                                          // service to get the list of
-        List<Campaign> campaigns = campaignService.getAllCampaigns(); // Assuming a campaign service to get the list of
-                                                                      // campaigns
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()
+                || authentication.getPrincipal().equals("anonymousUser")) {
+            return "redirect:/auth/login"; // Redirect to login page if user is not authenticated
+        }
+
+        List<Student> students = studentService.getAllStudents();
+        List<PaymentMethod> paymentMethods = paymentMethodService.getAllPaymentMethods();
+        List<Campaign> campaigns = campaignService.getAllCampaigns();
 
         model.addAttribute("students", students);
         model.addAttribute("paymentMethods", paymentMethods);
@@ -66,6 +73,11 @@ public class DonateWebController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            logger.error("User not found with username: {}", username);
+            return "redirect:/donate";
+        }
         Donor donor = donorService.findByUserUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Donor not found"));
         logger.debug("Donor found: {}", donor);
@@ -82,6 +94,11 @@ public class DonateWebController {
 
         donationService.donate(studentId, paymentMethodId, amount, donor.getId(), campaign.getId());
         redirectAttributes.addFlashAttribute("message", "Donation successful!");
+
+        // Send a notification to the user
+        String message = String.format("Thank you for your donation of $%.2f to the %s campaign.", amount,
+                campaign.getName());
+        notificationService.sendNotification(donor.getId(), user.getId(), campaign.getId(), message);
 
         return "redirect:/donate";
     }

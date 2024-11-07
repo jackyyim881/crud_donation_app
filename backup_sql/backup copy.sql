@@ -100,7 +100,7 @@ CREATE TABLE `donation` (
   CONSTRAINT `donation_ibfk_2` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`),
   CONSTRAINT `donation_ibfk_3` FOREIGN KEY (`payment_method_id`) REFERENCES `paymentmethod` (`id`),
   CONSTRAINT `donation_ibfk_4` FOREIGN KEY (`campaign_id`) REFERENCES `campaign` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -127,7 +127,7 @@ CREATE TABLE `donor` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_user_id` (`user_id`),
   CONSTRAINT `donor_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -136,7 +136,7 @@ CREATE TABLE `donor` (
 
 LOCK TABLES `donor` WRITE;
 /*!40000 ALTER TABLE `donor` DISABLE KEYS */;
-INSERT INTO `donor` VALUES (1,1,'personal'),(2,2,'personal'),(3,3,'personal'),(4,4,'personal'),(5,5,'personal'),(6,6,'personal'),(7,7,'personal'),(8,8,'personal'),(9,9,'personal'),(10,10,'personal'),(13,17,'personal');
+INSERT INTO `donor` VALUES (1,1,'personal'),(2,2,'personal'),(3,3,'personal'),(4,4,'personal'),(5,5,'personal'),(6,6,'personal'),(7,7,'personal'),(8,8,'personal'),(9,9,'personal'),(10,10,'personal');
 /*!40000 ALTER TABLE `donor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -187,7 +187,7 @@ CREATE TABLE `event` (
   PRIMARY KEY (`id`),
   KEY `fk_event_user` (`user_id`),
   CONSTRAINT `fk_event_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -335,7 +335,7 @@ CREATE TABLE `notification` (
   CONSTRAINT `notification_ibfk_1` FOREIGN KEY (`donor_id`) REFERENCES `donor` (`id`),
   CONSTRAINT `notification_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   CONSTRAINT `notification_ibfk_3` FOREIGN KEY (`campaign_id`) REFERENCES `campaign` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -554,7 +554,7 @@ CREATE TABLE `user` (
   `email` varchar(100) NOT NULL,
   `phone_number` varchar(20) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
-  `profileImage` tinyblob,
+  `profileImage` longblob,
   `name` varchar(50) DEFAULT NULL,
   `role` varchar(50) NOT NULL DEFAULT 'ROLE_USER',
   `currency` varchar(10) NOT NULL,
@@ -564,7 +564,7 @@ CREATE TABLE `user` (
   `profile_image_path` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -573,7 +573,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'jameswong','password123','james.wong@example.hk','85291234567','Central, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(2,'sarahchan','password123','sarah.chan@example.hk','85291234568','Tsim Sha Tsui, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(3,'michaellee','password123','michael.lee@example.hk','85291234569','Causeway Bay, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(4,'emilyho','password123','emily.ho@example.hk','85291234570','Mong Kok, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(5,'davidcheung','password123','david.cheung@example.hk','85291234571','Wan Chai, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(6,'amykwok','password123','amy.kwok@example.hk','85291234572','Shatin, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(7,'benjaminng','password123','benjamin.ng@example.hk','85291234573','Kowloon Tong, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(8,'jessicalau','password123','jessica.lau@example.hk','85291234574','Tseung Kwan O, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(9,'alexchow','password123','alex.chow@example.hk','85291234575','Tsuen Wan, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(10,'karenli','password123','karen.li@example.hk','85291234576','Tuen Mun, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(17,'test','$2a$10$hZ8sWcoi2bVRNyY5w5baLep0GvAhEi.8HWZnLNjEbAS47IRryPYM6','test@gmail.com',NULL,NULL,NULL,NULL,'ROLE_USER','USD','en',0,0,NULL);
+INSERT INTO `user` VALUES (1,'jameswong','password123','james.wong@example.hk','85291234567','Central, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(2,'sarahchan','password123','sarah.chan@example.hk','85291234568','Tsim Sha Tsui, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(3,'michaellee','password123','michael.lee@example.hk','85291234569','Causeway Bay, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(4,'emilyho','password123','emily.ho@example.hk','85291234570','Mong Kok, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(5,'davidcheung','password123','david.cheung@example.hk','85291234571','Wan Chai, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(6,'amykwok','password123','amy.kwok@example.hk','85291234572','Shatin, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(7,'benjaminng','password123','benjamin.ng@example.hk','85291234573','Kowloon Tong, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(8,'jessicalau','password123','jessica.lau@example.hk','85291234574','Tseung Kwan O, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(9,'alexchow','password123','alex.chow@example.hk','85291234575','Tsuen Wan, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL),(10,'karenli','password123','karen.li@example.hk','85291234576','Tuen Mun, Hong Kong',NULL,'','ROLE_USER','','',0,0,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -602,7 +602,6 @@ CREATE TABLE `user_roles` (
 
 LOCK TABLES `user_roles` WRITE;
 /*!40000 ALTER TABLE `user_roles` DISABLE KEYS */;
-INSERT INTO `user_roles` VALUES (17,1,'2024-11-07 03:46:27','active');
 /*!40000 ALTER TABLE `user_roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -637,4 +636,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-07 13:32:52
+-- Dump completed on 2024-11-06 17:16:25

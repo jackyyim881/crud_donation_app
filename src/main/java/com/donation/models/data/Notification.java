@@ -31,17 +31,13 @@ public class Notification {
     @Column(name = "is_read", nullable = false)
     private boolean isRead = false;
 
-    // No-argument constructor
     public Notification() {
     }
 
-    // Custom constructors
-    public Notification(String message2, User user2) {
-    }
-
-    // Constructor with user, message, and timestamp
-    public Notification(User user, String message, LocalDateTime timestamp) {
+    public Notification(Donor donor, User user, Campaign campaign, String message, LocalDateTime timestamp) {
+        this.donor = donor;
         this.user = user;
+        this.campaign = campaign;
         this.message = message;
         this.timestamp = timestamp;
     }
@@ -98,7 +94,9 @@ public class Notification {
         return isRead;
     }
 
-    public void setRead(boolean read) {
-        isRead = read;
+    public void setRead(boolean isRead) {
+        this.isRead = isRead;
     }
+
+
 }
