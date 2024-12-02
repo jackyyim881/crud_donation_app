@@ -1,0 +1,25 @@
+<!-- src/main/resources/templates/chat.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Chatroom</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+  </head>
+  <body>
+    <div class="chat-container">
+      <div class="chat-header">
+        <h2 th:text="#{chat.title}">Chatroom</h2>
+      </div>
+      <div id="messageArea" class="chat-messages">
+        <!-- Messages will appear here -->
+      </div>
+      <div class="chat-input">
+        <input type="text" id="message" placeholder="Type your message..." />
+        <button onclick="sendMessage()" th:text="#{chat.send}">Send</button>
+      </div>
+    </div>
+
+    <script th:src="@{/js/chat.js}"></script>
+  </body>
+</html>

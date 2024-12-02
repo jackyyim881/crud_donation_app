@@ -1,97 +1,94 @@
-// package com.donation.models.data;
 
-// import jakarta.persistence.*;
+package com.donation.models.data;
 
-// import java.sql.Date;
+import jakarta.persistence.*;
 
-// @Entity
-// @Table(name = "donation")
-// public class Donation {
+import java.time.LocalDate;
 
-// @Id
-// @GeneratedValue(strategy = GenerationType.IDENTITY)
-// private int id;
+@Entity
+@Table(name = "donation")
+public class Donation {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-// @Column(name = "amount", nullable = false)
-// private double amount;
+    @ManyToOne
+    @JoinColumn(name = "donor_id", nullable = false) // Enforce donor not null
+    private Donor donor;
 
-// @Column(name = "date", nullable = false)
-// private Date date;
+    @ManyToOne
+    @JoinColumn(name = "student_id", nullable = true) // Student is optional
+    private Student student; // Assuming a student entity
 
-// // Many-to-One relationship with Campaign
-// @ManyToOne
-// @JoinColumn(name = "campaign_id", nullable = false)
-// private Campaign campaign;
+    @Column(nullable = false)
+    private Double amount;
 
-// // Many-to-One relationship with Student (nullable, as it could be optional)
-// @ManyToOne
-// @JoinColumn(name = "student_id", nullable = true)
-// private Student student;
+    @Column(name = "date")
+    @Temporal(TemporalType.DATE)
+    private LocalDate donationDate;
 
-// // Other columns such as donor_id and payment_method_id would go here as
-// well.
-// @Column(name = "donor_id", nullable = false)
-// private Donor donor;
+    @ManyToOne
+    @JoinColumn(name = "campaign_id", nullable = true) // Campaign is optional
+    private Campaign ncampaign; // Assuming a campaign entity
 
-// @Column(name = "paym_ent_method_id", nullable = false)
-// private int paymentMethodId;
+    @ManyToOne
+    @JoinColumn(name = "payment_method_id")
+    private PaymentMethod paymentMethod; // Assuming a payment method entity
 
-// public int getId() {
-// return id;
-// }
+    public Long getId() {
+        return id;
+    }
 
-// public void setId(int id) {
-// this.id = id;
-// }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-// public double getAmount() {
-// return amount;
-// }
+    public Donor getDonor() {
+        return donor;
+    }
 
-// public void setAmount(double amount) {
-// this.amount = amount;
-// }
+    public void setDonor(Donor donor) {
+        this.donor = donor;
+    }
 
-// public Date getDate() {
-// return date;
-// }
+    public Student getStudent() {
+        return student;
+    }
 
-// public void setDate(Date date) {
-// this.date = date;
-// }
+    public void setStudent(Student student) {
+        this.student = student;
+    }
 
-// public Campaign getCampaign() {
-// return campaign;
-// }
+    public Double getAmount() {
+        return amount;
+    }
 
-// public void setCampaign(Campaign campaign) {
-// this.campaign = campaign;
-// }
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
 
-// public Student getStudent() {
-// return student;
-// }
+    public LocalDate getDonationDate() {
+        return donationDate;
+    }
 
-// public void setStudent(Student student) {
-// this.student = student;
-// }
+    public void setDonationDate(LocalDate donationDate) {
+        this.donationDate = donationDate;
+    }
 
-// public Donor getDonor() {
-// return donor;
-// }
+    public Campaign getNcampaign() {
+        return ncampaign;
+    }
 
-// public void setDonor(Donor donor) {
-// this.donor = donor;
-// }
+    public void setNcampaign(Campaign ncampaign) {
+        this.ncampaign = ncampaign;
+    }
 
-// public int getPaymentMethodId() {
-// return paymentMethodId;
-// }
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
 
-// public void setPaymentMethodId(int paymentMethodId) {
-// this.paymentMethodId = paymentMethodId;
-// }
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
 
-// // Getters and Setters
-
-// }
+}

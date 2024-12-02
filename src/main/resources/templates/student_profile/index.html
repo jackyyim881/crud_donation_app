@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Student Profile</title>
+  </head>
+  <style>
+    .card {
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .donate-button:hover {
+      transition: background-color 0.2s ease-in-out;
+      background-color: #f5a623;
+      color: #fff;
+    }
+    body {
+      background: linear-gradient(135deg, #ffecd2, #fcb69f);
+    }
+  </style>
+  <body class="bg-gray-100 min-h-screen font-sans">
+    <header th:replace="fragments/header :: header"></header>
+
+    <div class="container mx-auto px-4 py-16">
+      <div class="text-center mb-8 flex items-center justify-center ml-4">
+        <div class="">
+          <p
+            th:text="${student.studentImage != null ? 'Image available' : 'Image not available'}"
+            class="text-gray-600 dark:text-gray-400 border border-gray-300 dark:border-gray-600 rounded-full px-4 py-2"
+          ></p>
+        </div>
+        <div class="">
+          <img
+            th:if="${student.studentImage != null}"
+            th:src="'data:image/jpeg;base64,' + ${student.imageBase64}"
+            alt="Student Image"
+            class="w-16 h-16 object-cover rounded-full border border-gray-300 dark:border-gray-600 shadow-md dark:shadow-gray-700"
+          />
+          <span
+            th:if="${student.studentImage == null}"
+            class="text-gray-500 dark:text-gray-400 italic"
+            >No Image</span
+          >
+        </div>
+      </div>
+      <div class="text-center mb-12">
+        <h1
+          class="text-6xl font-extrabold mb-4 text-gray-800 leading-tight"
+          th:text="${student.name}"
+        >
+          Student Name
+        </h1>
+        <p class="text-lg text-gray-600">
+          Join us in supporting
+          <span th:text="${student.name}">Student Name</span> to achieve a
+          brighter future!
+        </p>
+      </div>
+
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <!-- Student Details Card -->
+        <div class="card p-8 rounded-2xl shadow-xl">
+          <h2 class="text-4xl font-semibold text-gray-800 mb-6">
+            Student Details
+          </h2>
+          <div class="text-lg space-y-4">
+            <p>
+              <i class="fas fa-school text-blue-500"></i>
+              <strong class="text-gray-700">School:</strong>
+              <span class="text-gray-600" th:text="${student.school}"
+                >School Name</span
+              >
+            </p>
+            <p>
+              <i class="fas fa-birthday-cake text-pink-500"></i>
+              <strong class="text-gray-700">Age:</strong>
+              <span class="text-gray-600" th:text="${student.age}">Age</span>
+            </p>
+            <p>
+              <i class="fas fa-info-circle text-indigo-500"></i>
+              <strong class="text-gray-700">Bio:</strong>
+              <span class="text-gray-600" th:text="${student.bio}"
+                >Student Bio</span
+              >
+            </p>
+          </div>
+        </div>
+
+        <!-- Homeless Student Details Section -->
+        <div class="card p-8 rounded-2xl shadow-xl">
+          <h2 class="text-4xl font-semibold text-blue-800 mb-6">
+            Homeless Student Details
+          </h2>
+          <div class="text-lg space-y-4">
+            <p>
+              <i class="fas fa-house-user text-blue-500"></i>
+              <strong class="text-blue-700">Current Shelter:</strong>
+              <span
+                class="text-gray-700"
+                th:text="${homelessStudentDetails.currentShelter}"
+                >Shelter Name</span
+              >
+            </p>
+            <p>
+              <i class="fas fa-clock text-blue-500"></i>
+              <strong class="text-blue-700">Duration of Homelessness:</strong>
+              <span
+                class="text-gray-700"
+                th:text="${homelessStudentDetails.durationOfHomelessness}"
+                >Duration</span
+              >
+            </p>
+            <p>
+              <i class="fas fa-phone text-blue-500"></i>
+              <strong class="text-blue-700">Emergency Contact:</strong>
+              <span
+                class="text-gray-700"
+                th:text="${homelessStudentDetails.emergencyContact}"
+                >Emergency Contact Name</span
+              >
+            </p>
+            <p>
+              <i class="fas fa-heart text-blue-500"></i>
+              <strong class="text-blue-700">Special Needs:</strong>
+              <span
+                class="text-gray-700"
+                th:text="${homelessStudentDetails.specialNeeds}"
+                >Special Needs</span
+              >
+            </p>
+          </div>
+        </div>
+
+        <!-- Needs Section -->
+        <div class="card p-8 rounded-2xl shadow-xl col-span-2">
+          <h2 class="text-4xl font-semibold text-yellow-800 mb-6">Needs</h2>
+          <div th:if="${needs != null and !needs.isEmpty()}">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div
+                class="p-6 bg-white rounded-xl border-l-8 border-yellow-500 shadow-lg hover:shadow-xl transition-shadow"
+                th:each="need : ${needs}"
+              >
+                <h3
+                  class="text-2xl text-gray-800"
+                  th:text="${need.needDescription}"
+                ></h3>
+                <p class="text-gray-700 mt-2">
+                  Goal Amount: $
+                  <span
+                    th:text="${need.goalAmount}"
+                    class="font-medium text-gray-700"
+                  ></span>
+                </p>
+                <p class="text-gray-700">
+                  Current Amount: $
+                  <span
+                    th:text="${need.currentAmount}"
+                    class="font-medium text-gray-700"
+                  ></span>
+                </p>
+                <button
+                  class="donate-button mt-4 py-2 px-4 rounded-lg bg-yellow-500 text-white font-semibold hover:bg-yellow-600"
+                >
+                  Donate Now
+                </button>
+              </div>
+            </div>
+          </div>
+          <div th:if="${needs == null or needs.isEmpty()}">
+            <p class="text-gray-700 text-lg">
+              No needs information available for this student.
+            </p>
+          </div>
+        </div>
+
+        <!-- Progress Updates Section -->
+        <div class="card p-8 rounded-2xl shadow-xl">
+          <h2 class="text-4xl font-semibold text-green-800 mb-6">
+            Progress Updates
+          </h2>
+          <div
+            th:if="${progressUpdates != null and !progressUpdates.isEmpty()}"
+          >
+            <ul class="space-y-4">
+              <li th:each="update : ${progressUpdates}">
+                <div
+                  class="p-4 bg-white rounded-lg border-l-4 border-green-500 shadow-lg hover:shadow-xl transition-shadow"
+                >
+                  <strong class="text-gray-800">Date:</strong>
+                  <span
+                    class="font-medium text-gray-700"
+                    th:text="${update.updateDate}"
+                  ></span>
+                  <p
+                    class="text-gray-800 mt-2"
+                    th:text="${update.updateDescription}"
+                  ></p>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div th:if="${progressUpdates == null or progressUpdates.isEmpty()}">
+            <p class="text-gray-700 text-lg">
+              No progress updates available for this student.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

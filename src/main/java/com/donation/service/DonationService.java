@@ -1,24 +1,34 @@
-// package com.donation.service;
+package com.donation.service;
 
-// import java.util.List;
-// import org.springframework.stereotype.Service;
-// import com.donation.models.data.Donation;
-// import com.donation.repository.DonationRepository;
+import com.donation.dto.DonationRequest;
+import com.donation.models.data.CampaignAmountProjection;
+import com.donation.models.data.CampaignTotalAmountProjection;
+import com.donation.models.data.Donation;
 
-// import jakarta.persistence.EntityManager;
-// import jakarta.persistence.PersistenceContext;
+import java.time.LocalDate;
+import java.util.List;
 
-// @Service
-// public class DonationService {
-// @PersistenceContext
-// private EntityManager entityManager;
-// private final DonationRepository donationRepository;
+public interface DonationService {
 
-// public DonationService(DonationRepository donationRepository) {
-// this.donationRepository = donationRepository;
-// }
+    Donation createDonation(DonationRequest donationRequest);
 
-// public List<Donation> getAllDonations() {
-// return donationRepository.findAll();
-// }
-// }
+    List<Donation> getAllDonations();
+
+    List<Donation> getDonations(Double minAmount, Double maxAmount, LocalDate startDate, LocalDate endDate,
+            Long campaignId);
+
+    Donation getDonationById(Long id);
+
+    // Update an existing donation
+    Donation updateDonation(Long id, DonationRequest donationDetails);
+
+    // Delete a donation by its ID
+    void deleteDonation(Long id);
+
+    // Simulate a donation
+    void donate(Long studentId, Long paymentMethodId, Double amount, Long donorId, Long campaignId);
+
+    List<CampaignAmountProjection> findCampaignIdAndAmount();
+
+    List<CampaignTotalAmountProjection> findTotalAmountByCampaign();
+}

@@ -1,91 +1,116 @@
-// package com.donation.models.data;
+package com.donation.models.data;
 
-// import jakarta.persistence.*;
-// import java.sql.Date;
-// import java.util.List;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-// @Entity
-// @Table(name = "campaign")
-// public class Campaign {
+@Entity
+@Table(name = "campaign")
+public class Campaign {
 
-// @Id
-// @GeneratedValue(strategy = GenerationType.IDENTITY)
-// private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-// @Column(name = "name", nullable = false, length = 100)
-// private String name;
+    @Column(name = "name", nullable = false, length = 100)
+    private String name;
 
-// @Column(name = "description", columnDefinition = "TEXT")
-// private String description;
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
 
-// @Column(name = "goal_amount", precision = 15, scale = 2, nullable = false)
-// private double goalAmount;
+    @Column(name = "goal_amount", precision = 15, scale = 2)
+    private BigDecimal goalAmount;
 
-// @Column(name = "start_date", nullable = false)
-// private Date startDate;
+    @Column(name = "start_date")
+    @Temporal(TemporalType.DATE)
+    private Date startDate;
 
-// @Column(name = "end_date")
-// private Date endDate;
+    @Column(name = "end_date")
+    @Temporal(TemporalType.DATE)
+    private Date endDate;
 
-// // One-to-Many relationship with Donation
-// @OneToMany(mappedBy = "campaign", cascade = CascadeType.ALL, orphanRemoval =
-// true)
-// private List<Donation> donations;
+    @Column(name = "goalAmount", precision = 15, scale = 2, nullable = false)
+    private BigDecimal currentAmount = BigDecimal.ZERO;
+    @OneToMany(mappedBy = "ncampaign", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Donation> donations = new ArrayList<>();
 
-// // Getters and Setters
-// public int getId() {
-// return id;
-// }
+    public Campaign() {
+    }
 
-// public void setId(int id) {
-// this.id = id;
-// }
+    public Campaign(String name, String description, BigDecimal goalAmount, Date startDate, Date endDate) {
+        this.name = name;
+        this.description = description;
+        this.goalAmount = goalAmount;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.currentAmount = BigDecimal.ZERO;
+    }
 
-// public String getName() {
-// return name;
-// }
+    public List<Donation> getDonations() {
+        return donations;
+    }
 
-// public void setName(String name) {
-// this.name = name;
-// }
+    public void setDonations(List<Donation> donations) {
+        this.donations = donations;
+    }
 
-// public String getDescription() {
-// return description;
-// }
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
 
-// public void setDescription(String description) {
-// this.description = description;
-// }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-// public double getGoalAmount() {
-// return goalAmount;
-// }
+    public String getName() {
+        return name;
+    }
 
-// public void setGoalAmount(double goalAmount) {
-// this.goalAmount = goalAmount;
-// }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-// public Date getStartDate() {
-// return startDate;
-// }
+    public String getDescription() {
+        return description;
+    }
 
-// public void setStartDate(Date startDate) {
-// this.startDate = startDate;
-// }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-// public Date getEndDate() {
-// return endDate;
-// }
+    public BigDecimal getGoalAmount() {
+        return goalAmount;
+    }
 
-// public void setEndDate(Date endDate) {
-// this.endDate = endDate;
-// }
+    public void setGoalAmount(BigDecimal goalAmount) {
+        this.goalAmount = goalAmount;
+    }
 
-// public List<Donation> getDonations() {
-// return donations;
-// }
+    public Date getStartDate() {
+        return startDate;
+    }
 
-// public void setDonations(List<Donation> donations) {
-// this.donations = donations;
-// }
-// }
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public BigDecimal getCurrentAmount() {
+        return currentAmount;
+    }
+
+    public void setCurrentAmount(BigDecimal currentAmount) {
+        this.currentAmount = currentAmount;
+    }
+
+}

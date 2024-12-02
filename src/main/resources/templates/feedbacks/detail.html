@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Donor Feedback 详情</title>
+  </head>
+  <body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-semibold mb-6">Donor Feedback 详情</h1>
+      <div class="bg-white p-6 rounded shadow-md">
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold">ID：</label>
+          <span class="text-gray-700" th:text="${feedback.id}">1</span>
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold">Donor Type：</label>
+          <span class="text-gray-700" th:text="${feedback.donorType}"
+            >类型</span
+          >
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold">评论：</label>
+          <span class="text-gray-700" th:text="${feedback.comments}"
+            >评论内容</span
+          >
+        </div>
+        <!-- 添加其他字段根据需要 -->
+        <div class="flex items-center">
+          <a
+            href="/feedbacks"
+            class="bg-primary text-white px-4 py-2 rounded hover:bg-indigo-600"
+            >返回</a
+          >
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

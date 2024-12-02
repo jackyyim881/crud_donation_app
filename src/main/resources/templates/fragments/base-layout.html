@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="fragments/head :: headerFragment">
+    <!-- Page title -->
+    <title id="pageTitle">Base Title</title>
+  </head>
+
+  <body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+    <!-- Header Fragment -->
+    <header th:replace="fragments/header :: header"></header>
+
+    <!-- Main Container with Sidebar and Content -->
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar Fragment -->
+      <div
+        th:replace="fragments/sidebar :: sidebar"
+        class="mr-8 hidden lg:block flex-shrink-0 w-64 bg-white dark:bg-gray-800 shadow-lg h-full"
+      ></div>
+
+      <!-- Main Content Area Placeholder -->
+      <div class="flex-grow overflow-auto p-8">
+        <div th:fragment="mainContent">
+          <!-- Page-specific content will be injected here -->
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

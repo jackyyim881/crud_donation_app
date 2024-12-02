@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Student User List</title>
+  </head>
+  <body
+    class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans"
+  >
+    <div th:replace="fragments/header :: header"></div>
+    <div class="mb-4">
+      <div class="mb-4 mt-5">
+        <a
+          href="/api/v1/user/addForm"
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Add New User
+        </a>
+      </div>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border border-gray-200">
+        <thead>
+          <tr
+            class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal"
+          >
+            <th class="py-3 px-6 text-left">ID</th>
+            <th class="py-3 px-6 text-left">Username</th>
+            <th class="py-3 px-6 text-left">Email</th>
+            <th class="py-3 px-6 text-left">Phone Number</th>
+            <th class="py-3 px-6 text-left">Address</th>
+            <th class="py-3 px-6 text-left">Profile Image</th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-600 text-sm font-light">
+          <tr
+            th:each="user : ${users}"
+            class="border-b border-gray-200 hover:bg-gray-100"
+          >
+            <td
+              class="py-3 px-6 text-left whitespace-nowrap"
+              th:text="${user.id}"
+            ></td>
+            <td class="py-3 px-6 text-left" th:text="${user.username}"></td>
+            <td class="py-3 px-6 text-left" th:text="${user.email}"></td>
+            <td class="py-3 px-6 text-left" th:text="${user.phoneNumber}"></td>
+            <td class="py-3 px-6 text-left" th:text="${user.address}"></td>
+            <td class="py-3 px-6 text-left">
+              <div th:if="${user.profileImage != null}">
+                <img
+                  th:src="'data:image/png;base64,' + ${#strings.bytesToBase64(user.profileImage)}"
+                  alt="Profile Image"
+                  class="w-24 h-24 object-cover"
+                />
+              </div>
+              <div th:if="${user.profileImage == null}">No Image</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

@@ -1,6 +1,11 @@
 package com.donation.models.data;
 
+import java.util.Base64;
+
 import jakarta.persistence.*;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "student")
@@ -8,7 +13,7 @@ public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name = "name", nullable = false, length = 100)
     private String name;
@@ -26,12 +31,36 @@ public class Student {
     @Column(name = "student_image", columnDefinition = "LONGBLOB")
     private byte[] studentImage;
 
+    @Column(name = "latitude", nullable = true)
+    private Double latitude;
+
+    @Column(name = "longitude", nullable = true)
+    private Double longitude;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<HomelessStudentDetails> homelessDetails;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    private List<Needs> needs;
+
+    public Student() {
+    }
+
+    public Student(String name, int age, String school, String bio, byte[] studentImage) {
+        this.name = name;
+        this.age = age;
+        this.school = school;
+        this.bio = bio;
+        this.studentImage = studentImage;
+    }
+
     // Getters and Setters
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -74,4 +103,45 @@ public class Student {
     public void setStudentImage(byte[] studentImage) {
         this.studentImage = studentImage;
     }
+
+    @Transient
+    public String getImageBase64() {
+        if (studentImage != null && studentImage.length > 0) {
+            return Base64.getEncoder().encodeToString(studentImage);
+        }
+        return null;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public List<HomelessStudentDetails> getHomelessDetails() {
+        return homelessDetails;
+    }
+
+    public void setHomelessDetails(List<HomelessStudentDetails> homelessDetails) {
+        this.homelessDetails = homelessDetails;
+    }
+
+    public List<Needs> getNeeds() {
+        return needs;
+    }
+
+    public void setNeeds(List<Needs> needs) {
+        this.needs = needs;
+    }
+
 }

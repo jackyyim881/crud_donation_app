@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Getting Started</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css"
+    />
+  </head>
+  <body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+    <header th:replace="fragments/header :: header"></header>
+
+    <aside
+      th:replace="fragments/sidebar :: sidebar"
+      class="mr-8 hidden lg:block"
+    ></aside>
+  </body>
+</html>

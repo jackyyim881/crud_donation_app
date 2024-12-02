@@ -1,0 +1,51 @@
+version: "3.8"
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql-db
+    ports:
+      - "3307:3306" # Map container's port 3306 to host's port 3307 to avoid conflict with local MySQL
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password # Set root password
+      MYSQL_DATABASE: mydatabase # Create database on startup
+      MYSQL_USER: user # Create additional user
+      MYSQL_PASSWORD: user_password # Password for the additional user
+    
+    volumes:
+      - mysql_data:/var/lib/mysql # Persist database 
+      - ./sql/backup.sql:/docker-entrypoint-initdb.d/backup.sql # Load the backup.sql script
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "--password=root_password"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  spring-app:
+    build:
+      context: . # Use current directory as context
+      dockerfile: Dockerfile # Dockerfile for the Spring Boot app
+    container_name: spring-boot-app
+    ports:
+      - "8080:8080" # Map Spring Boot port to host
+    depends_on:
+      mysql:
+        condition: service_healthy # Ensure MySQL is healthy before starting Spring Boot
+    environment:
+      SERVER_PORT: 8080
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mydatabase
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: user_password
+      SPRING_SECURITY_USER_NAME: admin
+      SPRING_SECURITY_USER_PASSWORD: admin123
+
+  tailwind:
+    build:
+      context: .
+      dockerfile: Dockerfile.tailwind # Dockerfile for Tailwind build
+    container_name: tailwind-builder
+    volumes:
+      - ./src:/app/src # Mount the source directory to work with Tailwind CSS files
+      - ./dist:/app/dist # Mount the output directory for generated Tailwind CSS
+    command: npm run build:tailwind # Command to run Tailwind CSS build
+
+volumes:
+  mysql_data:

@@ -1,28 +1,44 @@
-// package com.donation.models.data;
+package com.donation.models.data;
 
-// import lombok.Getter;
-// import lombok.Setter;
+import jakarta.persistence.*;
 
-// import jakarta.persistence.*;
-// import java.util.List;
+@Entity
+@Table(name = "donor")
+public class Donor {
 
-// @Entity
-// @Getter
-// @Setter
-// @Table(name = "donor")
-// public class Donor {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-// @Id
-// @GeneratedValue(strategy = GenerationType.IDENTITY)
-// private Integer id;
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user; // Association with the User table
 
-// @ManyToOne
-// @JoinColumn(name = "user_id", nullable = false)
-// private User user;
+    @Column(nullable = false, name = "donor_type")
+    private String donorType; // personal or organization
 
-// @OneToMany(mappedBy = "donor", cascade = CascadeType.ALL)
-// private List<Donation> donations;
+    public Long getId() {
+        return id;
+    }
 
-// @OneToMany(mappedBy = "donor", cascade = CascadeType.ALL)
-// private List<DonorFeedback> donorFeedbacks;
-// }
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getDonorType() {
+        return donorType;
+    }
+
+    public void setDonorType(String donorType) {
+        this.donorType = donorType;
+    }
+
+}

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Campaign List</title>
+  </head>
+  <body
+    class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans"
+  >
+    <header th:replace="fragments/header :: header"></header>
+
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-semibold mb-6">Campaign List</h1>
+      <a
+        href="/campaigns/create"
+        class="inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mb-4"
+      >
+        Create New Campaign
+      </a>
+      <a
+        href="/campaigns/graph"
+        class="inline-block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4"
+      >
+        View Campaign Graph
+      </a>
+      <div class="overflow-x-auto">
+        <table class="min-w-full rounded shadow dark:bg-gray-800">
+          <thead>
+            <tr class="">
+              <th
+                class="px-6 py-3 border-b-2 border-gray-200 dark:bg-gray-50 text-left text-xs font-semibold dark:text-gray-700 uppercase tracking-wider"
+              >
+                ID
+              </th>
+              <th
+                class="px-6 py-3 border-b-2 border-gray-200 dark:bg-gray-50 text-left text-xs font-semibold dark:text-gray-700 uppercase tracking-wider"
+              >
+                Name
+              </th>
+              <th
+                class="px-6 py-3 border-b-2 border-gray-200 dark:bg-gray-50 text-left text-xs font-semibold dark:text-gray-700 uppercase tracking-wider"
+              >
+                Description
+              </th>
+              <th
+                class="px-6 py-3 border-b-2 border-gray-200 dark:bg-gray-50 text-left text-xs font-semibold dark:text-gray-700 uppercase tracking-wider"
+              >
+                Goal Amount / Current Amount
+              </th>
+              <th
+                class="px-6 py-3 border-b-2 border-gray-200 dark:bg-gray-50 text-left text-xs font-semibold dark:text-gray-700 uppercase tracking-wider"
+              >
+                Progress
+              </th>
+              <th
+                class="px-6 py-3 border-b-2 border-gray-200 dark:bg-gray-50 text-left text-xs font-semibold dark:text-gray-700 uppercase tracking-wider"
+              >
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody id="campaignsTableBody">
+            <!-- Campaign rows will be dynamically populated using jQuery -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        // Function to fetch and display campaigns
+        function fetchCampaigns() {
+          $.ajax({
+            url: "/api/v1/campaigns",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+              const tableBody = $("#campaignsTableBody");
+              tableBody.empty();
+              data.forEach((campaign) => {
+                const goalAmount = new Big(campaign.goalAmount);
+                const currentAmount = new Big(campaign.currentAmount);
+                const progressPercentage = goalAmount.eq(0)
+                  ? 0
+                  : currentAmount.div(goalAmount).times(100).toFixed(2);
+
+                const row = `
+              <tr class=" transition-colors">
+                <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700">
+                  <a  href="/campaigns/${campaign.id}" class="text-indigo-600 hover:text-indigo-900">${campaign.id}</a>
+                </td>
+                <td class="px-6 py-4 border-b border-gray-200 text-sm dark:text-gray-700">
+                  ${campaign.name}
+                </td>
+                <td class="px-6 py-4 border-b border-gray-200 text-sm dark:text-gray-700">
+                  ${campaign.description}
+                </td>
+                <td class="px-6 py-4 border-b border-gray-200 text-sm dark:text-gray-700">
+                  ${campaign.currentAmount} / ${campaign.goalAmount}
+                </td>
+                <td class="px-6 py-4 border-b border-gray-200 text-sm dark:text-gray-700">
+                  <div class="w-full bg-gray-200 rounded-full h-4">
+                    <div
+                      class="bg-primary h-4 rounded-full"
+                      style="width: ${progressPercentage}%"
+                    ></div>
+                  </div>
+                  <span>${progressPercentage}%</span>
+                </td>
+                <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700">
+                  <a href="/campaigns/${campaign.id}" class="text-indigo-600 hover:text-indigo-900 mr-2">View</a>
+                  <a href="/campaigns/edit/${campaign.id}" class="text-yellow-500 hover:text-yellow-700 mr-2">Edit</a>
+                  <a href="/campaigns/delete/${campaign.id}" class="text-red-600 hover:text-red-900" onclick="return confirm('Are you sure you want to delete?')">Delete</a>
+                </td>
+              </tr>
+            `;
+                tableBody.append(row);
+              });
+            },
+            error: function (err) {
+              console.error("Error fetching campaigns:", err);
+            },
+          });
+        }
+
+        // Initial fetch on page load
+        fetchCampaigns();
+      });
+    </script>
+  </body>
+</html>

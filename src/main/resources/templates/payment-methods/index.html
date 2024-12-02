@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Payment Methods</title>
+  </head>
+  <body class="bg-gray-100">
+    <header th:replace="fragments/header :: header"></header>
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-6">Payment Methods</h1>
+      <div class="mb-4 flex justify-between items-center">
+        <a
+          href="/payment-methods/create.html"
+          class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Create New Payment Method
+        </a>
+        <form id="filterForm" class="flex space-x-4">
+          <input
+            type="text"
+            id="methodName"
+            name="methodName"
+            placeholder="Method Name"
+            class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+          <button
+            type="submit"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Filter
+          </button>
+          <button
+            type="button"
+            id="resetFilters"
+            class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Reset
+          </button>
+        </form>
+      </div>
+      <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+        <thead>
+          <tr>
+            <th class="py-2 px-4 border-b">ID</th>
+            <th class="py-2 px-4 border-b">Method Name</th>
+            <th class="py-2 px-4 border-b">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="paymentMethodsTableBody">
+          <!-- Payment Methods will be populated here via jQuery -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="/js/paymentMethods.js"></script>
+  </body>
+</html>

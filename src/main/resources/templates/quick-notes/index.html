@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="fragments/head :: head">
+    <title id="pageTitle">Quick Notes - Donation App</title>
+    <!-- Include Font Awesome for icons (optional) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-pVtLOy+jfYnVrGiqKeQcMcfhCbTpblYHjIzIsg9zD98d7x9sR0Q1iQhK6yC2u9W9jt7rdD+AScJJ4QX9F5GpDw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body
+    class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans transition-colors duration-300"
+  >
+    <header th:replace="fragments/header :: header"></header>
+
+    <div class="flex">
+      <!-- Sidebar Fragment -->
+      <div
+        th:replace="fragments/sidebar :: sidebar"
+        class="mr-8 hidden lg:block flex-none bg-white dark:bg-gray-800 shadow-lg h-full transition-colors duration-300"
+      ></div>
+
+      <!-- Main Content Area -->
+      <div class="flex-grow p-5 mt-10">
+        <h1 class="text-3xl font-bold mb-6">Quick Notes</h1>
+
+        <!-- Note Input Form -->
+        <div class="mb-4">
+          <form
+            id="noteForm"
+            th:action="@{/dashboard/quick-notes/create}"
+            method="post"
+            onsubmit="showLoadingSpinner()"
+            class="flex flex-col space-y-4"
+          >
+            <textarea
+              id="noteContent"
+              name="content"
+              class="w-full h-32 p-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-300 bg-white dark:bg-gray-800 text-black dark:text-gray-100"
+              placeholder="Add a new note..."
+              required
+            ></textarea>
+
+            <button
+              type="submit"
+              id="submitButton"
+              class="bg-blue-500 dark:bg-blue-600 text-white px-4 py-2 rounded mt-2 hover:bg-blue-600 dark:hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center"
+            >
+              <i class="fas fa-plus mr-2"></i> Add Note
+            </button>
+          </form>
+
+          <!-- Loading Spinner (hidden by default) -->
+          <div id="loadingSpinner" class="hidden flex justify-center mt-4">
+            <svg
+              class="w-8 h-8 text-blue-500 dark:text-blue-400 animate-spin"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Notes List -->
+        <div
+          id="notesList"
+          class="w-full lg:w-3/4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"
+        >
+          <div
+            th:each="note : ${quickNotes}"
+            class="note-card p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md flex flex-col justify-between transition-colors duration-300"
+          >
+            <p
+              class="text-gray-800 dark:text-gray-200"
+              th:text="${note.content}"
+            >
+              Note Content
+            </p>
+            <div class="mt-4 flex space-x-4">
+              <a
+                th:href="@{'quick-notes/update/' + ${note.id}}"
+                class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 transition"
+              >
+                <i class="fas fa-edit"></i> Edit
+              </a>
+              <a
+                th:href="@{'quick-notes/delete/' + ${note.id}}"
+                onclick="return confirm('Are you sure you want to delete this note?');"
+                class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 transition"
+              >
+                <i class="fas fa-trash-alt"></i> Delete
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script type="text/javascript">
+      function showLoadingSpinner() {
+        // Show the loading spinner
+        const loadingSpinner = document.getElementById("loadingSpinner");
+        loadingSpinner.classList.remove("hidden");
+        loadingSpinner.classList.add("flex"); // Ensure it's visible
+
+        // Disable the submit button to prevent multiple submissions
+        const submitButton = document.getElementById("submitButton");
+        submitButton.disabled = true;
+        submitButton.classList.add("bg-gray-400", "cursor-not-allowed");
+        submitButton.classList.remove(
+          "bg-blue-500",
+          "dark:bg-blue-600",
+          "hover:bg-blue-600",
+          "dark:hover:bg-blue-700"
+        );
+
+        // Optionally, change the button text to indicate loading
+        submitButton.innerHTML =
+          '<i class="fas fa-spinner fa-spin mr-2"></i> Adding...';
+      }
+    </script>
+  </body>
+</html>

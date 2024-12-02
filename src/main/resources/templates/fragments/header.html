@@ -1,35 +1,225 @@
-<!-- src/main/resources/templates/fragments/header.html -->
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8" />
-    <title>My Application</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
-  </head>
-  <body class="bg-gray-100">
-    <header th:fragment="header" class="bg-white shadow-md p-4">
-      <h1 class="text-2xl font-bold text-gray-800">Donation Application</h1>
-      <nav class="mt-4">
-        <ul class="flex space-x-4">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <header th:fragment="header">
+    <nav
+      class="bg-gradient-to-r from-blue-600 to-purple-600 p-5 text-white shadow-lg uk-navbar-container"
+    >
+      <div class="container mx-auto">
+        <div class="flex items-center justify-between w-full">
+          <!-- Logo -->
+          <div class="">
+            <a
+              href="/"
+              class="text-sm font-bold tracking-widest hover:text-gray-200 transition-colors duration-300"
+            >
+              DonateApp
+            </a>
+            <button
+              id="darkModeToggle"
+              class="text-gray-800 px-4 py-2 rounded-full transition hover:text-gray-900"
+              aria-label="Toggle Dark Mode"
+            >
+              <i
+                id="darkModeIcon"
+                class="fa-solid fa-moon hover:bg-gray-300 rounded-full p-4 focus:outline-none focus:ring-2 focus:ring-purple-300"
+              ></i>
+            </button>
+          </div>
+
+          <button
+            id="menu-btn"
+            class="block lg:hidden p-2 focus:outline-none focus:ring-2 focus:ring-purple-300 rounded"
+            aria-label="Toggle Menu"
+            aria-expanded="false"
+            aria-controls="menu"
+          >
+            <svg
+              id="menu-icon"
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                id="menu-path"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16m-7 6h7"
+              ></path>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Menu Links -->
+        <ul
+          id="menu"
+          class="flex flex-wrap lg:space-x-8 w-full lg:w-auto lg:flex-row lg:items-center mt-8 lg:mt-0 flex-col space-y-4 lg:space-y-0 transition-all duration-300"
+        >
           <li>
-            <a href="/" class="text-blue-500 hover:text-blue-700">Home</a>
+            <a
+              href="/"
+              class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
+              >Home</a
+            >
           </li>
           <li>
-            <a href="/users" class="text-blue-500 hover:text-blue-700">Users</a>
+            <a
+              href="/about"
+              class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
+              >About</a
+            >
           </li>
           <li>
-            <a href="/about" class="text-blue-500 hover:text-blue-700">About</a>
-          </li>
-          <li>
-            <a href="/contact" class="text-blue-500 hover:text-blue-700"
+            <a
+              href="/contact"
+              class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
               >Contact</a
             >
           </li>
+
+          <!-- Show these links only if the user is logged in -->
+          <li th:if="${#authentication.name != 'anonymousUser'}">
+            <a
+              href="/users"
+              class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
+              >Users</a
+            >
+          </li>
+          <li th:if="${#authentication.name != 'anonymousUser'}">
+            <a
+              href="/students"
+              class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
+              >Students</a
+            >
+          </li>
+          <li th:if="${#authentication.name != 'anonymousUser'}">
+            <a
+              href="/donations"
+              class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
+              >Donations</a
+            >
+          </li>
+          <li th:if="${#authentication.name != 'anonymousUser'}">
+            <a
+              href="/donors"
+              class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
+              >Donors</a
+            >
+          </li>
+          <li th:if="${#authentication.name != 'anonymousUser'}">
+            <a
+              href="/campaigns"
+              class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
+              >Campaigns</a
+            >
+          </li>
+          <li th:if="${#authentication.name != 'anonymousUser'}">
+            <a
+              href="/payment-methods"
+              class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
+              >Payment Methods</a
+            >
+          </li>
+          <li th:if="${#authentication.name != 'anonymousUser'}">
+            <a
+              href="/receipts"
+              class="block text-lg md:text-sm hover:bg-white hover:text-blue-600 rounded-lg px-4 py-2 transition-colors duration-300"
+              >Receipts</a
+            >
+          </li>
+
+          <!-- Show login and register if the user is not logged in -->
+          <li th:if="${#authentication.name == 'anonymousUser'}">
+            <a
+              href="/auth/login"
+              class="block text-lg md:text-sm text-white rounded-lg px-4 py-2 transition-colors duration-300 hover:bg-white hover:text-blue-600"
+              >Login</a
+            >
+          </li>
+          <li th:if="${#authentication.name == 'anonymousUser'}">
+            <a
+              href="/auth/register"
+              class="block text-lg md:text-sm bg-purple-600 text-white rounded-lg px-4 py-2 transition-colors duration-300 hover:bg-purple-700"
+              >Register</a
+            >
+          </li>
+
+          <!-- Show logout link if user is logged in -->
+          <li th:if="${#authentication.name != 'anonymousUser'}">
+            <a
+              href="/auth/logout"
+              class="block text-xs md:text-sm text-white bg-blue-500 rounded-lg px-4 py-2 transition-colors duration-300 hover:bg-blue-600 active:bg-blue-700 active:text-white focus:outline-none focus:ring-2 focus:ring-blue-300"
+            >
+              Logout</a
+            >
+          </li>
         </ul>
-      </nav>
-    </header>
-  </body>
+      </div>
+    </nav>
+    <script src="/js/switch_mode.js"></script>
+    <script>
+      // JavaScript to handle the mobile menu toggle and responsiveness
+      document.addEventListener("DOMContentLoaded", () => {
+        const menuBtn = document.getElementById("menu-btn");
+        const menu = document.getElementById("menu");
+        const menuPath = document.getElementById("menu-path");
+
+        const toggleMenu = () => {
+          const isHidden = menu.classList.toggle("hidden");
+          menuBtn.setAttribute("aria-expanded", !isHidden);
+
+          // Toggle the icon between hamburger and close
+          if (isHidden) {
+            menuPath.setAttribute("d", "M4 6h16M4 12h16m-7 6h7"); // Hamburger icon
+          } else {
+            menuPath.setAttribute("d", "M6 18L18 6M6 6l12 12"); // Close icon
+          }
+        };
+
+        menuBtn.addEventListener("click", toggleMenu);
+
+        // Close the menu when clicking outside
+        document.addEventListener("click", (event) => {
+          if (!menu.contains(event.target) && !menuBtn.contains(event.target)) {
+            if (!menu.classList.contains("hidden")) {
+              menu.classList.add("hidden");
+              menuBtn.setAttribute("aria-expanded", "false");
+              menuPath.setAttribute("d", "M4 6h16M4 12h16m-7 6h7"); // Hamburger icon
+            }
+          }
+        });
+
+        // Handle Esc key to close the menu
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape" && !menu.classList.contains("hidden")) {
+            menu.classList.add("hidden");
+            menuBtn.setAttribute("aria-expanded", "false");
+            menuPath.setAttribute("d", "M4 6h16M4 12h16m-7 6h7"); // Hamburger icon
+            menuBtn.focus();
+          }
+        });
+
+        // Handle window resize to reset menu state
+        const handleResize = () => {
+          if (window.innerWidth >= 1024) {
+            // Match 'lg' breakpoint
+            menu.classList.remove("hidden");
+            menuBtn.setAttribute("aria-expanded", "true");
+            menuPath.setAttribute("d", "M6 18L18 6M6 6l12 12"); // Ensure menu is open
+          } else {
+            menu.classList.add("hidden");
+            menuBtn.setAttribute("aria-expanded", "false");
+            menuPath.setAttribute("d", "M4 6h16M4 12h16m-7 6h7"); // Hamburger icon
+          }
+        };
+
+        window.addEventListener("resize", handleResize);
+
+        // Initialize menu state on page load
+        handleResize();
+      });
+    </script>
+  </header>
 </html>

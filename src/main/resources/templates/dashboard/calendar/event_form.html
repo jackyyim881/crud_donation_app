@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Create Event - Calendar</title>
+</head>
+<body class="bg-gray-100 font-sans text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+    <header th:replace="fragments/header :: header" class="shadow-md">
+        <!-- Header content -->
+    </header>
+
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar Fragment -->
+        <div th:replace="fragments/sidebar :: sidebar" class="hidden h-full w-64 flex-shrink-0 bg-white shadow-lg dark:bg-gray-800 lg:block sidebar"></div>
+
+        <!-- Main Content Area -->
+        <div class="flex-grow overflow-auto p-4 lg:p-8">
+            <!-- Back Button -->
+            <div class="mb-6">
+                <a href="/dashboard/calendar" class="inline-block rounded-md bg-gray-600 px-4 py-2 text-white shadow-md hover:bg-gray-700 dark:bg-gray-500 dark:hover:bg-gray-600">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to Calendar
+                </a>
+            </div>
+
+            <!-- Event Form -->
+            <div class="max-w-lg mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                <h2 th:text="${event.id != null} ? 'Edit Event' : 'Create New Event'" class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-100"></h2>
+                <form th:action="${event.id != null} ? @{'/dashboard/calendar/edit/' + ${event.id}} : @{'/dashboard/calendar/new'}" th:object="${event}" method="post">
+                    <!-- CSRF Token -->
+
+                    <!-- Event ID (hidden for edit) -->
+                    <input type="hidden" th:if="${event.id != null}" th:name="id" th:value="${event.id}" />
+
+                    <!-- Title -->
+                    <div class="mb-4">
+                        <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
+                        <input type="text" id="title" th:field="*{title}" required
+                               class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 sm:text-sm"
+                               placeholder="Event title" />
+                        <div th:if="${#fields.hasErrors('title')}" class="text-red-500 text-sm mt-1" th:errors="*{title}">Title Error</div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-4">
+                        <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+                        <textarea id="description" th:field="*{description}"
+                                  class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 sm:text-sm"
+                                  placeholder="Event description"></textarea>
+                        <div th:if="${#fields.hasErrors('description')}" class="text-red-500 text-sm mt-1" th:errors="*{description}">Description Error</div>
+                    </div>
+
+                    <!-- Start Time -->
+                    <div class="mb-4">
+                        <label for="start" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Start Time</label>
+                        <input type="datetime-local" id="start" th:field="*{start}" required
+                               class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 sm:text-sm" />
+                        <div th:if="${#fields.hasErrors('start')}" class="text-red-500 text-sm mt-1" th:errors="*{start}">Start Time Error</div>
+                    </div>
+
+                    <!-- End Time -->
+                    <div class="mb-4">
+                        <label for="end" class="block text-sm font-medium text-gray-700 dark:text-gray-300">End Time</label>
+                        <input type="datetime-local" id="end" th:field="*{end}" required
+                               class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 sm:text-sm" />
+                        <div th:if="${#fields.hasErrors('end')}" class="text-red-500 text-sm mt-1" th:errors="*{end}">End Time Error</div>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="mb-4">
+                        <label for="category" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Category</label>
+                        <select id="category" th:field="*{category}"
+                                class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 sm:text-sm">
+                            <option value="" disabled selected>Select category</option>
+                            <option value="default">Default</option>
+                            <option value="meeting">Meeting</option>
+                            <option value="birthday">Birthday</option>
+                            <option value="holiday">Holiday</option>
+                            <!-- Add more categories as needed -->
+                        </select>
+                        <div th:if="${#fields.hasErrors('category')}" class="text-red-500 text-sm mt-1" th:errors="*{category}">Category Error</div>
+                    </div>
+
+                    <!-- Color -->
+                    <div class="mb-6">
+                        <label for="color" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Color</label>
+                        <input type="color" id="color" th:field="*{color}" 
+                               class="mt-1 block h-10 w-16 cursor-pointer rounded-md border-0 p-0 shadow-sm"
+                               value="#3788d8" />
+                        <div th:if="${#fields.hasErrors('color')}" class="text-red-500 text-sm mt-1" th:errors="*{color}">Color Error</div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="flex justify-end">
+                        <button type="submit"
+                                class="rounded-md bg-indigo-600 px-4 py-2 text-white shadow-md hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600">
+                            <i th:text="${event.id != null} ? 'Update Event' : 'Add Event'" class="fas fa-save mr-2"></i>
+                            <span th:text="${event.id != null} ? 'Update Event' : 'Add Event'">Submit</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Font Awesome for Icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"
+            integrity="sha512-zG+VhIJ1b1Rz1GdfuB+H7tD2f8kzGNhcOxNn3raKd6aLjI1GN+l6q3IDGHrPV4APW+Pvz1D6v7l9PL2b0+7u8g=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</body>
+</html>

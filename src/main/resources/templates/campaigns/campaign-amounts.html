@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Campaign Amounts</title>
+  </head>
+  <body>
+    <h1>Campaign Amounts</h1>
+
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Campaign ID</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Iterate over the campaignAmounts list -->
+        <tr th:each="campaignAmount : ${campaignAmounts}">
+          <td th:text="${campaignAmount.campaignId}">Campaign ID</td>
+          <td th:text="${campaignAmount.amount}">Amount</td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>
